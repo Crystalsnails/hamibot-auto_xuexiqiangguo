@@ -333,7 +333,8 @@ function get_finish_list() {
 /*
  *********************准备部分********************
  */
-
+home();
+sleep(random_time(delay_time));
 var back_track_flag = 2;
 // 首次运行可能弹升级，等久一点
 var back_track_wait_time = 4;
