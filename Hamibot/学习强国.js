@@ -1397,6 +1397,7 @@ while (!finish_list[9] && whether_complete_subscription == "yes") {
             sleep(random_time(delay_time));
 
             while (num_subscribe < 2) {
+                var last_swipe_flag = false;
                 // 点击红色的订阅按钮
                 do {
                     var subscribe_pos = findColor(captureScreen(), "#E42417", {
@@ -1406,12 +1407,14 @@ while (!finish_list[9] && whether_complete_subscription == "yes") {
                     if (subscribe_pos) {
                         sleep(random_time(delay_time * 2));
                         // 解决极端情况下，当订阅按钮的顶端在屏幕最底端被检测到，然而由于虚拟按键或小白条等阻挡了点击按钮中心点而无法使得按钮被点击到，从而使得脚本无限循环的问题
-                        if (subscribe_pos.y > device.height / 2) {
-                            swipe(device.width / 2, device.height - subscribe_button_pos.top, device.width / 2, device.height - subscribe_button_pos.top - subscribe_button_pos.height(), random_time(0));
+                        if (subscribe_pos.y > device.height / 2 && !last_swipe_flag) {
+                            swipe(device.width / 2, device.height - subscribe_button_pos.top, device.width / 2, device.height - subscribe_button_pos.top - subscribe_button_pos.height() * 3, random_time(0));
                             sleep(random_time(delay_time));
+                            last_swipe_flag = true;
                             continue;
                         }
                         click(subscribe_pos.x + subscribe_button_pos.width() / 2, subscribe_pos.y + subscribe_button_pos.height() / 2);
+                        last_swipe_flag = false;
                         num_subscribe++;
                         sleep(random_time(delay_time));
                     }
