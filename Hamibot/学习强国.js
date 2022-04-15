@@ -3,6 +3,9 @@ auto.waitFor();
 // 将设备保持常亮
 device.keepScreenDim();
 
+// 本地存储数据
+var storage = storages.create("data");
+
 // 获取基础数据
 var { delay_time } = hamibot.env;
 var { whether_improve_accuracy } = hamibot.env;
@@ -24,6 +27,7 @@ var { SK } = hamibot.env;
 if (whether_mute == "yes") {
     if (!storage.contains("mute_auth")) {
         toast("请先给hamibot添加修改系统设置权限,并重新启动脚本。");
+        device.getMusicVolume();
         storage.put("mute_auth", "yes");
         exit();
     }
@@ -61,8 +65,6 @@ threads.start(function () {
 });
 requestScreenCapture(false);
 
-// 本地存储数据
-var storage = storages.create("data");
 // 更新题库为answer_question_map1
 storage.remove("answer_question_map");
 
