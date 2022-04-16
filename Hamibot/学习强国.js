@@ -450,9 +450,13 @@ if (!finish_list[12]) {
         }
         sleep(random_time(delay_time));
         // log("点击:" + "android.widget.LinearLayout");
-        exist.click();
+        if(!my_click_clickable(exist.text())){
+            exit_the_app();
+            continue;
+        }
         sleep(random_time(delay_time));
         back();
+        sleep(random_time(delay_time));
         break;
     }
 }
@@ -516,7 +520,7 @@ if (id("home_bottom_tab_icon_large").exists()) {
     var home_bottom = id("home_bottom_tab_icon_large").findOne(15000);
     click(home_bottom.bounds().centerX(), home_bottom.bounds().centerY());
 }
-log("阅读文章");
+if (count < 6 - completed_read_count && !finish_list[0]) log("阅读文章");
 while (count < 6 - completed_read_count && !finish_list[0]) {
     if (failed_attempt > 7) {
         log("阅读文章时出现错误");
@@ -1679,7 +1683,6 @@ if (!finish_list[8] && two_players_scored < 1) {
  */
 
 var attempt = 0;
-finish_list[9] = false;
 while (!finish_list[9] && whether_complete_subscription == "yes") {
     attempt++;
     if (attempt > 7) {
