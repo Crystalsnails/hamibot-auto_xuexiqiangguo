@@ -1,4 +1,4 @@
-# Auto_xxqg
+# Auto_x_x_q_g
 Forked from [this project](https://github.com/dundunnp/auto_xuexiqiangguo)
 Author [dundunnp](https://github.com/dundunnp)
 
