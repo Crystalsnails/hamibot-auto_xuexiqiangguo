@@ -1,5 +1,5 @@
 auto.waitFor();
-//console.show();
+console.show();
 // 将设备保持常亮
 device.keepScreenDim();
 
@@ -41,7 +41,7 @@ if (whether_froze_app == "yes") {
     result = shell("pm enable cn.xuexi.android", true);
     if (result.code != 0 || result) {
         toast("解冻失败，请查看配置模式中的'冻结学习强国'选项是否选择'否'");
-        if (pushplus_token) push_weixin_message("解冻失败，请查看配置模式中的'冻结学习强国'选项是否选择'否'");
+        push_weixin_message("解冻失败，请查看配置模式中的'冻结学习强国'选项是否选择'否'");
         exit(0);
     }
 }
@@ -282,10 +282,13 @@ function exit_the_app() {
  * back_track_flag = 2时，表示竞赛、答题部分和准备部分
  */
 function back_track(back_track_flag) {
+    log("back_track");
     var attempt = 0;
     loop: while (attempt <= 7) {
         attempt++;
-        app.launchApp("学习强国");
+        if (!className("android.widget.FrameLayout").packageName("cn.xuexi.android").exists()) {
+            app.launchApp("学习强国");
+        }
         sleep(random_time(delay_time * back_track_wait_time));
         if (text("新用户注册").exists()) {
             device.cancelKeepingAwake();
@@ -439,7 +442,8 @@ if (!finish_list[12]) {
         }
         if (!id("comm_head_title").packageName("cn.xuexi.android").exists() || !className("android.widget.TextView").packageName("cn.xuexi.android").depth(27).text("切换地区").exists()) back_track(0);
         // log("等待:" + "android.widget.LinearLayout");
-        var exist = className("android.widget.LinearLayout").clickable(true).depth(26).findOne(15000);
+        sleep(random_time(delay_time));
+        var exist = textMatches(/\S{1,4}学习平台/).findOne(15000);
         if (exist == null) {
             exit_the_app();
             continue;
@@ -476,25 +480,20 @@ if (!finish_list[2] && !finish_list[0]) {
             push_weixin_message("打开电台广播时出现错误");
             break;
         }
+        sleep(random_time(delay_time));
         if (!id("comm_head_title").packageName("cn.xuexi.android").exists()) back_track(0);
         sleep(random_time(delay_time));
-        var exist = text("电台").findOne(15000);
-        if (exist == null) {
+        if (!my_click_clickable("电台")) {
             exit_the_app();
             continue;
         }
-        exist.click();
         sleep(random_time(delay_time));
-
-        var exist = text("听广播").findOne(15000);
-        if (exist == null) {
+        if (!my_click_clickable("听广播")) {
             exit_the_app();
             continue;
         }
-        exist.click();
         sleep(random_time(delay_time));
 
-        // log("等待:" + "lay_state_icon");
         var exist = id("lay_state_icon").findOne(15000);
         if (exist == null) {
             exit_the_app();
@@ -513,6 +512,11 @@ if (!finish_list[2] && !finish_list[0]) {
 // 阅读文章
 var count = 0;
 var failed_attempt = 0;
+if (id("home_bottom_tab_icon_large").exists()) {
+    var home_bottom = id("home_bottom_tab_icon_large").findOne(15000);
+    click(home_bottom.bounds().centerX(), home_bottom.bounds().centerY());
+}
+log("阅读文章");
 while (count < 6 - completed_read_count && !finish_list[0]) {
     if (failed_attempt > 7) {
         log("阅读文章时出现错误");
@@ -534,7 +538,7 @@ while (count < 6 - completed_read_count && !finish_list[0]) {
         refresh(false);
         continue;
     }
-    for (var i = 0; i < article.length - 1; i++) {
+    loop1: for (var i = 0; i < article.length - 1; i++) {
         sleep(random_time(500));
         try {
             click(article[i].bounds().centerX(), article[i].bounds().centerY());
@@ -547,10 +551,10 @@ while (count < 6 - completed_read_count && !finish_list[0]) {
         if (className("ImageView").depth(10).clickable(true).findOnce(1) == null || textContains("专题").findOne(1000) != null) {
             log("跳过专栏与音乐");
             back();
-            continue;
+            continue loop1;
         }
         // 观看时长
-        sleep(random_time(65000));
+        sleep(random_time(650));
         back();
         count++;
         // log("已阅读文章数：" + count);
@@ -574,19 +578,16 @@ if (!finish_list[2] && !finish_list[0]) {
             break;
         }
         if (!id("comm_head_title").packageName("cn.xuexi.android").exists()) back_track(0);
-        var exist = text("电台").findOne(15000);
-        if (exist == null) {
-            exit_the_app();
-            continue;
-        }
-        exist.click();
         sleep(random_time(delay_time));
-        var exist = text("听广播").findOne(15000);
-        if (exist == null) {
+        if (!my_click_clickable("电台")) {
             exit_the_app();
             continue;
         }
-        exist.click();
+        sleep(random_time(delay_time));
+        if (!my_click_clickable("听广播")) {
+            exit_the_app();
+            continue;
+        }
         sleep(random_time(delay_time));
         if (textStartsWith("正在收听").findOne(15000)) {
             var exist = className("android.widget.ImageView").clickable(true).id("v_playing").findOne(15000);
@@ -619,19 +620,16 @@ if (!finish_list[1] || !finish_list[2]) {
             break;
         }
         if (!id("comm_head_title").packageName("cn.xuexi.android").exists()) back_track(1);
-        var exist = text("百灵").findOne(15000);
-        if (exist == null) {
+        sleep(random_time(delay_time));
+        if (!my_click_clickable("百灵")) {
             exit_the_app();
             continue;
         }
-        exist.click();
         sleep(random_time(delay_time / 2));
-        var exist = text("竖").findOne(15000);
-        if (exist == null) {
+        if (!my_click_clickable("竖")) {
             exit_the_app();
             continue;
         }
-        exist.click();
         // 等待视频加载
         sleep(random_time(delay_time * 3));
         // 点击第一个视频
@@ -1208,8 +1206,8 @@ function do_periodic_answer(number) {
 /*
  **********每日答题*********
  */
+if (whether_improve_accuracy == "yes") var token = get_baidu_token();
 var restart_flag = 0;
-
 if (!finish_list[3]) {
     var attempt = 0;
     while (true) {
@@ -1239,6 +1237,7 @@ if (!finish_list[3]) {
             exit_the_app();
             continue;
         }
+        break;
     }
 }
 
@@ -1416,6 +1415,8 @@ if (!finish_list[5] && special_answer_scored < 8) {
                 exit_the_app();
                 continue;
             }
+            exist.click();
+
             // 点击退出
             sleep(random_time(delay_time));
             // log("等待:" + "android.view.View");
@@ -1435,6 +1436,7 @@ if (!finish_list[5] && special_answer_scored < 8) {
             }
             exist.click();
         }
+        break;
     }
 }
 
@@ -1586,6 +1588,7 @@ function do_contest() {
 /*
  **********四人赛*********
  */
+
 if (!finish_list[7] && four_players_scored < 3) {
     var attempt = 0;
     loop: while (true) {
@@ -1674,7 +1677,9 @@ if (!finish_list[8] && two_players_scored < 1) {
 /*
  **********订阅*********
  */
+
 var attempt = 0;
+finish_list[9] = false;
 while (!finish_list[9] && whether_complete_subscription == "yes") {
     attempt++;
     if (attempt > 7) {
@@ -1713,7 +1718,7 @@ while (!finish_list[9] && whether_complete_subscription == "yes") {
             loop2: while (num_subscribe < 2) {
                 var last_swipe_flag = false;
                 // 点击红色的订阅按钮
-                do {
+                loop3: do {
                     var subscribe_pos = findColor(captureScreen(), "#E42417", {
                         region: [subscribe_button_pos.left, subscribe_button_pos.top, subscribe_button_pos.width(), device.height - subscribe_button_pos.top],
                         threshold: 10,
@@ -1725,14 +1730,10 @@ while (!finish_list[9] && whether_complete_subscription == "yes") {
                             swipe(device.width / 2, device.height - subscribe_button_pos.top, device.width / 2, device.height - subscribe_button_pos.top - subscribe_button_pos.height() * 3, random_time(0));
                             sleep(random_time(delay_time));
                             last_swipe_flag = true;
-                            continue loop2;
+                            continue loop3;
                         }
                         click(subscribe_pos.x + subscribe_button_pos.width() / 2, subscribe_pos.y + subscribe_button_pos.height() / 2);
                         sleep(random_time(delay_time));
-                        if (pixel(captureScreen(), subscribe_pos.x, subscribe_pos.y) == "#E42417") {
-                            last_swipe_flag = false;
-                            continue loop2;
-                        }
                         last_swipe_flag = false;
                         num_subscribe++;
                         sleep(random_time(delay_time));
@@ -1853,6 +1854,7 @@ if (!finish_list[10]) {
             back();
             sleep(random_time(delay_time));
         }
+        break;
     }
 }
 
