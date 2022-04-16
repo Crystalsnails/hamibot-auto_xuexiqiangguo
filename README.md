@@ -18,7 +18,8 @@ This fork is intended to make the automation of the original project stablizer.
 * restructed the original project so if unexpected circumstance happend(bad react of the destinated app/bad network),the script restart itself to adjust.
 
 ## How to use?
-Refer to the hamibot version of the original project.
+* Refer to the hamibot version of the original project.
+* The v2.33 app is recommend.
 
 ## Where is the Auto.js version?
 I don't use the original Auto.js app. Forks welcomed.
