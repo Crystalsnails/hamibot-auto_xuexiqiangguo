@@ -27,3 +27,6 @@ I don't use the original Auto.js app. Forks welcomed.
 
 ## Disclaimer
 * You can't use any content of this fork for any illegal purpose.
+
+## About donation
+This project refuses any format of donation.
