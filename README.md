@@ -15,7 +15,8 @@ This fork is intended to make the automation of the original project stablizer.
 
 ### Features
 * Fix bugs
-* restructed the original project so if unexpected circumstance happend(bad react of the destinated app/bad network),the script restart itself to adjust.
+* Killed all `findOne()` and `waitFor()` that may lead to a choke. 
+* Restructed the original project so if unexpected circumstance happend(bad react of the destinated app/bad network),the script restart itself to adjust.
 
 ## How to use?
 * Refer to the hamibot version of the original project.
