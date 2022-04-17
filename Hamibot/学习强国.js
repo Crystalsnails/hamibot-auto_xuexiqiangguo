@@ -558,7 +558,7 @@ while (count < 6 - completed_read_count && !finish_list[0]) {
             continue loop1;
         }
         // 观看时长
-        sleep(random_time(650));
+        sleep(random_time(65000));
         back();
         count++;
         // log("已阅读文章数：" + count);
