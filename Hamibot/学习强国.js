@@ -1,5 +1,5 @@
 auto.waitFor();
-console.show();
+// console.show();
 // 将设备保持常亮
 device.keepScreenDim();
 
