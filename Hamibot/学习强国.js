@@ -169,7 +169,7 @@ function my_click_non_clickable(target) {
     if (typeof target == "string") {
         var exist = text(target).findOne(random_time(15000));
         if (exist == null) return false;
-        var tmp = text(target).findOne(random_time()).bounds();
+        var tmp = text(target).findOne().bounds();
     } else {
         var tmp = target.bounds();
     }
@@ -253,13 +253,13 @@ function exit_the_app() {
         }
         app.openAppSetting(name);
         text(app.getAppName(name)).waitFor();
-        let is_sure = textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne(random_time());
+        let is_sure = textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne();
         if (is_sure.enabled()) {
             textMatches(/(.*停.*|.*结.*|.*行.*)/)
-                .findOne(random_time())
+                .findOne()
                 .click();
             textMatches(/(.*确.*|.*定.*)/)
-                .findOne(random_time())
+                .findOne()
                 .click();
             log(app.getAppName(name) + "应用已被关闭");
             sleep(1000);
@@ -1292,7 +1292,7 @@ if (!finish_list[4] && weekly_answer_scored < 4) {
         sleep(random_time(delay_time * 2));
         if (text("未作答").exists()) {
             // log("点击:" + "未作答");
-            text("未作答").findOne(random_time()).parent().click();
+            text("未作答").findOne().parent().click();
             if (!do_periodic_answer(5)) {
                 exit_the_app();
                 continue;
@@ -1380,7 +1380,7 @@ if (!finish_list[5] && special_answer_scored < 8) {
         sleep(random_time(delay_time * 2));
         if (text("开始答题").exists()) {
             // log("点击:" + "开始答题");
-            text("开始答题").findOne(random_time()).click();
+            text("开始答题").findOne().click();
             if (!do_periodic_answer(10)) {
                 exit_the_app();
                 continue;
@@ -1775,7 +1775,7 @@ while (!finish_list[9] && whether_complete_subscription == "yes") {
 
         if (num_subscribe < 2) {
             log("点击:" + "地方平台\nTab 2 of 2");
-            desc("地方平台\nTab 2 of 2").findOne(random_time()).click();
+            desc("地方平台\nTab 2 of 2").findOne().click();
             sleep(random_time(delay_time));
             for (var i = subscription_local_platform_startup; i < 5; i++) {
                 log("点击:" + "android.view.View");
@@ -1916,13 +1916,13 @@ if (sct_token || pushplus_token) {
     log("执行完毕，正在生成推送内容");
     back_track(2);
     // 获取今日得分
-    var score = textStartsWith("今日已累积").findOne(random_time()).text();
+    var score = textStartsWith("今日已累积").findOne().text();
     score = score.match(/\d+/);
     cap_img = captureScreen();
     sleep(random_time(delay_time));
     back();
     // 获取账号名
-    var account = id("my_display_name").findOne(random_time()).text();
+    var account = id("my_display_name").findOne().text();
 
     // 推送消息
     push_weixin_message(account + ",您的今日得分" + score + "分。");
@@ -1966,10 +1966,10 @@ function kill_app(packageName) {
     }
     app.openAppSetting(name);
     text(app.getAppName(name)).waitFor();
-    let is_sure = textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne(random_time());
+    let is_sure = textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne();
     if (is_sure.enabled()) {
-        textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne(random_time()).click();
-        textMatches(/(.*确.*|.*定.*)/).findOne(random_time()).click();
+        textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne().click();
+        textMatches(/(.*确.*|.*定.*)/).findOne().click();
         log(app.getAppName(name) + "应用已被关闭");
         sleep(1000);
         back();
