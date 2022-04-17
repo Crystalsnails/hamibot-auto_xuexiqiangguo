@@ -888,7 +888,8 @@ function is_select_all_choice() {
     var options = className("android.view.View").depth(26).find();
     // question是题目(专项答题是第4个，其他是第2个)
     var question = className("android.view.View").depth(23).findOnce(1).text().length > 2 ? className("android.view.View").depth(23).findOnce(1).text() : className("android.view.View").depth(23).findOnce(3).text();
-    return options.length / 2 == (question.match(/\s+/g) || []).length;
+    // 部分题目中有多出来的空格，需要判断
+    return options.length / 2 <= (question.match(/\s+/g) || []).length;
 }
 
 /**
@@ -1098,9 +1099,10 @@ function ocr_processing(text, if_question) {
  * @param {int} number 需要做题目的数量
  */
 function do_periodic_answer(number) {
-    // 保证拿满分，如果ocr识别有误而扣分重来
+    // 保证拿满分，如果ocr识别有误而扣分重来，如果重试超过7次，则放弃
     // flag为true时全对
     var flag = false;
+
     while (!flag) {
         sleep(random_time(delay_time));
         // 局部变量用于保存答案
