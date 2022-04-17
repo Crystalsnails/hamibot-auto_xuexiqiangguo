@@ -450,7 +450,7 @@ if (!finish_list[12]) {
         }
         sleep(random_time(delay_time));
         // log("点击:" + "android.widget.LinearLayout");
-        if(!my_click_clickable(exist.text())){
+        if (!my_click_clickable(exist.text())) {
             exit_the_app();
             continue;
         }
@@ -1102,7 +1102,7 @@ function do_periodic_answer(number) {
     // 保证拿满分，如果ocr识别有误而扣分重来，如果重试超过7次，则放弃
     // flag为true时全对
     var flag = false;
-
+    var failed_attempt = 0;
     while (!flag) {
         sleep(random_time(delay_time));
         // 局部变量用于保存答案
@@ -1141,9 +1141,22 @@ function do_periodic_answer(number) {
                             break;
                         }
                     } else {
+                        if (failed_attempt > 7) {
+                            fill_in_blank("lov");
+                            sleep(random_time(delay_time * 2));
+                            if (text("下一题").exists()) click("下一题");
+                            if (text("确定").exists()) click("确定");
+                            sleep(random_time(delay_time));
+                            if (text("完成").exists()) {
+                                click("完成");
+                                flag = true;
+                                break;
+                            }
+                        }
                         if (!restart()) {
                             return false;
                         }
+                        failed_attempt++;
                         break;
                     }
                 }
@@ -1195,9 +1208,15 @@ function do_periodic_answer(number) {
                         if (text("下一题").exists()) click("下一题");
                         else click("完成");
                     } else {
+                        if (failed_attempt > 7) {
+                            if (text("下一题").exists()) click("下一题");
+                            else click("完成");
+                            break;
+                        }
                         if (!restart()) {
                             return false;
                         }
+                        failed_attempt++;
                         break;
                     }
                 }
