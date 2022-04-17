@@ -167,9 +167,9 @@ var answer_question_map = storage.get("answer_question_map1");
  */
 function my_click_non_clickable(target) {
     if (typeof target == "string") {
-        var exist = text(target).findOne(15000);
+        var exist = text(target).findOne(random_time(15000));
         if (exist == null) return false;
-        var tmp = text(target).findOne().bounds();
+        var tmp = text(target).findOne(random_time()).bounds();
     } else {
         var tmp = target.bounds();
     }
@@ -181,14 +181,14 @@ function my_click_non_clickable(target) {
 
 // 模拟点击可点击元素
 function my_click_clickable(target) {
-    var exist = text(target).findOne(15000);
+    var exist = text(target).findOne(random_time(15000));
     if (exist == null) {
         return false;
     }
     // 防止点到页面中其他有包含“我的”的控件，比如搜索栏
     if (target == "我的") {
         // log("点击:" + "comm_head_xuexi_mine");
-        id("comm_head_xuexi_mine").findOne(15000).click();
+        id("comm_head_xuexi_mine").findOne(random_time(15000)).click();
     } else {
         click(target);
     }
@@ -253,13 +253,13 @@ function exit_the_app() {
         }
         app.openAppSetting(name);
         text(app.getAppName(name)).waitFor();
-        let is_sure = textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne();
+        let is_sure = textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne(random_time());
         if (is_sure.enabled()) {
             textMatches(/(.*停.*|.*结.*|.*行.*)/)
-                .findOne()
+                .findOne(random_time())
                 .click();
             textMatches(/(.*确.*|.*定.*)/)
-                .findOne()
+                .findOne(random_time())
                 .click();
             log(app.getAppName(name) + "应用已被关闭");
             sleep(1000);
@@ -302,20 +302,20 @@ function back_track(back_track_flag) {
         while (!id("comm_head_title").exists() && while_count < 5) {
             if (text("立即升级").exists()) {
                 log("点击:" + "取消");
-                text("取消").findOne(1000).click();
+                text("取消").findOne(random_time(1000)).click();
             }
             while_count++;
             back();
             sleep(random_time(delay_time));
         }
-        if (!id("comm_head_title").findOne(1000)) {
+        if (!id("comm_head_title").findOne(random_time(1000))) {
             exit_the_app();
             continue loop;
         }
         switch (back_track_flag) {
             case 0:
                 // 返回首页主页面
-                var home_bottom = id("home_bottom_tab_icon_large").findOne(15000);
+                var home_bottom = id("home_bottom_tab_icon_large").findOne(random_time(15000));
                 if (!home_bottom) {
                     exit_the_app();
                     continue loop;
@@ -324,7 +324,7 @@ function back_track(back_track_flag) {
                 click(home_bottom.bounds().centerX(), home_bottom.bounds().centerY());
                 // 前往省份页面
                 //log("等待:" + "android.view.ViewGroup");
-                var exist = className("android.view.ViewGroup").depth(15).findOne(15000);
+                var exist = className("android.view.ViewGroup").depth(15).findOne(random_time(15000));
                 if (exist == null) {
                     exit_the_app();
                     continue loop;
@@ -348,13 +348,13 @@ function back_track(back_track_flag) {
                 }
                 sleep(random_time(delay_time));
                 //log("等待:" + "积分规则");
-                var exist = text("积分规则").findOne(15000);
+                var exist = text("积分规则").findOne(random_time(15000));
                 if (exist == null) {
                     exit_the_app();
                     continue loop;
                 }
                 sleep(random_time(delay_time));
-                var exist = text("登录").findOne(15000);
+                var exist = text("登录").findOne(random_time(15000));
                 if (exist == null) {
                     exit_the_app();
                     continue loop;
@@ -443,7 +443,7 @@ if (!finish_list[12]) {
         if (!id("comm_head_title").packageName("cn.xuexi.android").exists() || !className("android.widget.TextView").packageName("cn.xuexi.android").depth(27).text("切换地区").exists()) back_track(0);
         // log("等待:" + "android.widget.LinearLayout");
         sleep(random_time(delay_time));
-        var exist = textMatches(/\S{1,4}学习平台/).findOne(15000);
+        var exist = textMatches(/\S{1,4}学习平台/).findOne(random_time(15000));
         if (exist == null) {
             exit_the_app();
             continue;
@@ -498,7 +498,7 @@ if (!finish_list[2] && !finish_list[0]) {
         }
         sleep(random_time(delay_time));
 
-        var exist = id("lay_state_icon").findOne(15000);
+        var exist = id("lay_state_icon").findOne(random_time(15000));
         if (exist == null) {
             exit_the_app();
             continue;
@@ -517,7 +517,7 @@ if (!finish_list[2] && !finish_list[0]) {
 var count = 0;
 var failed_attempt = 0;
 if (id("home_bottom_tab_icon_large").exists()) {
-    var home_bottom = id("home_bottom_tab_icon_large").findOne(15000);
+    var home_bottom = id("home_bottom_tab_icon_large").findOne(random_time(15000));
     click(home_bottom.bounds().centerX(), home_bottom.bounds().centerY());
 }
 if (count < 6 - completed_read_count && !finish_list[0]) log("阅读文章");
@@ -531,7 +531,7 @@ while (count < 6 - completed_read_count && !finish_list[0]) {
     if (!id("comm_head_title").packageName("cn.xuexi.android").exists() || !className("android.widget.TextView").packageName("cn.xuexi.android").depth(27).text("切换地区").exists()) back_track(0);
     sleep(random_time(delay_time));
     refresh(false);
-    var exist = id("general_card_image_id").findOne(15000);
+    var exist = id("general_card_image_id").findOne(random_time(15000));
     if (exist == null) {
         exit_the_app();
         failed_attempt++;
@@ -552,7 +552,7 @@ while (count < 6 - completed_read_count && !finish_list[0]) {
         }
         sleep(random_time(delay_time));
         // 跳过专栏与音乐
-        if (className("ImageView").depth(10).clickable(true).findOnce(1) == null || textContains("专题").findOne(1000) != null) {
+        if (className("ImageView").depth(10).clickable(true).findOnce(1) == null || textContains("专题").findOne(random_time(1000)) != null) {
             log("跳过专栏与音乐");
             back();
             continue loop1;
@@ -593,8 +593,8 @@ if (!finish_list[2] && !finish_list[0]) {
             continue;
         }
         sleep(random_time(delay_time));
-        if (textStartsWith("正在收听").findOne(15000)) {
-            var exist = className("android.widget.ImageView").clickable(true).id("v_playing").findOne(15000);
+        if (textStartsWith("正在收听").findOne(random_time(15000))) {
+            var exist = className("android.widget.ImageView").clickable(true).id("v_playing").findOne(random_time(15000));
             if (exist == null) {
                 exit_the_app();
                 continue;
@@ -638,7 +638,7 @@ if (!finish_list[1] || !finish_list[2]) {
         sleep(random_time(delay_time * 3));
         // 点击第一个视频
         // log("点击:" + "android.widget.FrameLayout");
-        var exist = className("android.widget.FrameLayout").clickable(true).depth(24).findOne(15000);
+        var exist = className("android.widget.FrameLayout").clickable(true).depth(24).findOne(random_time(15000));
         if (exist == null) {
             exit_the_app();
             continue;
@@ -651,20 +651,20 @@ if (!finish_list[1] || !finish_list[2]) {
             className("android.widget.FrameLayout").clickable(true).depth(24).findOnce(7).click();
             sleep(random_time(delay_time));
         }
-        if (text("继续播放").findOne(500)) click("继续播放");
-        if (text("刷新重试").findOne(500)) click("刷新重试");
+        if (text("继续播放").findOne(random_time(500))) click("继续播放");
+        if (text("刷新重试").findOne(random_time(500))) click("刷新重试");
         while (completed_watch_count < 6) {
             log("视听学习：" + completed_watch_count);
             sleep(random_time(delay_time / 2));
             // log("等待:" + "android.widget.LinearLayout");
-            var exist = className("android.widget.LinearLayout").clickable(true).depth(16).findOne(15000);
+            var exist = className("android.widget.LinearLayout").clickable(true).depth(16).findOne(random_time(15000));
             if (exist == null) {
                 exit_the_app();
                 continue;
             }
             // 当前视频的时间长度
             try {
-                var exist = className("android.widget.TextView").clickable(false).depth(16).findOne(6000);
+                var exist = className("android.widget.TextView").clickable(false).depth(16).findOne(random_time(6000));
                 if (exist == null) {
                     exit_the_app();
                     continue;
@@ -740,7 +740,7 @@ function select_option(answer, depth_click_option, options_text) {
         try {
             // 没找到答案，点击第一个
             log("点击:" + "android.widget.RadioButton");
-            var exist = className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(15000);
+            var exist = className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(random_time(15000));
             if (exist == null) {
                 exit_the_app();
                 return;
@@ -792,7 +792,7 @@ function do_contest_answer(depth_click_option, question, options_text) {
         } else {
             // 没找到答案，点击第一个
             log("点击:" + "android.widget.RadioButton");
-            className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(5000).click();
+            className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(random_time(5000)).click();
         }
     } else {
         log("答案: " + answer);
@@ -916,7 +916,7 @@ function restart() {
     switch (restart_flag) {
         case 0:
             // log("等待:" + "登录");
-            var exist = text("登录").findOne(15000);
+            var exist = text("登录").findOne(random_time(15000));
             if (exist == null) {
                 return false;
             }
@@ -927,7 +927,7 @@ function restart() {
             if_restart_flag = true;
             // 等待列表加载
             // log("等待:" + "本月");
-            var exist = text("本月").findOne(15000);
+            var exist = text("本月").findOne(random_time(15000));
             if (exist == null) {
                 return false;
             }
@@ -939,7 +939,7 @@ function restart() {
                 refresh(true);
             }
             // log("点击:" + "未作答");
-            text("未作答").findOne(15000).parent().click();
+            text("未作答").findOne(random_time(15000)).parent().click();
             break;
     }
     return true;
@@ -1165,7 +1165,7 @@ function do_periodic_answer(number) {
                 img.recycle();
                 answer = ocr_processing(answer, false);
                 // log("等待:" + "提示");
-                var exist = text("提示").findOne(15000);
+                var exist = text("提示").findOne(random_time(15000));
                 if (exist == null) {
                     return false;
                 }
@@ -1228,7 +1228,7 @@ if (!finish_list[3]) {
         entry_model(7);
         // 等待题目加载
         // log("等待:" + "查看提示");
-        var exist = text("查看提示").findOne(15000);
+        var exist = text("查看提示").findOne(random_time(15000));
         if (exist == null) {
             exit_the_app();
             continue;
@@ -1275,7 +1275,7 @@ if (!finish_list[4] && weekly_answer_scored < 4) {
         entry_model(8);
         // 等待列表加载
         log("等待:" + "月");
-        var exist = textContains("月").findOne(15000);
+        var exist = textContains("月").findOne(random_time(15000));
         if (exist == null) {
             exit_the_app();
             continue;
@@ -1292,7 +1292,7 @@ if (!finish_list[4] && weekly_answer_scored < 4) {
         sleep(random_time(delay_time * 2));
         if (text("未作答").exists()) {
             // log("点击:" + "未作答");
-            text("未作答").findOne().parent().click();
+            text("未作答").findOne(random_time()).parent().click();
             if (!do_periodic_answer(5)) {
                 exit_the_app();
                 continue;
@@ -1304,7 +1304,7 @@ if (!finish_list[4] && weekly_answer_scored < 4) {
             sleep(random_time(delay_time));
         }
         // log("等待:" + "android.view.View");
-        var exist = className("android.view.View").clickable(true).depth(23).findOne(15000);
+        var exist = className("android.view.View").clickable(true).depth(23).findOne(random_time(15000));
         if (exist == null) {
             exit_the_app();
             continue;
@@ -1341,7 +1341,7 @@ if (!finish_list[5] && special_answer_scored < 8) {
         entry_model(9);
         // 等待列表加载
         log("等待:" + "android.view.View");
-        var exist = className("android.view.View").clickable(true).depth(23).findOne(15000);
+        var exist = className("android.view.View").clickable(true).depth(23).findOne(random_time(15000));
         if (exist == null) {
             exit_the_app();
             continue;
@@ -1380,7 +1380,7 @@ if (!finish_list[5] && special_answer_scored < 8) {
         sleep(random_time(delay_time * 2));
         if (text("开始答题").exists()) {
             // log("点击:" + "开始答题");
-            text("开始答题").findOne().click();
+            text("开始答题").findOne(random_time()).click();
             if (!do_periodic_answer(10)) {
                 exit_the_app();
                 continue;
@@ -1402,7 +1402,7 @@ if (!finish_list[5] && special_answer_scored < 8) {
             // 点击退出按钮
             sleep(random_time(delay_time));
             // log("等待:" + "android.view.View");
-            var exist = className("android.view.View").clickable(true).depth(23).findOne(15000);
+            var exist = className("android.view.View").clickable(true).depth(23).findOne(random_time(15000));
             if (exist == null) {
                 exit_the_app();
                 continue;
@@ -1414,7 +1414,7 @@ if (!finish_list[5] && special_answer_scored < 8) {
             // 点击完成
             sleep(random_time(delay_time));
             //log("等待:" + "完成");
-            var exist = text("完成").findOne(15000);
+            var exist = text("完成").findOne(random_time(15000));
             if (exist == null) {
                 exit_the_app();
                 continue;
@@ -1424,7 +1424,7 @@ if (!finish_list[5] && special_answer_scored < 8) {
             // 点击退出
             sleep(random_time(delay_time));
             // log("等待:" + "android.view.View");
-            var exist = className("android.view.View").clickable(true).depth(20).findOne(15000);
+            var exist = className("android.view.View").clickable(true).depth(20).findOne(random_time(15000));
             if (exist == null) {
                 exit_the_app();
                 continue;
@@ -1433,7 +1433,7 @@ if (!finish_list[5] && special_answer_scored < 8) {
 
             sleep(random_time(delay_time));
             // log("等待:" + "android.view.View");
-            var exist = className("android.view.View").clickable(true).depth(23).findOne(15000);
+            var exist = className("android.view.View").clickable(true).depth(23).findOne(random_time(15000));
             if (exist == null) {
                 exit_the_app();
                 continue;
@@ -1462,7 +1462,7 @@ if (!finish_list[6]) {
         entry_model(10);
         // 加载页面
         // log("等待:" + "android.view.View");
-        var exist = className("android.view.View").clickable(true).depth(22).findOne(15000);
+        var exist = className("android.view.View").clickable(true).depth(22).findOne(random_time(15000));
         if (exist == null) {
             exit_the_app();
             continue loop;
@@ -1491,7 +1491,7 @@ if (!finish_list[6]) {
                 }
                 // 题目
                 log("等待:" + "android.view.View");
-                var exist = className("android.view.View").depth(25).findOne(15000);
+                var exist = className("android.view.View").depth(25).findOne(random_time(15000));
                 if (exist == null) {
                     exit_the_app();
                     continue loop;
@@ -1503,7 +1503,7 @@ if (!finish_list[6]) {
                 var options_text = [];
                 // 等待选项加载
                 // log("等待:" + "android.widget.RadioButton");
-                className("android.widget.RadioButton").depth(28).clickable(true).findOne(15000);
+                className("android.widget.RadioButton").depth(28).clickable(true).findOne(random_time(15000));
                 // 获取所有选项控件，以RadioButton对象为基准，根据UI控件树相对位置寻找选项文字内容
                 var options = className("android.widget.RadioButton").depth(28).find();
                 // 选项文本
@@ -1521,7 +1521,7 @@ if (!finish_list[6]) {
         do {
             sleep(random_time(delay_time * 2.5));
             // log("点击:" + "android.widget.RadioButton");
-            var exist = className("android.widget.RadioButton").depth(28).findOne(15000);
+            var exist = className("android.widget.RadioButton").depth(28).findOne(random_time(15000));
             if (exist == null) {
                 exit_the_app();
                 continue loop;
@@ -1544,9 +1544,9 @@ function do_contest() {
     while (!text("继续挑战").exists()) {
         // 等待下一题题目加载
         // log("等待:" + "android.view.View");
-        className("android.view.View").depth(28).findOne(8000);
-        var pos = className("android.view.View").depth(28).findOne(8000).bounds();
-        if (className("android.view.View").text("        ").exists()) pos = className("android.view.View").text("        ").findOne(8000).bounds();
+        className("android.view.View").depth(28).findOne(random_time(8000));
+        var pos = className("android.view.View").depth(28).findOne(random_time(8000)).bounds();
+        if (className("android.view.View").text("        ").exists()) pos = className("android.view.View").text("        ").findOne(random_time(8000)).bounds();
         do {
             var point = findColor(captureScreen(), "#1B1F25", {
                 region: [pos.left, pos.top, pos.width(), pos.height()],
@@ -1555,7 +1555,7 @@ function do_contest() {
         } while (!point);
         // 等待选项加载
         // log("等待:" + "android.widget.RadioButton");
-        className("android.widget.RadioButton").depth(32).findOne(5000);
+        className("android.widget.RadioButton").depth(32).findOne(random_time(5000));
         var img = images.inRange(captureScreen(), "#000000", "#444444");
         img = images.clip(img, pos.left, pos.top, pos.width(), device.height - pos.top);
         if (whether_improve_accuracy == "yes") {
@@ -1578,7 +1578,7 @@ function do_contest() {
         log("选项: " + options_text);
         if (question) do_contest_answer(32, question, options_text);
         else {
-            var exist = className("android.widget.RadioButton").depth(32).findOne(5000);
+            var exist = className("android.widget.RadioButton").depth(32).findOne(random_time(5000));
             if (exist != null) {
                 exist.click();
             }
@@ -1652,14 +1652,14 @@ if (!finish_list[8] && two_players_scored < 1) {
         entry_model(12);
         // 点击随机匹配
         // log("等待:" + "随机匹配");
-        text("随机匹配").findOne(15000);
+        text("随机匹配").findOne(random_time(15000));
         sleep(random_time(delay_time * 2));
         try {
             // log("点击:" + "android.view.View");
             className("android.view.View").clickable(true).depth(24).findOnce(1).click();
         } catch (error) {
             // log("点击:" + "");
-            var exist = className("android.view.View").text("").findOne(15000);
+            var exist = className("android.view.View").text("").findOne(random_time(15000));
             if (exist == null) {
                 exit_the_app();
                 continue loop;
@@ -1775,7 +1775,7 @@ while (!finish_list[9] && whether_complete_subscription == "yes") {
 
         if (num_subscribe < 2) {
             log("点击:" + "地方平台\nTab 2 of 2");
-            desc("地方平台\nTab 2 of 2").findOne().click();
+            desc("地方平台\nTab 2 of 2").findOne(random_time()).click();
             sleep(random_time(delay_time));
             for (var i = subscription_local_platform_startup; i < 5; i++) {
                 log("点击:" + "android.view.View");
@@ -1916,13 +1916,13 @@ if (sct_token || pushplus_token) {
     log("执行完毕，正在生成推送内容");
     back_track(2);
     // 获取今日得分
-    var score = textStartsWith("今日已累积").findOne().text();
+    var score = textStartsWith("今日已累积").findOne(random_time()).text();
     score = score.match(/\d+/);
     cap_img = captureScreen();
     sleep(random_time(delay_time));
     back();
     // 获取账号名
-    var account = id("my_display_name").findOne().text();
+    var account = id("my_display_name").findOne(random_time()).text();
 
     // 推送消息
     push_weixin_message(account + ",您的今日得分" + score + "分。");
@@ -1966,10 +1966,10 @@ function kill_app(packageName) {
     }
     app.openAppSetting(name);
     text(app.getAppName(name)).waitFor();
-    let is_sure = textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne();
+    let is_sure = textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne(random_time());
     if (is_sure.enabled()) {
-        textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne().click();
-        textMatches(/(.*确.*|.*定.*)/).findOne().click();
+        textMatches(/(.*停.*|.*结.*|.*行.*)/).findOne(random_time()).click();
+        textMatches(/(.*确.*|.*定.*)/).findOne(random_time()).click();
         log(app.getAppName(name) + "应用已被关闭");
         sleep(1000);
         back();
