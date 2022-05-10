@@ -787,7 +787,10 @@ function do_contest_answer(depth_click_option, question, options_text) {
         } else {
             // 没找到答案，点击第一个
             log("点击:" + "android.widget.RadioButton");
-            className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(random_time(5000)).click();
+            answer_button = className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(random_time(5000));
+            if (answer_button != null) {
+                answer_button.click();
+            }
         }
     } else {
         log("答案: " + answer);
