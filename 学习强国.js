@@ -1475,4 +1475,5 @@ device.cancelKeepingAwake();
 //震动半秒
 device.vibrate(500);
 toast('脚本运行完成');
+sleep(random_time(delay_time));
 exit();
