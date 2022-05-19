@@ -101,7 +101,7 @@ if (!storage.contains('answer_question_map1')) {
   // 如果资源过期换成别的云盘
   if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
     // 使用腾讯云
-    var answer_question_bank = http.get('https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json')
+    answer_question_bank = http.get('https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json')
   }
   answer_question_bank = answer_question_bank.body.string();
   answer_question_bank = JSON.parse(answer_question_bank);
@@ -181,9 +181,10 @@ function handling_access_exceptions() {
 处理访问异常，滑动验证
 */
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
+var id_handling_access_exceptions
 var thread_handling_access_exceptions = threads.start(function () {
   // 每2秒就处理访问异常
-  setInterval(handling_access_exceptions, 2000);
+  id_handling_access_exceptions = setInterval(handling_access_exceptions, 2000);
 });
 
 /** 
@@ -591,7 +592,9 @@ if (two_player_battle == 'yes') {
   my_click_clickable("退出");
 }
 
+// 取消访问异常处理循环
+clearInterval(id_handling_access_exceptions);
+
 //震动半秒
 device.vibrate(500);
 toast('脚本运行完成');
-exit();
