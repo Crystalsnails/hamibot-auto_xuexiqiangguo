@@ -1202,7 +1202,7 @@ function handling_access_exceptions() {
  * 答题
  */
 function do_contest() {
-    while (!text("开始").exists()) handling_access_exceptions();;
+    while (!text("开始").exists()) handling_access_exceptions();
     while (!text("继续挑战").exists()) {
         // 等待下一题题目加载
         handling_access_exceptions();
