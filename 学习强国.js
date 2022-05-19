@@ -312,6 +312,31 @@ className("android.view.ViewGroup").depth(15).waitFor();
 sleep(random_time(delay_time));
 className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
 
+/**
+ * 处理访问异常
+ */
+function handling_access_exceptions() {
+    if (text("访问异常").exists()) {
+        // 滑动按钮位置
+        var pos = className('android.view.View').depth(10).clickable(true).findOnce(1).bounds();
+        // 滑动框右边界
+        var right_border = className('android.view.View').depth(9).clickable(false).findOnce(0).bounds().right;
+        // 位置取随机值
+        var randomX = random(pos.left, pos.right);
+        var randomY = random(pos.top, pos.bottom);
+        swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
+    }
+}
+
+/* 
+处理访问异常，滑动验证
+*/
+// 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
+var thread_handling_access_exceptions = threads.start(function () {
+    // 每2秒就处理访问异常
+    var id_handling_access_exceptions = setInterval(handling_access_exceptions, 2000);
+});
+
 /*
  **********本地频道*********
  */
@@ -1183,22 +1208,6 @@ if (!finish_list[6]) {
  */
 
 /**
- * 处理访问异常
- */
-function handling_access_exceptions() {
-    if (text("访问异常").exists()) {
-        // 滑动按钮位置
-        var pos = className('android.view.View').depth(10).clickable(true).findOnce(1).bounds();
-        // 滑动框右边界
-        var right_border = className('android.view.View').depth(9).clickable(false).findOnce(0).bounds().right;
-        // 位置取随机值
-        var randomX = random(pos.left, pos.right);
-        var randomY = random(pos.top, pos.bottom);
-        swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-    }
-}
-
-/**
  * 答题
  */
 function do_contest() {
@@ -1244,15 +1253,6 @@ function do_contest() {
         while (!textMatches(/第\d题/).exists() && !text("继续挑战").exists() && !text("开始").exists());
     }
 }
-
-/* 
-处理访问异常，滑动验证
-*/
-// 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
-var thread_handling_access_exceptions = threads.start(function () {
-    // 每2秒就处理访问异常
-    var id_handling_access_exceptions = setInterval(handling_access_exceptions, 2000);
-});
 
 /*
  **********四人赛*********
@@ -1312,9 +1312,6 @@ if (!finish_list[8] && two_players_scored < 1) {
     back();
     my_click_clickable("退出");
 }
-
-// 取消访问异常处理循环
-clearInterval(id_handling_access_exceptions);
 
 /*
 **********订阅*********
@@ -1478,3 +1475,4 @@ device.cancelKeepingAwake();
 //震动半秒
 device.vibrate(500);
 toast('脚本运行完成');
+exit();
