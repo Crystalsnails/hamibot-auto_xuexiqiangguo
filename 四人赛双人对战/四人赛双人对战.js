@@ -459,6 +459,16 @@ function handling_access_exceptions() {
   }
 }
 
+/* 
+处理访问异常，滑动验证
+*/
+var id_handling_access_exceptions;
+// 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
+var thread_handling_access_exceptions = threads.start(function () {
+  // 每2秒就处理访问异常
+  id_handling_access_exceptions = setInterval(handling_access_exceptions, 2000);
+});
+
 /**
 * 答题
 */
@@ -522,16 +532,6 @@ if (!className('android.view.View').depth(21).text('学习积分').exists()) {
   my_click_clickable('我的');
   my_click_clickable('学习积分');
 }
-
-/* 
-处理访问异常，滑动验证
-*/
-var id_handling_access_exceptions;
-// 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
-var thread_handling_access_exceptions = threads.start(function () {
-  // 每2秒就处理访问异常
-  id_handling_access_exceptions = setInterval(handling_access_exceptions, 2000);
-});
 
 /*
 **********四人赛*********
