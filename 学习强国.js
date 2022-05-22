@@ -985,7 +985,7 @@ function do_periodic_answer(number) {
 function handling_access_exceptions() {
     if (text("访问异常").exists()) {
         if(text("刷新").exists()) {
-            click('刷新',1)
+            click('刷新', 1)
             text("刷新").click();
             className("android.view.View").text("刷新").findOne().click();
         }
@@ -1167,8 +1167,11 @@ if (!finish_list[6]) {
             if (text("分享就能复活").exists()) {
                 num -= 2;
                 click("分享就能复活");
-                handling_access_exceptions();
-                sleep(random_time(delay_time / 2));
+                sleep(random_time(delay_time * 3));
+                if (text("访问异常").exists()) {
+                    handling_access_exceptions();
+                    sleep(random_time(delay_time * 7));
+                }
                 back();
                 // 等待题目加载
                 sleep(random_time(delay_time * 3));
@@ -1207,8 +1210,11 @@ if (!finish_list[6]) {
         sleep(random_time(delay_time * 2.5));
     } while (!text("再来一局").exists() && !text("结束本局").exists());
     click("结束本局");
-    handling_access_exceptions();
-    sleep(random_time(delay_time));
+    sleep(random_time(delay_time * 3));    
+    if (text("访问异常").exists()) {
+        handling_access_exceptions();
+        sleep(random_time(delay_time * 7));
+    }
     back();
 }
 
