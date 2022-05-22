@@ -37,16 +37,22 @@ function my_click_clickable(target) {
  * 处理访问异常
  */
 function handling_access_exceptions() {
-  if (text("访问异常").exists()) {
-    // 滑动按钮位置
-    var pos = className('android.view.View').depth(10).clickable(true).findOnce(1).bounds();
-    // 滑动框右边界
-    var right_border = className('android.view.View').depth(9).clickable(false).findOnce(0).bounds().right;
-    // 位置取随机值
-    var randomX = random(pos.left, pos.right);
-    var randomY = random(pos.top, pos.bottom);
-    swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-  }
+    if (text("访问异常").exists()) {
+        if(text("刷新").exists()) {
+            click('刷新',1)
+            text("刷新").click();
+            className("android.view.View").text("刷新").findOne().click();
+        }
+        // 滑动按钮位置
+        var pos = className('android.view.View').depth(10).clickable(true).findOnce(1).bounds();
+        // 滑动框右边界
+        var right_border = className('android.view.View').depth(9).clickable(false).findOnce(0).bounds().right;
+        // 位置取随机值
+        var randomX = random(pos.left, pos.right);
+        var randomY = random(pos.top, pos.bottom);
+        swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
+        longClick(randomX + right_border, randomY);
+    }
 }
 
 /* 
@@ -55,8 +61,8 @@ function handling_access_exceptions() {
 var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
-  // 每2秒就处理访问异常
-  id_handling_access_exceptions = setInterval(handling_access_exceptions, 2000);
+    // 每2秒就处理访问异常
+    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2000);
 });
 
 function do_it() {
