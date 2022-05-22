@@ -984,6 +984,11 @@ function do_periodic_answer(number) {
  */
 function handling_access_exceptions() {
     if (text("访问异常").exists()) {
+        if(text("刷新").exists()) {
+            click('刷新',1)
+            text("刷新").click();
+            className("android.view.View").text("刷新").findOne().click();
+        }
         // 滑动按钮位置
         var pos = className('android.view.View').depth(10).clickable(true).findOnce(1).bounds();
         // 滑动框右边界
@@ -992,6 +997,7 @@ function handling_access_exceptions() {
         var randomX = random(pos.left, pos.right);
         var randomY = random(pos.top, pos.bottom);
         swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
+        longClick(randomX + right_border, randomY);
     }
 }
 
