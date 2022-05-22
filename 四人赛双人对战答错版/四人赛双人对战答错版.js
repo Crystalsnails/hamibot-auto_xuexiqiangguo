@@ -148,7 +148,7 @@ if (two_player_battle == 'yes') {
 }
 
 // 取消访问异常处理循环
-clearInterval(id_handling_access_exceptions);
+if (id_handling_access_exceptions) clearInterval(id_handling_access_exceptions);
 
 //震动半秒
 device.vibrate(500);
