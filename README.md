@@ -17,6 +17,10 @@ This fork is intended to make the automation of the original project stablizer.
 * Fix bugs
 * Killed all `findOne()` and `waitFor()` that may lead to a choke. 
 * Restructed the original project so if unexpected circumstance happend(bad react of the destinated app/bad network),the script restart itself to adjust.
+### ToDo
+* Bypass the robot test
+* kill some `click()`functions that may lead to a stuck
+* Support the newest version of the app 
 ### My destination
 * Just plug your backup phone to a charger and wifi, then throw it to a corner and forget about it.Dont worry about crushes.
 ## How to use?
