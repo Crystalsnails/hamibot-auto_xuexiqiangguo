@@ -1,3 +1,6 @@
+**Auto自用脚本参考**
+https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
+
 # 免责声明
 **本脚本为免费使用，本脚本只供个人学习使用，不得盈利传播，不得用于违法用途，否则造成的一切后果自负！**
 
