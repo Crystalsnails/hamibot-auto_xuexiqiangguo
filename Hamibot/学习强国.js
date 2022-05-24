@@ -140,7 +140,7 @@ if (!storage.contains("answer_question_map1")) {
     // 使用腾讯云云盘
     if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
         // 使用腾讯云
-    var answer_question_bank = http.get("https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json");
+        var answer_question_bank = http.get("https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json");
     }
     answer_question_bank = answer_question_bank.body.string();
     answer_question_bank = JSON.parse(answer_question_bank);
@@ -397,13 +397,13 @@ function get_finish_list() {
                 completed_read_count = parseInt(model.child(2).text().match(/\d+/)) / 2;
             } else if (i == 5) {
                 completed_watch_count = parseInt(model.child(2).text().match(/\d+/));
-            } else if (i == 8) {
+            } else if (i == 16) {
                 weekly_answer_scored = parseInt(model.child(2).text().match(/\d+/));
-            } else if (i == 9) {
+            } else if (i == 8) {
                 special_answer_scored = parseInt(model.child(2).text().match(/\d+/));
-            } else if (i == 11) {
+            } else if (i == 10) {
                 four_players_scored = parseInt(model.child(2).text().match(/\d+/));
-            } else if (i == 12) {
+            } else if (i == 11) {
                 two_players_scored = parseInt(model.child(2).text().match(/\d+/));
             }
             finish_list.push(model.child(3).text() == "已完成");
@@ -429,7 +429,7 @@ var finish_list = get_finish_list();
  **********本地频道*********
  */
 
-if (!finish_list[12]) {
+if (!finish_list[10]) {
     log("去本地频道");
     var attempt = 0;
     while (true) {
@@ -1283,7 +1283,7 @@ if (all_weekly_answers_completed == "no") {
     all_weekly_answers_completed = storage.get("all_weekly_answers_completed_storage");
 }
 
-if (!finish_list[4] && weekly_answer_scored < 4) {
+if (!finish_list[12] && weekly_answer_scored < 4) {
     var attempt = 0;
     while (true) {
         attempt++;
@@ -1349,7 +1349,7 @@ if (all_special_answer_completed == "no") {
     all_special_answer_completed = storage.get("all_special_answer_completed_storage");
 }
 
-if (!finish_list[5] && special_answer_scored < 8) {
+if (!finish_list[4] && special_answer_scored < 8) {
     var attempt = 0;
     while (true) {
         attempt++;
@@ -1471,7 +1471,7 @@ if (!finish_list[5] && special_answer_scored < 8) {
 /*
  **********挑战答题*********
  */
-if (!finish_list[6]) {
+if (!finish_list[5]) {
     var attempt = 0;
     loop: while (true) {
         attempt++;
@@ -1617,7 +1617,7 @@ function do_contest() {
  **********四人赛*********
  */
 
-if (!finish_list[7] && four_players_scored < 3) {
+if (!finish_list[6] && four_players_scored < 3) {
     var attempt = 0;
     loop: while (true) {
         attempt++;
@@ -1660,7 +1660,7 @@ if (!finish_list[7] && four_players_scored < 3) {
 /*
  **********双人对战*********
  */
-if (!finish_list[8] && two_players_scored < 1) {
+if (!finish_list[7] && two_players_scored < 1) {
     var attempt = 0;
     loop: while (true) {
         attempt++;
@@ -1707,7 +1707,7 @@ if (!finish_list[8] && two_players_scored < 1) {
  */
 
 var attempt = 0;
-while (!finish_list[9] && whether_complete_subscription == "yes") {
+while (!finish_list[8] && whether_complete_subscription == "yes") {
     attempt++;
     if (attempt > 7) {
         log("警告，订阅模块多次执行后仍未拿满分，这有可能是因为你有过多的重复订阅，也有可能是因为脚本或app发生错误，请检查脚本或app是否正常。");
@@ -1846,6 +1846,7 @@ while (!finish_list[9] && whether_complete_subscription == "yes") {
  */
 
 // 分享两次
+/*
 if (!finish_list[10]) {
     var attempt = 0;
     loop: while (true) {
@@ -1884,8 +1885,9 @@ if (!finish_list[10]) {
         break;
     }
 }
+*/
 
-if (!finish_list[11] && whether_complete_speech == "yes") {
+if (!finish_list[9] && whether_complete_speech == "yes") {
     var attempt = 0;
     loop: while (true) {
         if (attempt > 7) {
