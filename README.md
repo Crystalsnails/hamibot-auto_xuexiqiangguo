@@ -11,7 +11,7 @@ Author [dundunnp](https://github.com/dundunnp)
 * 禁止用于违法用途。
 
 ## Whats the difference?
-This fork is intended to make the automation of the original project stablizer.
+This fork is intended to make the automation of the original project more stable.
 
 ### Features
 * Fix bugs
