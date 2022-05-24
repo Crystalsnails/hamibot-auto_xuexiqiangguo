@@ -1296,7 +1296,7 @@ if (!finish_list[12] && weekly_answer_scored < 4) {
         sleep(random_time(delay_time));
 
         if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track(2);
-        entry_model(8);
+        entry_model(16);
         // 等待列表加载
         log("等待:" + "月");
         var exist = textContains("月").findOne(random_time(15000));
@@ -1362,7 +1362,7 @@ if (!finish_list[4] && special_answer_scored < 8) {
         sleep(random_time(delay_time));
 
         if (!className("android.view.View").packageName("cn.xuexi.android").depth(21).text("学习积分").exists()) back_track(2);
-        entry_model(9);
+        entry_model(8);
         // 等待列表加载
         log("等待:" + "android.view.View");
         var exist = className("android.view.View").clickable(true).depth(23).findOne(random_time(15000));
@@ -1483,7 +1483,7 @@ if (!finish_list[5]) {
         log("挑战答题");
         sleep(random_time(delay_time));
         if (!className("android.view.View").packageName("cn.xuexi.android").depth(21).text("学习积分").exists()) back_track(2);
-        entry_model(10);
+        entry_model(9);
         // 加载页面
         // log("等待:" + "android.view.View");
         var exist = className("android.view.View").clickable(true).depth(22).findOne(random_time(15000));
@@ -1631,7 +1631,7 @@ if (!finish_list[6] && four_players_scored < 3) {
 
         if (!className("android.view.View").packageName("cn.xuexi.android").depth(21).text("学习积分").exists()) back_track(2);
         sleep(random_time(delay_time));
-        entry_model(11);
+        entry_model(10);
 
         for (var i = 0; i < 2; i++) {
             sleep(random_time(delay_time));
@@ -1673,7 +1673,7 @@ if (!finish_list[7] && two_players_scored < 1) {
         sleep(random_time(delay_time));
         if (!className("android.view.View").packageName("cn.xuexi.android").depth(21).text("学习积分").exists()) back_track(2);
         sleep(random_time(delay_time));
-        entry_model(12);
+        entry_model(11);
         // 点击随机匹配
         // log("等待:" + "随机匹配");
         text("随机匹配").findOne(random_time(15000));
@@ -1717,7 +1717,7 @@ while (!finish_list[8] && whether_complete_subscription == "yes") {
     log("订阅");
     sleep(random_time(delay_time));
     if (!className("android.view.View").packageName("cn.xuexi.android").depth(21).text("学习积分").exists()) back_track(2);
-    entry_model(13);
+    entry_model(12);
     // 等待加载
     sleep(random_time(delay_time * 3));
 
@@ -1901,7 +1901,7 @@ if (!finish_list[9] && whether_complete_speech == "yes") {
         sleep(random_time(delay_time));
         if (!text("欢迎发表你的观点").exists()) {
             if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track(2);
-            entry_model(15);
+            entry_model(13);
             // 随意找一篇文章
             sleep(random_time(delay_time));
             if (!my_click_clickable("推荐")) {
