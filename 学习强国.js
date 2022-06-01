@@ -1041,7 +1041,7 @@ if (!finish_list[3]) {
 **********每周答题*********
 */
 var restart_flag = 1;
-// 是否重做过，如果重做，也即错了，则换用精度更高的华为ocr
+// 是否重做过，如果重做，也即错了，则换用精度更高的百度ocr
 var if_restart_flag = false;
 // 保存本地变量，如果已经做完之前的所有题目则跳过
 if (!storage.contains('all_weekly_answers_completed_storage')) {
@@ -1126,15 +1126,21 @@ if (!finish_list[4] && special_answer_scored < 8) {
     if (text('开始答题').exists() || text('您已经看到了我的底线').exists()) {
         text('开始答题').findOne().click();
         is_answer_special_flag = true;
-        do_periodic_answer(10);
+        // 总题数
+        var num_string = className("android.view.View").depth(24).findOnce(1).text();
+        var total_question_num = parseInt(num_string.slice(num_string.indexOf('/') + 1));
+        do_periodic_answer(total_question_num);
     } else if (text('继续答题').exists()) {
         text('继续答题').findOnce(special_i).click();
         // 等待题目加载
         sleep(random_time(delay_time));
-        // 已完成题数
-        var completed_num = parseInt(className('android.view.View').depth(24).findOnce(1).text());
         is_answer_special_flag = true;
-        do_periodic_answer(10 - completed_num + 1);
+        var num_string = className("android.view.View").depth(24).findOnce(1).text();
+        // 已完成题数
+        var completed_question_num = parseInt(num_string);
+        // 总题数
+        var total_question_num = parseInt(num_string.slice(num_string.indexOf('/') + 1));
+        do_periodic_answer(total_question_num - completed_question_num + 1);
     } else {
         sleep(random_time(delay_time));
         className('android.view.View').clickable(true).depth(23).waitFor();
@@ -1470,11 +1476,11 @@ if (sct_token || pushplus_token) {
 
 sleep(random_time(delay_time));
 back();
-
+sleep(random_time(delay_time));
+// 取消屏幕唤醒
 device.cancelKeepingAwake();
-
-//震动半秒
-device.vibrate(500);
 // 恢复媒体音量
 device.setMusicVolume(volume);
+// 震动半秒
+device.vibrate(500);
 toast('脚本运行完成');
