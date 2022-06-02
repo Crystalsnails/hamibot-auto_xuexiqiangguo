@@ -954,9 +954,13 @@ function do_periodic_answer(number) {
             }
 
             sleep(random_time(delay_time * 2));
-            // 对于专项答题没有确定
-            if (text('下一题').exists()) {
-                click('下一题');
+
+            if (text("下一题").exists()) {
+                // 对于专项答题没有确定
+                click("下一题");
+            } else if (text("完成").exists()) {
+                // 如果专项答题完成点击完成
+                click("完成");
             } else {
                 // 不是专项答题时
                 click('确定');
@@ -1127,6 +1131,7 @@ if (!finish_list[4] && special_answer_scored < 8) {
         text('开始答题').findOne().click();
         is_answer_special_flag = true;
         // 总题数
+        className("android.view.View").depth(24).waitFor();
         var num_string = className("android.view.View").depth(24).findOnce(1).text();
         var total_question_num = parseInt(num_string.slice(num_string.indexOf('/') + 1));
         do_periodic_answer(total_question_num);
@@ -1135,6 +1140,7 @@ if (!finish_list[4] && special_answer_scored < 8) {
         // 等待题目加载
         sleep(random_time(delay_time));
         is_answer_special_flag = true;
+        className("android.view.View").depth(24).waitFor();
         var num_string = className("android.view.View").depth(24).findOnce(1).text();
         // 已完成题数
         var completed_question_num = parseInt(num_string);
