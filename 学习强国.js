@@ -115,7 +115,7 @@ if (!storage.contains("answer_question_map1")) {
     // 如果资源过期或无法访问则换成别的云盘
     if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
         // 使用腾讯云
-        answer_question_bank = http.get("https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json");
+        var answer_question_bank = http.get("https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json");
     }
     answer_question_bank = answer_question_bank.body.string();
     answer_question_bank = JSON.parse(answer_question_bank);
@@ -995,21 +995,14 @@ function handling_access_exceptions() {
         // 滑动框右边界
         className('android.view.View').depth(9).clickable(false).waitFor();
         var right_border = className('android.view.View').depth(9).clickable(false).findOnce(0).bounds().right;
-        while (text("访问异常").exists() || text("刷新").exists()) {
-            // 位置取随机值
-            var randomX = random(pos.left, pos.right);
-            var randomY = random(pos.top, pos.bottom);
-            swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-            press(randomX + right_border, randomY, 600);
-            // 需要开启新线程获取控件
-            threads.start(function () {
-                if (text("刷新").exists()) {
-                    click('刷新');
-                }
-            });
+        // 位置取随机值
+        var randomX = random(pos.left, pos.right);
+        var randomY = random(pos.top, pos.bottom);
+        swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
+        longClick(randomX + right_border, randomY);
+        if (textContains("刷新").exists()) {
+            click('刷新');
         }
-        // 执行脚本只需通过一次验证即可，通过后将定时器关闭
-        threads.shutDownAll();
     }
     if (textContains("网络开小差").exists()) {
         click('确定');
@@ -1355,12 +1348,11 @@ if (!finish_list[7] && two_players_scored < 1) {
 if (id_handling_access_exceptions) clearInterval(id_handling_access_exceptions);
 
 /*
-**********订阅*********
-*/
-
+ **********订阅*********
+ */
 if (!finish_list[8] && whether_complete_subscription == "yes") {
     sleep(random_time(delay_time));
-    if (!className("android.view.View").packageName("cn.xuexi.android").depth(21).text("学习积分").exists()) back_track(2);
+    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
     entry_model(12);
     // 等待加载
     sleep(random_time(delay_time * 3));
@@ -1381,35 +1373,25 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
         }
         var subscription_strong_country_startup = storage.get("subscription_strong_country_startup");
 
-        loop1: for (var i = subscription_strong_country_startup; i < 10; i++) {
+        for (var i = subscription_strong_country_startup; i < 10; i++) {
             className("android.view.View").clickable(true).depth(15).findOnce(i).click();
             sleep(random_time(delay_time));
 
-            loop2: while (num_subscribe < 2) {
-                var last_swipe_flag = false;
+            while (num_subscribe < 2) {
                 // 点击红色的订阅按钮
-                loop3: do {
+                do {
                     var subscribe_pos = findColor(captureScreen(), "#E42417", {
                         region: [subscribe_button_pos.left, subscribe_button_pos.top, subscribe_button_pos.width(), device.height - subscribe_button_pos.top],
                         threshold: 10,
                     });
                     if (subscribe_pos) {
                         sleep(random_time(delay_time * 2));
-                        // 解决极端情况下，当订阅按钮的顶端在屏幕最底端被检测到，然而由于虚拟按键或小白条等阻挡了点击按钮中心点而无法使得按钮被点击到，从而使得脚本无限循环的问题
-                        if (subscribe_pos.y > device.height / 2 && !last_swipe_flag) {
-                            swipe(device.width / 2, device.height - subscribe_button_pos.top, device.width / 2, device.height - subscribe_button_pos.top - subscribe_button_pos.height() * 3, random_time(0));
-                            sleep(random_time(delay_time));
-                            last_swipe_flag = true;
-                            continue loop3;
-                        }
                         click(subscribe_pos.x + subscribe_button_pos.width() / 2, subscribe_pos.y + subscribe_button_pos.height() / 2);
-                        sleep(random_time(delay_time));
-                        last_swipe_flag = false;
                         num_subscribe++;
                         sleep(random_time(delay_time));
                     }
                 } while (subscribe_pos && num_subscribe < 2);
-                if (num_subscribe >= 2) break loop2;
+                if (num_subscribe >= 2) break;
                 // 通过对比 检测到的已订阅控件 的位置来判断是否滑到底部
                 // 滑动前的已订阅控件的位置
                 var complete_subscribe_pos1 = findColor(captureScreen(), "#B2B3B7", {
@@ -1429,13 +1411,57 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
             }
             // 更新本地存储值
             if (i > subscription_strong_country_startup) storage.put("subscription_strong_country_startup", i);
-            if (num_subscribe >= 2) break loop1;
+            if (num_subscribe >= 2) break;
             sleep(random_time(delay_time * 2));
         }
-        back();
+
+        // 地方平台
+        // 创建本地存储，记忆每次遍历起始点
+        if (!storage.contains("subscription_local_platform_startup")) {
+            storage.put("subscription_local_platform_startup", 0);
+        }
+        var subscription_local_platform_startup = storage.get("subscription_local_platform_startup");
+
+        if (num_subscribe < 2) {
+            desc("地方平台\nTab 2 of 2").findOne().click();
+            sleep(random_time(delay_time));
+            for (var i = subscription_local_platform_startup; i < 5; i++) {
+                className("android.view.View").clickable(true).depth(15).findOnce(i).click();
+                sleep(random_time(delay_time));
+                // 刷新次数
+                var num_refresh = 0;
+                // 定义最大刷新次数
+                if (i == 2) var max_num_refresh = 20;
+                else var max_num_refresh = 2;
+                while (num_subscribe < 2 && num_refresh < max_num_refresh) {
+                    do {
+                        var subscribe_pos = findColor(captureScreen(), "#E42417", {
+                            region: [subscribe_button_pos.left, subscribe_button_pos.top, subscribe_button_pos.width(), device.height - subscribe_button_pos.top],
+                            threshold: 10,
+                        });
+                        if (subscribe_pos) {
+                            sleep(random_time(delay_time * 2));
+                            click(subscribe_pos.x + subscribe_button_pos.width() / 2, subscribe_pos.y + subscribe_button_pos.height() / 2);
+                            num_subscribe++;
+                            sleep(random_time(delay_time));
+                        }
+                    } while (subscribe_pos && num_subscribe < 2);
+                    swipe(device.width / 2, device.height - subscribe_button_pos.top, device.width / 2, subscribe_button_pos.top, random_time(0));
+                    num_refresh++;
+                    sleep(random_time(delay_time / 2));
+                }
+                if (i > subscription_local_platform_startup) storage.put("subscription_local_platform_startup", i);
+                if (num_subscribe >= 2) break;
+                sleep(random_time(delay_time * 2));
+            }
+        }
+
+        // 退回
+        className("android.widget.Button").clickable(true).depth(11).findOne().click();
     }
     // 在订阅模块中若未拿满分，则重试
-    back_track(2);
+    back_track_flag = 2;
+    back_track();
     finish_list = get_finish_list();
 }
 
@@ -1490,3 +1516,4 @@ device.setMusicVolume(volume);
 // 震动半秒
 device.vibrate(500);
 toast('脚本运行完成');
+exit();
