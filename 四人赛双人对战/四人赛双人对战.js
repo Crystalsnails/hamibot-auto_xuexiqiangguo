@@ -128,7 +128,6 @@ if (!storage.contains('answer_question_map2')) {
 
 var answer_question_map = storage.get('answer_question_map2');
 
-
 /**
  * 模拟点击不可以点击元素
  * @param {UiObject / string} target 控件或者是控件文本
