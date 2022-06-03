@@ -26,6 +26,13 @@ var storage = storages.create("data");
 // 更新题库为answer_question_map2
 storage.remove("answer_question_map");
 storage.remove("answer_question_map1");
+var date = new Date();
+// 每周五定时更新题库，周日为0
+var update_day = date.getDay();
+if (update_day == 5) storage.remove('answer_question_map2');
+// 或设定每月某日定时更新
+//var update_day = date.getDate();
+//if (update_day == 3) storage.remove('answer_question_map2');
 
 delay_time = Number(delay_time) * 1000;
 
