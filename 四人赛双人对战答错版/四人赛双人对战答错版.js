@@ -48,7 +48,7 @@ function handling_access_exceptions() {
         var randomX = random(pos.left, pos.right);
         var randomY = random(pos.top, pos.bottom);
         swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-        press(randomX + right_border, randomY, 600);
+        press(randomX + right_border, randomY, 650);
         if (textContains("刷新").exists()) {
             click('刷新');
         }
