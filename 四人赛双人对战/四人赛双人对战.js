@@ -565,7 +565,7 @@ if (four_player_battle == 'yes') {
             sleep(random_time(delay_time));
         }
     }
-    sleep(random_time(delay_time * 3))
+    sleep(random_time(delay_time * 3));
     back();
     sleep(random_time(delay_time));
     back();
