@@ -231,23 +231,20 @@ function do_contest_answer(depth_click_option, question, options_text) {
 
     // 如果本地题库没搜到，则搜网络题库
     if (answer == null) {
-
         var result;
         // 发送http请求获取答案 网站搜题速度 r1 > r2
         try {
             // 此网站只支持十个字符的搜索
             var r1 = http.get('http://www.syiban.com/search/index/init.html?modelid=1&q=' + encodeURI(question.slice(0, 10)));
             result = r1.body.string().match(/答案：.*</);
-        } catch (error) {
-        }
+        } catch (error) { }
         // 如果第一个网站没获取到正确答案，则利用第二个网站
         if (!(result && result[0].charCodeAt(3) > 64 && result[0].charCodeAt(3) < 69)) {
             try {
                 // 此网站只支持六个字符的搜索
                 var r2 = http.get('https://www.souwen123.com/search/select.php?age=' + encodeURI(question.slice(0, 6)));
                 result = r2.body.string().match(/答案：.*</);
-            } catch (error) {
-            }
+            } catch (error) { }
         }
 
         if (result) {
@@ -256,7 +253,9 @@ function do_contest_answer(depth_click_option, question, options_text) {
             select_option(result, depth_click_option, options_text);
         } else {
             // 没找到答案，点击第一个
-            className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOne().click();
+            try {
+                className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
+            } catch (error) { }
         }
     } else {
         select_option(answer, depth_click_option, options_text);
@@ -285,21 +284,18 @@ function getSimilarity(str1, str2) {
 }
 
 /*
-********************调用百度API实现ocr********************
-*/
+ ********************调用百度API实现ocr********************
+ */
 
 /**
-* 获取用户token
-*/
+ * 获取用户token
+ */
 function get_baidu_token() {
-    var res = http.post(
-        'https://aip.baidubce.com/oauth/2.0/token',
-        {
-            grant_type: 'client_credentials',
-            client_id: AK,
-            client_secret: SK
-        }
-    );
+    var res = http.post('https://aip.baidubce.com/oauth/2.0/token', {
+        grant_type: 'client_credentials',
+        client_id: AK,
+        client_secret: SK,
+    });
     return res.body.json()['access_token'];
 }
 
@@ -314,21 +310,17 @@ if (whether_improve_accuracy == 'yes') var token = get_baidu_token();
 function baidu_ocr_api(img) {
     var options_text = [];
     var question = "";
-    var res = http.post(
-        'https://aip.baidubce.com/rest/2.0/ocr/v1/general',
-        {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            access_token: token,
-            image: images.toBase64(img),
-        }
-    );
+    var res = http.post('https://aip.baidubce.com/rest/2.0/ocr/v1/general', {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        access_token: token,
+        image: images.toBase64(img),
+    });
     var res = res.body.json();
     try {
         var words_list = res.words_result;
-    } catch (error) {
-    }
+    } catch (error) { }
     if (words_list) {
         // question是否读取完成的标志位
         var question_flag = false;
@@ -344,9 +336,7 @@ function baidu_ocr_api(img) {
                  * location['left']表示定位位置的长方形左上顶点的水平坐标
                  * location['top']表示定位位置的长方形左上顶点的垂直坐标
                  */
-                if (words_list[0].words.indexOf('.') != -1 && i > 0 &&
-                    Math.abs(words_list[i].location['left'] -
-                        words_list[i - 1].location['left']) > 100) question_flag = true;
+                if (words_list[0].words.indexOf('.') != -1 && i > 0 && Math.abs(words_list[i].location['left'] - words_list[i - 1].location['left']) > 100) question_flag = true;
                 if (!question_flag) question += words_list[i].words;
                 // 如果question已经大于10了也不需要读取了
                 if (question > 10) question_flag = true;
@@ -390,9 +380,7 @@ function extract_ocr_recognize(object) {
                  * 识别到的文字块的区域位置信息，列表形式，
                  * bounds.left表示定位位置的长方形左上顶点的水平坐标
                  */
-                if (words_list[0].text.indexOf('.') != -1 && i > 0 &&
-                    Math.abs(words_list[i].bounds.left -
-                        words_list[i - 1].bounds.left) > 100) question_flag = true;
+                if (words_list[0].text.indexOf('.') != -1 && i > 0 && Math.abs(words_list[i].bounds.left - words_list[i - 1].bounds.left) > 100) question_flag = true;
                 if (!question_flag) question += words_list[i].text;
                 // 如果question已经大于10了也不需要读取了
                 if (question > 10) question_flag = true;
@@ -464,7 +452,7 @@ function handling_access_exceptions() {
         var randomX = random(pos.left, pos.right);
         var randomY = random(pos.top, pos.bottom);
         swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-        press(randomX + right_border, randomY, 800);
+        press(randomX + right_border, randomY, 1000);
         if (textContains("刷新").exists()) {
             click('刷新');
         }
@@ -480,8 +468,8 @@ function handling_access_exceptions() {
 var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
-    // 每2.5秒就处理访问异常
-    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2500);
+    // 每3秒就处理访问异常
+    id_handling_access_exceptions = setInterval(handling_access_exceptions, 3000);
 });
 
 /**
