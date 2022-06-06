@@ -891,7 +891,7 @@ function do_periodic_answer(number) {
                 // options数组：下标为i基数时对应着ABCD，下标为偶数时对应着选项i-1(ABCD)的数值
                 var options = className("android.view.View").depth(26).find();
                 for (var i = 1; i < options.length; i += 2) {
-                    my_click_non_clickable(options[i].text());   
+                    my_click_non_clickable(options[i].text());
                 }
             } else if (className("android.widget.Image").exists() && text('填空题').exists()) {
                 // 如果存在视频题
@@ -1232,7 +1232,7 @@ if (!finish_list[5]) {
  * 答题
  */
 function do_contest() {
-    while (!text("开始").exists()) handling_access_exceptions();;
+    while (!text("开始").exists()) handling_access_exceptions();
     while (!text("继续挑战").exists()) {
         // 等待下一题题目加载
         handling_access_exceptions();
@@ -1289,7 +1289,6 @@ if (!finish_list[6] && four_players_scored < 3) {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
-    log("等待:" + "学习积分");
     className("android.view.View").depth(21).text("学习积分").waitFor();
     entry_model(10);
 
@@ -1307,7 +1306,7 @@ if (!finish_list[6] && four_players_scored < 3) {
             sleep(random_time(delay_time));
         }
     }
-    sleep(random_time(delay_time));
+    sleep(random_time(delay_time * 3))
     back();
     sleep(random_time(delay_time));
     back();
@@ -1321,13 +1320,11 @@ if (!finish_list[7] && two_players_scored < 1) {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
-    log("等待:" + "学习积分");
     className("android.view.View").depth(21).text("学习积分").waitFor();
     entry_model(11);
 
     // 点击随机匹配
     handling_access_exceptions();
-    log("等待:" + "随机匹配");
     text("随机匹配").waitFor();
     sleep(random_time(delay_time * 2));
     try {
