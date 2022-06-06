@@ -903,8 +903,7 @@ function do_periodic_answer(number) {
                 for (var i = 1; i < options.length; i += 2) {
                     my_click_non_clickable(options[i].text());
                 }
-
-            } else if (className("android.widget.Image").exists()) {
+            } else if (className("android.widget.Image").exists() && text('填空题').exists()) {
                 // 如果存在视频题
                 var video_question = className("android.view.View").depth(24).findOnce(2).text();
                 answer = video_answer_question(video_question);
@@ -1004,7 +1003,7 @@ function handling_access_exceptions() {
         var randomX = random(pos.left, pos.right);
         var randomY = random(pos.top, pos.bottom);
         swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-        press(randomX + right_border, randomY, 650);
+        press(randomX + right_border, randomY, 800);
         if (textContains("刷新").exists()) {
             click('刷新');
         }
@@ -1020,8 +1019,8 @@ function handling_access_exceptions() {
 var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
-    // 每2秒就处理访问异常
-    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2000);
+    // 每2.5秒就处理访问异常
+    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2500);
 });
 
 /*
