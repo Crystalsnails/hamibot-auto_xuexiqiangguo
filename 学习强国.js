@@ -1306,7 +1306,7 @@ if (!finish_list[6] && four_players_scored < 3) {
             sleep(random_time(delay_time));
         }
     }
-    sleep(random_time(delay_time * 3))
+    sleep(random_time(delay_time * 3));
     back();
     sleep(random_time(delay_time));
     back();
