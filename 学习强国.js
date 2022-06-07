@@ -22,11 +22,11 @@ var { pushplus_token } = hamibot.env;
 var { sct_token } = hamibot.env;
 
 // 本地存储数据
-var storage = storages.create("data");
-// 更新题库为answer_question_map3
-storage.remove("answer_question_map");
-storage.remove("answer_question_map1");
+var storage = storages.create('data');
+// 更新题库为answer_question_map
+storage.remove('answer_question_map1');
 storage.remove('answer_question_map2');
+storage.remove('answer_question_map3');
 
 delay_time = Number(delay_time) * 1000;
 
@@ -38,8 +38,8 @@ var { SK } = hamibot.env;
 threads.start(function () {
     try {
         var beginBtn;
-        if (beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time));
-        else (beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time));
+        if (beginBtn = classNameContains('Button').textContains("开始").findOne(delay_time));
+        else (beginBtn = classNameContains('Button').textContains("允许").findOne(delay_time));
         beginBtn.click();
     } catch (error) {
     }
@@ -57,7 +57,7 @@ if (whether_improve_accuracy == 'yes' && !AK) {
  * 由于hamibot不支持存储自定义对象和new Map()，因此这里用列表存储自己实现
  * 在存储时，不需要存储整个question，可以仅根据选项来对应question，这样可以省去ocr题目的花费
  * 但如果遇到选项为special_problem数组中的模糊词，无法对应question，则需要存储整个问题
-*/
+ */
 
 var answer_question_map = [];
 
@@ -110,15 +110,15 @@ function map_get(key) {
 /**
  * 通过Http下载题库到本地，并进行处理，如果本地已经存在则无需下载
  */
-if (!storage.contains("answer_question_map3")) {
+if (!storage.contains('answer_question_map')) {
     toast("正在下载题库");
     // 使用 Github 文件加速服务：https://git.yumenaka.net
     var answer_question_bank = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2020.json");
     sleep(random_time(delay_time * 5));
     // 如果资源过期或无法访问则换成别的地址
     if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
-        // 使用XXQG_TiKu挑战答题题库地址
-        var answer_question_bank = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/Mondayfirst/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json");
+        // 使用XXQG_TiKu挑战答题腾讯云题库地址
+        var answer_question_bank = http.get("https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json");
         toast("下载XXQG_TiKu题库");
         sleep(random_time(delay_time * 5));
     }
@@ -127,26 +127,26 @@ if (!storage.contains("answer_question_map3")) {
 
     for (var question in answer_question_bank) {
         var answer = answer_question_bank[question];
-        if (special_problem.indexOf(question.slice(0, 7)) != -1) question = question.slice(question.indexOf("|") + 1);
+        if (special_problem.indexOf(question.slice(0, 7)) != -1) question = question.slice(question.indexOf('|') + 1);
         else {
-            question = question.slice(0, question.indexOf("|"));
-            question = question.slice(0, question.indexOf(" "));
+            question = question.slice(0, question.indexOf('|'));
+            question = question.slice(0, question.indexOf(' '));
             question = question.slice(0, 10);
         }
         map_set(question, answer);
     }
     sleep(random_time(delay_time * 5));
-    storage.put("answer_question_map3", answer_question_map);
+    storage.put('answer_question_map', answer_question_map);
 }
 
-var answer_question_map = storage.get("answer_question_map3");
+var answer_question_map = storage.get('answer_question_map');
 
 /**
  * 模拟点击不可以点击元素
  * @param {UiObject / string} target 控件或者是控件文本
  */
 function my_click_non_clickable(target) {
-    if (typeof target == "string") {
+    if (typeof (target) == 'string') {
         text(target).waitFor();
         var tmp = text(target).findOne().bounds();
     } else {
@@ -161,8 +161,8 @@ function my_click_non_clickable(target) {
 function my_click_clickable(target) {
     text(target).waitFor();
     // 防止点到页面中其他有包含“我的”的控件，比如搜索栏
-    if (target == "我的") {
-        id("comm_head_xuexi_mine").findOne().click();
+    if (target == '我的') {
+        id('comm_head_xuexi_mine').findOne().click();
     } else {
         click(target);
     }
@@ -178,8 +178,8 @@ function random_time(time) {
  * @param {boolean} orientation 方向标识 true表示从下至上 false表示从上至下
  */
 function refresh(orientation) {
-    if (orientation) swipe(device.width / 2, device.height * 13 / 15, device.width / 2, device.height * 2 / 15, random_time(delay_time / 2));
-    else swipe(device.width / 2, device.height * 6 / 15, device.width / 2, device.height * 12 / 15, random_time(delay_time / 2));
+    if (orientation) swipe(device.width / 2, (device.height * 13) / 15, device.width / 2, (device.height * 2) / 15, random_time(delay_time / 2));
+    else swipe(device.width / 2, (device.height * 6) / 15, device.width / 2, (device.height * 12) / 15, random_time(delay_time / 2));
     sleep(random_time(delay_time * 2));
 }
 
@@ -502,9 +502,10 @@ function select_option(answer, depth_click_option, options_text) {
     // 如果找到答案对应的选项
     if (option_i != -1) {
         try {
-            className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOnce(option_i).click();
+            className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOnce(option_i).click();
             return;
-        } catch (error) { }
+        } catch (error) {
+        }
     }
 
     // 如果运行到这，说明很有可能是选项ocr错误，导致答案无法匹配，因此用最大相似度匹配
@@ -521,14 +522,16 @@ function select_option(answer, depth_click_option, options_text) {
             }
         }
         try {
-            className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOnce(max_similarity_index).click();
+            className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOnce(max_similarity_index).click();
             return;
-        } catch (error) { }
+        } catch (error) {
+        }
     } else {
         try {
             // 没找到答案，点击第一个
-            className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
-        } catch (error) { }
+            className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
+        } catch (error) {
+        }
     }
 }
 
@@ -544,7 +547,7 @@ function do_contest_answer(depth_click_option, question, options_text) {
     if (special_problem.indexOf(question.slice(0, 7)) != -1) {
         var original_options_text = options_text.concat();
         var sorted_options_text = original_options_text.sort();
-        question = sorted_options_text.join("|");
+        question = sorted_options_text.join('|');
     }
     // 从哈希表中取出答案
     var answer = map_get(question);
@@ -557,27 +560,29 @@ function do_contest_answer(depth_click_option, question, options_text) {
             // 此网站只支持十个字符的搜索
             var r1 = http.get("http://www.syiban.com/search/index/init.html?modelid=1&q=" + encodeURI(question.slice(0, 10)));
             result = r1.body.string().match(/答案：.*</);
-        } catch (error) { }
+        } catch (error) {
+        }
         // 如果第一个网站没获取到正确答案，则利用第二个网站
         if (!(result && result[0].charCodeAt(3) > 64 && result[0].charCodeAt(3) < 69)) {
             try {
                 // 此网站只支持六个字符的搜索
                 var r2 = http.get("https://www.souwen123.com/search/select.php?age=" + encodeURI(question.slice(0, 6)));
                 result = r2.body.string().match(/答案：.*</);
-            } catch (error) { }
+            } catch (error) {
+            }
         }
 
         if (result) {
             // 答案文本
-            var result = result[0].slice(5, result[0].indexOf("<"));
+            var result = result[0].slice(5, result[0].indexOf('<'));
             log("答案: " + result);
             select_option(result, depth_click_option, options_text);
         } else {
             // 没找到答案，点击第一个
-            log("点击:" + "android.widget.RadioButton");
             try {
-                className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
-            } catch (error) { }
+                className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
+            } catch (error) {
+            }
         }
     } else {
         log("答案: " + answer);
@@ -615,7 +620,8 @@ function video_answer_question(video_question) {
     video_question = video_question.slice(0, Math.max(5, punctuation_index));
     try {
         var video_result = http.get("https://www.365shenghuo.com/?s=" + encodeURI(video_question));
-    } catch (error) { }
+    } catch (error) {
+    }
     var video_answer = video_result.body.string().match(/答案：.+</);
     if (video_answer) video_answer = video_answer[0].slice(3, video_answer[0].indexOf("<"));
     return video_answer;
@@ -989,7 +995,7 @@ function handling_access_exceptions() {
         var randomX = random(pos.left, pos.right);
         var randomY = random(pos.top, pos.bottom);
         swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-        press(randomX + right_border, randomY, 1000);
+        press(randomX + right_border, randomY, 650);
         if (textContains("刷新").exists()) {
             click('刷新');
         }
@@ -1006,7 +1012,7 @@ var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
     // 每3秒就处理访问异常
-    id_handling_access_exceptions = setInterval(handling_access_exceptions, 3000);
+    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2500);
 });
 
 /*
@@ -1236,7 +1242,6 @@ function do_contest() {
     while (!text("继续挑战").exists()) {
         // 等待下一题题目加载
         handling_access_exceptions();
-        log("等待:" + "android.view.View");
         className("android.view.View").depth(28).waitFor();
         var pos = className("android.view.View").depth(28).findOne().bounds();
         if (className("android.view.View").text("        ").exists()) pos = className("android.view.View").text("        ").findOne().bounds();
@@ -1248,7 +1253,6 @@ function do_contest() {
         } while (!point);
         // 等待选项加载
         handling_access_exceptions();
-        log("等待:" + "android.widget.RadioButton");
         className("android.widget.RadioButton").depth(32).clickable(true).waitFor();
         var img = images.inRange(captureScreen(), "#000000", "#444444");
         img = images.clip(img, pos.left, pos.top, pos.width(), device.height - pos.top);
@@ -1270,9 +1274,7 @@ function do_contest() {
         log("选项: " + options_text);
         if (question) do_contest_answer(32, question, options_text);
         else {
-            log("等待:" + "android.widget.RadioButton");
             className("android.widget.RadioButton").depth(32).waitFor();
-            log("点击:" + "android.widget.RadioButton");
             className("android.widget.RadioButton").depth(32).findOne(delay_time * 3).click();
         }
         handling_access_exceptions();
@@ -1328,10 +1330,8 @@ if (!finish_list[7] && two_players_scored < 1) {
     text("随机匹配").waitFor();
     sleep(random_time(delay_time * 2));
     try {
-        log("点击:" + "android.view.View");
         className("android.view.View").clickable(true).depth(24).findOnce(1).click();
     } catch (error) {
-        log("点击:" + "");
         className("android.view.View").text("").findOne().click();
     }
     handling_access_exceptions();
