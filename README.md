@@ -1,4 +1,5 @@
-**Hamibot自用主脚本参考**
+# Hamibot脚本安装
+**自用学习主脚本参考**
 https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
 
 # 免责声明
