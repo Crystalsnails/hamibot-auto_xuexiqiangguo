@@ -1011,7 +1011,7 @@ function handling_access_exceptions() {
 var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
-    // 每3秒就处理访问异常
+    // 每2.5秒就处理访问异常
     id_handling_access_exceptions = setInterval(handling_access_exceptions, 2500);
 });
 
@@ -1121,6 +1121,7 @@ if (!finish_list[4] && special_answer_scored < 8) {
         is_answer_special_flag = true;
         // 总题数
         className("android.view.View").depth(24).waitFor();
+        sleep(random_time(delay_time));
         var num_string = className("android.view.View").depth(24).findOnce(1).text();
         var total_question_num = parseInt(num_string.slice(num_string.indexOf('/') + 1));
         do_periodic_answer(total_question_num);
@@ -1130,6 +1131,7 @@ if (!finish_list[4] && special_answer_scored < 8) {
         sleep(random_time(delay_time));
         is_answer_special_flag = true;
         className("android.view.View").depth(24).waitFor();
+        sleep(random_time(delay_time));
         var num_string = className("android.view.View").depth(24).findOnce(1).text();
         // 已完成题数
         var completed_question_num = parseInt(num_string);
@@ -1143,10 +1145,6 @@ if (!finish_list[4] && special_answer_scored < 8) {
     }
 
     if (is_answer_special_flag) {
-        // 点击完成
-        sleep(random_time(delay_time));
-        text('完成').waitFor();
-        text('完成').click();
         // 点击退出
         sleep(random_time(delay_time));
         className('android.view.View').clickable(true).depth(20).waitFor();
