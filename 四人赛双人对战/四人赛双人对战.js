@@ -20,10 +20,9 @@ var { SK } = hamibot.env;
 
 // 本地存储数据
 var storage = storages.create('data');
-// 更新题库为answer_question_map3
+// 更新题库为answer_question_map2
+storage.remove('answer_question_map');
 storage.remove('answer_question_map1');
-storage.remove('answer_question_map2');
-storage.remove('answer_question_map3');
 
 //请求横屏截图权限
 threads.start(function () {
@@ -101,7 +100,7 @@ function map_get(key) {
 /**
  * 通过Http下载题库到本地，并进行处理，如果本地已经存在则无需下载
  */
-if (!storage.contains('answer_question_map')) {
+if (!storage.contains('answer_question_map2')) {
     toast("正在下载题库");
     // 使用 Github 文件加速服务：https://git.yumenaka.net
     var answer_question_bank = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2020.json");
@@ -127,10 +126,10 @@ if (!storage.contains('answer_question_map')) {
         map_set(question, answer);
     }
     sleep(random_time(delay_time * 5));
-    storage.put('answer_question_map', answer_question_map);
+    storage.put('answer_question_map2', answer_question_map);
 }
 
-var answer_question_map = storage.get('answer_question_map');
+var answer_question_map = storage.get('answer_question_map2');
 
 /**
  * 模拟点击不可以点击元素
@@ -476,7 +475,7 @@ function handling_access_exceptions() {
 var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
-    // 每3秒就处理访问异常
+    // 每2.5秒就处理访问异常
     id_handling_access_exceptions = setInterval(handling_access_exceptions, 2500);
 });
 
