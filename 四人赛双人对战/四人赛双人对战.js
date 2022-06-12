@@ -155,7 +155,7 @@ if (!storage.contains('answer_question_map')) {
     storage.put('answer_question_map', answer_question_map);
 
     // 通过异或运算切换更新题库的开关，并记录
-    var k = storage.get("answer_question_bank_update_storage") ^ 1
+    var k = storage.get("answer_question_bank_update_storage") ^ 1;
     storage.put('answer_question_bank_update_storage', k);
 }
 
