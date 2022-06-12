@@ -1,6 +1,8 @@
-# Hamibot脚本安装
-**自用学习主脚本参考**
+# 脚本安装和题库更新
+**Hamibot自用学习主脚本参考**
 https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
+
+**自建题库，每周六自动检测更新**
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
