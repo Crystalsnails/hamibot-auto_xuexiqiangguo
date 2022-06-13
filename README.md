@@ -35,6 +35,7 @@ https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
 # 使用说明
 
 脚本可以在Hamibot上使用，也可以在Auto.js上使用，但由于Auto.js使用的是免费版，**不支持OCR**，Auto.js只能使用百度OCR，因此如果完整运行学习强国.js脚本的话（四人赛双人对战两个平台是一样的）将可能**调用百度OCR大约35次**，请谨慎使用，**超出百度OCR免费次数所产生的费用概不负责**
+（本Fork库未提供Auto.js的脚本）
 
 具体操作如下：
 
