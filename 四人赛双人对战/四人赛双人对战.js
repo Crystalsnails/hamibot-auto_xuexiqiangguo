@@ -129,7 +129,7 @@ if (date.getDay() == 6) {
 if (!storage.contains('answer_question_map')) {
     toast("正在下载题库");
     // 使用 Github 文件加速服务：https://gh-proxy.com/
-    var answer_question_bank = http.get("https://gh-proxy.com/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2022.json");
+    var answer_question_bank = http.get("https://gh-proxy.com/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2020.json");
     sleep(random_time(delay_time * 5));
     // 如果资源过期或无法访问则换成别的地址
     if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
