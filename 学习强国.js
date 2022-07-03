@@ -1404,6 +1404,7 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
             className("android.view.View").clickable(true).depth(15).findOnce(i).click();
             sleep(random_time(delay_time));
 
+            var num_last_swipe = 0;
             while (num_subscribe < 2) {
                 // 点击红色的订阅按钮
                 do {
@@ -1433,8 +1434,13 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
                     region: [subscribe_button_pos.left, subscribe_button_pos.top, subscribe_button_pos.width(), device.height - subscribe_button_pos.top],
                     threshold: 10,
                 });
-                // 如果滑动前后已订阅控件的位置不变则判断滑到底部
-                if (complete_subscribe_pos1.x == complete_subscribe_pos2.x && complete_subscribe_pos1.y == complete_subscribe_pos2.y) break;
+                // 如果滑动前后已订阅控件的位置不变则判断滑到底部，再尝试滑动一次           
+                if (complete_subscribe_pos1.x == complete_subscribe_pos2.x && complete_subscribe_pos1.y == complete_subscribe_pos2.y) {
+                    if (num_last_swipe >= 2) break; 
+                    swipe(device.width / 2, device.height - subscribe_button_pos.top, device.width / 2, subscribe_button_pos.top, random_time(0));                    
+                    num_last_swipe++;
+                    sleep(random_time(delay_time / 2));
+                }
             }
             // 更新本地存储值
             if (i > subscription_strong_country_startup) storage.put("subscription_strong_country_startup", i);
