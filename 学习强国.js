@@ -887,13 +887,7 @@ function ocr_processing(text, if_question) {
     text = text.replace(/:/g, "：");
     text = text.replace(/!/g, "!");
     text = text.replace(/\(/g, "（");
-    text = text.replace(/\)/g, "）");
-    // 文字修改
-    text = text.replace(/营理/g, "管理");
-    text = text.replace(/土也/g, "地");
-    text = text.replace(/未口/g, "和");
-    text = text.replace(/晋查/g, "普查");
-    text = text.replace(/扶悌/g, "扶梯");
+    text = text.replace(/\)/g, "）");    
 
     if (if_question) {
         text = text.slice(text.indexOf(".") + 1);
@@ -1023,7 +1017,7 @@ function handling_access_exceptions() {
         var randomX = random(pos.left, pos.right);
         var randomY = random(pos.top, pos.bottom);
         swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-        press(randomX + right_border, randomY, 650);
+        press(randomX + right_border, randomY, 1000);
         sleep(100);
         if (textContains("刷新").exists()) {
             click('刷新');
@@ -1040,8 +1034,8 @@ function handling_access_exceptions() {
 var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
-    // 每2.6秒就处理访问异常
-    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2600);
+    // 每3秒就处理访问异常
+    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2950);
 });
 
 /*
@@ -1194,6 +1188,7 @@ if (!finish_list[5]) {
     entry_model(9);
     // 加载页面
     className("android.view.View").clickable(true).depth(22).waitFor();
+    log("挑战答题");
     // flag为true时挑战成功拿到6分
     var flag = false;
     while (!flag) {
