@@ -48,7 +48,7 @@ function handling_access_exceptions() {
         var randomX = random(pos.left, pos.right);
         var randomY = random(pos.top, pos.bottom);
         swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-        press(randomX + right_border, randomY, 650);
+        press(randomX + right_border, randomY, 1000);
         sleep(100);
         if (textContains("刷新").exists()) {
             click('刷新');
@@ -66,7 +66,7 @@ var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
     // 每2.6秒就处理访问异常
-    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2600);
+    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2950);
 });
 
 function do_it() {
