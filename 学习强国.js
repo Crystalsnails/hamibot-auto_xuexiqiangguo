@@ -149,7 +149,7 @@ if (!storage.contains('answer_question_map')) {
     }
     answer_question_bank = answer_question_bank.body.string();
     answer_question_bank = JSON.parse(answer_question_bank);
-
+    toast("格式化题库");
     for (var question in answer_question_bank) {
         var answer = answer_question_bank[question];
         if (special_problem.indexOf(question.slice(0, 7)) != -1) question = question.slice(question.indexOf('|') + 1);
@@ -887,7 +887,13 @@ function ocr_processing(text, if_question) {
     text = text.replace(/:/g, "：");
     text = text.replace(/!/g, "!");
     text = text.replace(/\(/g, "（");
-    text = text.replace(/\)/g, "）");    
+    text = text.replace(/\)/g, "）");
+    // 文字修改
+    text = text.replace(/营理/g, "管理");
+    text = text.replace(/土也/g, "地");
+    text = text.replace(/未口/g, "和");
+    text = text.replace(/晋查/g, "普查");
+    text = text.replace(/扶悌/g, "扶梯");
 
     if (if_question) {
         text = text.slice(text.indexOf(".") + 1);
@@ -1017,7 +1023,7 @@ function handling_access_exceptions() {
         var randomX = random(pos.left, pos.right);
         var randomY = random(pos.top, pos.bottom);
         swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
-        press(randomX + right_border, randomY, 1000);
+        press(randomX + right_border, randomY, 650);
         sleep(100);
         if (textContains("刷新").exists()) {
             click('刷新');
@@ -1034,8 +1040,8 @@ function handling_access_exceptions() {
 var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
-    // 每3秒就处理访问异常
-    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2950);
+    // 每2.6秒就处理访问异常
+    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2600);
 });
 
 /*
