@@ -1089,7 +1089,7 @@ if (!finish_list[3]) {
 **********每周答题*********
 */
 var restart_flag = 1;
-// 是否重做过，如果重做，也即错了，则换用精度更高的百度OCR
+// 是否重做过，如果重做，也即错了，则换用精度更高的百度ocr
 var if_restart_flag = false;
 // 保存本地变量，如果已经做完之前的所有题目则跳过
 if (!storage.contains('all_weekly_answers_completed_storage')) {
