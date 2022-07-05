@@ -238,7 +238,7 @@ function select_option(answer, depth_click_option, options_text) {
     } else {
         try {
             // 没找到答案，点击第一个
-            className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
+            className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOne(delay_time).click();
         } catch (error) {
         }
     }
@@ -289,7 +289,7 @@ function do_contest_answer(depth_click_option, question, options_text) {
         } else {
             // 没找到答案，点击第一个
             try {
-                className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
+                className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOne(delay_time).click();
             } catch (error) {
             }
         }
@@ -328,12 +328,15 @@ function getSimilarity(str1, str2) {
  * 获取用户token
  */
 function get_baidu_token() {
-    var res = http.post("https://aip.baidubce.com/oauth/2.0/token", {
-        grant_type: "client_credentials",
-        client_id: AK,
-        client_secret: SK,
-    });
-    return res.body.json()["access_token"];
+    var res = http.post(
+        'https://aip.baidubce.com/oauth/2.0/token',
+        {
+            grant_type: 'client_credentials',
+            client_id: AK,
+            client_secret: SK,
+        }
+    );
+    return res.body.json()['access_token'];
 }
 
 if (whether_improve_accuracy == "yes") var token = get_baidu_token();
@@ -347,17 +350,21 @@ if (whether_improve_accuracy == "yes") var token = get_baidu_token();
 function baidu_ocr_api(img) {
     var options_text = [];
     var question = "";
-    var res = http.post("https://aip.baidubce.com/rest/2.0/ocr/v1/general", {
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        access_token: token,
-        image: images.toBase64(img),
-    });
+    var res = http.post(
+        'https://aip.baidubce.com/rest/2.0/ocr/v1/general',
+        {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            access_token: token,
+            image: images.toBase64(img),
+        }
+    );
     var res = res.body.json();
     try {
         var words_list = res.words_result;
-    } catch (error) { }
+    } catch (error) {
+    }
     if (words_list) {
         // question是否读取完成的标志位
         var question_flag = false;
@@ -448,7 +455,6 @@ function ocr_processing(text, if_question) {
     text = text.replace(/\s*/g, "");
     text = text.replace(/_/g, "一");
     text = text.replace(/;/g, "；");
-    text = text.replace(/o/g, "");
     text = text.replace(/。/g, "");
     text = text.replace(/`/g, "、");
     text = text.replace(/\?/g, "？");
@@ -456,12 +462,32 @@ function ocr_processing(text, if_question) {
     text = text.replace(/!/g, "!");
     text = text.replace(/\(/g, "（");
     text = text.replace(/\)/g, "）");
-    // 文字修改
-    text = text.replace(/营理/g, "管理");
-    text = text.replace(/土也/g, "地");
-    text = text.replace(/未口/g, "和");
-    text = text.replace(/晋查/g, "普查");
-    text = text.replace(/扶悌/g, "扶梯");
+    // 拼音修改
+    text = text.replace(/ā/g, "a");
+    text = text.replace(/á/g, "a");
+    text = text.replace(/ǎ/g, "a");
+    text = text.replace(/à/g, "a");
+    text = text.replace(/ō/g, "e");
+    text = text.replace(/ó/g, "e");
+    text = text.replace(/ǒ/g, "e");
+    text = text.replace(/ò/g, "e");
+    text = text.replace(/ē/g, "o");
+    text = text.replace(/é/g, "o");
+    text = text.replace(/ě/g, "o");
+    text = text.replace(/è/g, "o");
+    text = text.replace(/ī/g, "i");
+    text = text.replace(/í/g, "i");
+    text = text.replace(/ǐ/g, "i");
+    text = text.replace(/ì/g, "i");
+    text = text.replace(/ū/g, "u");
+    text = text.replace(/ú/g, "u");
+    text = text.replace(/ǔ/g, "u");
+    text = text.replace(/ù/g, "u");
+    text = text.replace(/ǖ/g, "u");
+    text = text.replace(/ǘ/g, "u");
+    text = text.replace(/ǚ/g, "u");
+    text = text.replace(/ǜ/g, "u");
+    text = text.replace(/ü/g, "u");
 
     if (if_question) {
         text = text.slice(text.indexOf(".") + 1);
@@ -490,7 +516,7 @@ function handling_access_exceptions() {
         var randomY = random(pos.top, pos.bottom);
         swipe(randomX, randomY, randomX + right_border, randomY, random(200, 400));
         press(randomX + right_border, randomY, 650);
-        sleep(100);
+        sleep(350);
         if (textContains("刷新").exists()) {
             click('刷新');
         }
@@ -507,7 +533,7 @@ var id_handling_access_exceptions;
 // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
 var thread_handling_access_exceptions = threads.start(function () {
     // 每2.6秒就处理访问异常
-    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2600);
+    id_handling_access_exceptions = setInterval(handling_access_exceptions, 2850);
 });
 
 /**
@@ -551,7 +577,7 @@ function do_contest() {
         if (question) do_contest_answer(32, question, options_text);
         else {
             className("android.widget.RadioButton").depth(32).waitFor();
-            className("android.widget.RadioButton").depth(32).findOne(delay_time * 3).click();
+            className("android.widget.RadioButton").depth(32).findOne(delay_time).click();
         }
         handling_access_exceptions();
         // 等待新题目加载
@@ -599,7 +625,7 @@ if (four_player_battle == 'yes') {
             sleep(random_time(delay_time));
         }
     }
-    sleep(random_time(delay_time * 3));
+    sleep(random_time(delay_time * 2));
     back();
     sleep(random_time(delay_time));
     back();
