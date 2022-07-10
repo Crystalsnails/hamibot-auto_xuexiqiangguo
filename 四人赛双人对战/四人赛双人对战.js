@@ -147,7 +147,7 @@ if (!storage.contains('answer_question_map')) {
         else {
             question = question.slice(0, question.indexOf('|'));
             question = question.slice(0, question.indexOf(' '));
-            question = question.slice(0, 25);
+            question = question.slice(0, 24);
         }
         map_set(question, answer);
     }
@@ -251,7 +251,7 @@ function select_option(answer, depth_click_option, options_text) {
  * @param {list[string]} options_text 每个选项文本
  */
 function do_contest_answer(depth_click_option, question, options_text) {
-    question = question.slice(0, 25);
+    question = question.slice(0, 24);
     // 如果是特殊问题需要用选项搜索答案，而不是问题
     if (special_problem.indexOf(question.slice(0, 7)) != -1) {
         var original_options_text = options_text.concat();
