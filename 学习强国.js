@@ -62,7 +62,7 @@ if (whether_improve_accuracy == 'yes' && !AK) {
 var answer_question_map = [];
 
 // 当题目为这些词时，题目较多会造成hash表上的一个index过多，此时存储其选项
-var special_problem = '选择正确的读音 选择词语的正确词形 下列词形正确的是 根据《中华人民共和国';
+var special_problem = '选择正确的读音 选择词语的正确词形 下列词形正确的是 下列不属于二十四史的';
 
 /**
  * hash函数
@@ -117,7 +117,7 @@ if (!storage.contains('answer_question_bank_update_storage')) {
 
 var date = new Date();
 // 每周六定时检测更新题库，周日为0
-if (date.getDay() == 6) {
+if (date.getDay() == 0) {
     var answer_question_bank_update = storage.get("answer_question_bank_update_storage");
     if (answer_question_bank_update) {
         var answer_question_bank_checked = http.get("https://gh-proxy.com/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/0.json");
@@ -138,7 +138,7 @@ if (date.getDay() == 6) {
 if (!storage.contains('answer_question_map')) {
     toast("正在下载题库");
     // 使用 Github 文件加速服务：https://gh-proxy.com/
-    var answer_question_bank = http.get("https://gh-proxy.com/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2020.json");
+    var answer_question_bank = http.get("https://gh-proxy.com/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2022.json");
     sleep(random_time(delay_time * 5));
     // 如果资源过期或无法访问则换成别的地址
     if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
@@ -156,7 +156,7 @@ if (!storage.contains('answer_question_map')) {
         else {
             question = question.slice(0, question.indexOf('|'));
             question = question.slice(0, question.indexOf(' '));
-            question = question.slice(0, 10);
+            question = question.slice(0, 25);
         }
         map_set(question, answer);
     }
@@ -570,7 +570,7 @@ function select_option(answer, depth_click_option, options_text) {
  * @param {list[string]} options_text 每个选项文本
  */
 function do_contest_answer(depth_click_option, question, options_text) {
-    question = question.slice(0, 10);
+    question = question.slice(0, 25);
     // 如果是特殊问题需要用选项搜索答案，而不是问题
     if (special_problem.indexOf(question.slice(0, 7)) != -1) {
         var original_options_text = options_text.concat();
@@ -828,7 +828,7 @@ function baidu_ocr_api(img) {
     question = question.replace(/\s*/g, "");
     question = question.replace(/,/g, "，");
     question = question.slice(question.indexOf(".") + 1);
-    question = question.slice(0, 10);
+    question = question.slice(0, 24);
     return [question, options_text];
 }
 
@@ -899,14 +899,14 @@ function ocr_processing(text, if_question) {
     text = text.replace(/á/g, "a");
     text = text.replace(/ǎ/g, "a");
     text = text.replace(/à/g, "a");
-    text = text.replace(/ō/g, "e");
-    text = text.replace(/ó/g, "e");
-    text = text.replace(/ǒ/g, "e");
-    text = text.replace(/ò/g, "e");
-    text = text.replace(/ē/g, "o");
-    text = text.replace(/é/g, "o");
-    text = text.replace(/ě/g, "o");
-    text = text.replace(/è/g, "o");
+    text = text.replace(/ō/g, "o");
+    text = text.replace(/ó/g, "o");
+    text = text.replace(/ǒ/g, "o");
+    text = text.replace(/ò/g, "o");
+    text = text.replace(/ē/g, "e");
+    text = text.replace(/é/g, "e");
+    text = text.replace(/ě/g, "e");
+    text = text.replace(/è/g, "e");
     text = text.replace(/ī/g, "i");
     text = text.replace(/í/g, "i");
     text = text.replace(/ǐ/g, "i");
@@ -915,15 +915,10 @@ function ocr_processing(text, if_question) {
     text = text.replace(/ú/g, "u");
     text = text.replace(/ǔ/g, "u");
     text = text.replace(/ù/g, "u");
-    text = text.replace(/ǖ/g, "u");
-    text = text.replace(/ǘ/g, "u");
-    text = text.replace(/ǚ/g, "u");
-    text = text.replace(/ǜ/g, "u");
-    text = text.replace(/ü/g, "u");
 
     if (if_question) {
         text = text.slice(text.indexOf(".") + 1);
-        text = text.slice(0, 10);
+        text = text.slice(0, 24);
     }
     return text;
 }
