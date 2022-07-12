@@ -54,11 +54,8 @@ var answer_question_map = [];
 
 // 当题目为这些词时，题目较多会造成hash表上的一个index过多，此时存储其选项
 var special_problem = '选择正确的读音 选择词语的正确词形 下列词形正确的是 下列不属于二十四史的';
-// 当题目为这些词时，在线搜索书名号和逗号后的内容
-var special_problem2 = '根据《中华人民共和国企业所得 根据《中华人民共和国海事诉讼 根据《中华人民共和国国家通用 根据《中华人民共和国公职人员';
-var special_problem3 = '根据《中国共 根据《中华人 《中华人民共 中共十九大报';
-var special_problem4 = '根据《化妆品 根据《彩票管 在古代神话传 在我国古代传';
-var special_problem5 = '下列选项中， 下列食物中， 我国宪法规定 根据《化妆品';
+// 当题目为这些词时，在线搜索书名号后的内容
+var special_problem2 = '根据《中国共 根据《中华人 《中华人民共 根据《化妆品';
 
 /**
  * hash函数
@@ -269,10 +266,7 @@ function do_contest_answer(depth_click_option, question, options_text) {
     // 如果本地题库没搜到，则搜网络题库
     if (answer == null) {
         var result;
-        if (special_problem2.indexOf(question.slice(0, 14)) != -1 && question.slice(21, 25) != -1) question = question.slice(21, 25);
-        if (special_problem3.indexOf(question.slice(0, 6)) != -1 && question.slice(18, 25) != -1) question = question.slice(18, 25);
-        if (special_problem4.indexOf(question.slice(0, 6)) != -1 && question.slice(14, 21) != -1) question = question.slice(14, 21);
-        if (special_problem5.indexOf(question.slice(0, 6)) != -1 && question.slice(6, 13) != -1) question = question.slice(6, 13);
+        if (special_problem2.indexOf(question.slice(0, 6)) != -1 && question.slice(18, 25) != -1) question = question.slice(18, 25);
         // 发送http请求获取答案 网站搜题速度 r1 > r2
         try {
             // 此网站只支持十个字符的搜索
