@@ -63,6 +63,8 @@ var answer_question_map = [];
 
 // 当题目为这些词时，题目较多会造成hash表上的一个index过多，此时存储其选项
 var special_problem = '选择正确的读音 选择词语的正确词形 下列词形正确的是 下列不属于二十四史的';
+// 当题目为这些词时，在线搜索书名号后的内容
+var special_problem2 = '根据《中国共 根据《中华人 下列选项中， 《中华人民共';
 
 /**
  * hash函数
@@ -156,7 +158,7 @@ if (!storage.contains('answer_question_map')) {
         else {
             question = question.slice(0, question.indexOf('|'));
             question = question.slice(0, question.indexOf(' '));
-            question = question.slice(0, 24);
+            question = question.slice(0, 25);
         }
         map_set(question, answer);
     }
@@ -570,7 +572,7 @@ function select_option(answer, depth_click_option, options_text) {
  * @param {list[string]} options_text 每个选项文本
  */
 function do_contest_answer(depth_click_option, question, options_text) {
-    question = question.slice(0, 24);
+    question = question.slice(0, 25);
     // 如果是特殊问题需要用选项搜索答案，而不是问题
     if (special_problem.indexOf(question.slice(0, 7)) != -1) {
         var original_options_text = options_text.concat();
@@ -583,6 +585,7 @@ function do_contest_answer(depth_click_option, question, options_text) {
     // 如果本地题库没搜到，则搜网络题库
     if (answer == null) {
         var result;
+        if (special_problem2.indexOf(question.slice(0, 6)) != -1 && !question.slice(18, 25)) question = question.slice(18, 25);
         // 发送http请求获取答案 网站搜题速度 r1 > r2
         try {
             // 此网站只支持十个字符的搜索
@@ -828,7 +831,7 @@ function baidu_ocr_api(img) {
     question = question.replace(/\s*/g, "");
     question = question.replace(/,/g, "，");
     question = question.slice(question.indexOf(".") + 1);
-    question = question.slice(0, 24);
+    question = question.slice(0, 25);
     return [question, options_text];
 }
 
@@ -918,7 +921,7 @@ function ocr_processing(text, if_question) {
 
     if (if_question) {
         text = text.slice(text.indexOf(".") + 1);
-        text = text.slice(0, 24);
+        text = text.slice(0, 25);
     }
     return text;
 }
