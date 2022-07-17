@@ -63,7 +63,7 @@ var answer_question_map = [];
 
 // 当题目为这些词时，题目较多会造成hash表上的一个index过多，此时存储其选项
 var special_problem = '选择正确的读音 选择词语的正确词形 下列词形正确的是 下列不属于二十四史的';
-// 当题目为这些词时，在线搜索书名号后的内容
+// 当题目为这些词时，在线搜索书名号和逗号后的内容
 var special_problem2 = '根据《中国共 根据《中华人 《中华人民共 根据《化妆品';
 var special_problem3 = '下列选项中，';
 
@@ -1229,16 +1229,15 @@ if (!finish_list[5]) {
         while (num < 5) {
             // 每题的过渡
             sleep(random_time(delay_time * 2));
-            // 如果答错，第一次通过分享复活
-            if (text("分享就能复活").exists()) {
+            // 如果答错，第一次立即复活机会
+            if (text("立即复活").exists()) {
                 num -= 2;
-                click("分享就能复活");
+                click("立即复活");
                 sleep(random_time(delay_time * 3));
                 if (text("访问异常").exists()) {
                     handling_access_exceptions();
                     sleep(random_time(delay_time * 7));
                 }
-                back();
                 // 等待题目加载
                 sleep(random_time(delay_time * 3));
             }
