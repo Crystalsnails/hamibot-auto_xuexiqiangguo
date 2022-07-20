@@ -120,7 +120,7 @@ if (!storage.contains('answer_question_bank_update_storage')) {
 
 var date = new Date();
 // 每周六定时检测更新题库，周日为0
-if (date.getDay() == 0) {
+if (date.getDay() == 4) {
     var answer_question_bank_update = storage.get("answer_question_bank_update_storage");
     if (answer_question_bank_update) {
         var answer_question_bank_checked = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/0.json");
@@ -832,6 +832,8 @@ function baidu_ocr_api(img) {
     // 处理question
     question = question.replace(/\s*/g, "");
     question = question.replace(/,/g, "，");
+    question = question.replace(/，《/g, "《");
+    question = question.replace(/》，/g, "》");
     question = question.slice(question.indexOf(".") + 1);
     question = question.slice(0, 25);
     return [question, options_text];
@@ -887,8 +889,8 @@ function extract_ocr_recognize(object) {
 function ocr_processing(text, if_question) {
     // 标点修改
     text = text.replace(/,/g, "，");
-    text = text.replace(/〈〈/g, "《");
-    text = text.replace(/〉〉/g, "》");
+    text = text.replace(/，《/g, "《");
+    text = text.replace(/》，/g, "》");
     text = text.replace(/\s*/g, "");
     text = text.replace(/_/g, "一");
     text = text.replace(/;/g, "；");
