@@ -1484,7 +1484,7 @@ if (!finish_list[8] && whether_complete_subscription == 'yes') {
                 var num_refresh = 0;
                 // 定义最大刷新次数
                 if (i == 2) var max_num_refresh = 20;
-                else var max_num_refresh = 5;
+                else var max_num_refresh = 7;
                 while (num_subscribe < 2 && num_refresh < max_num_refresh) {
                     do {
                         var subscribe_pos = findColor(captureScreen(), "#E42417", {
