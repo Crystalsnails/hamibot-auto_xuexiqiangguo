@@ -120,7 +120,7 @@ if (!storage.contains('answer_question_bank_update_storage')) {
 
 var date = new Date();
 // 每周六定时检测更新题库，周日为0
-if (date.getDay() == 4) {
+if (date.getDay() == 6) {
     var answer_question_bank_update = storage.get("answer_question_bank_update_storage");
     if (answer_question_bank_update) {
         var answer_question_bank_checked = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/0.json");
@@ -279,6 +279,16 @@ function back_track() {
     }
 }
 
+// 关闭音乐播放浮窗控件
+function close_music_widget() {
+  let imv = className("android.widget.ImageView").find();
+  let swtch = imv[imv.length - 1];
+  swtch.click();
+  sleep(1000);
+  swtch.click();
+  return true;
+}
+
 /**
  * 获取各模块完成情况的列表、以及全局变量
  * 先获取有哪些模块还没有完成，并生成一个列表，其中第一个是我要选读文章模块，以此类推
@@ -368,9 +378,6 @@ if (!finish_list[10]) {
 var volume = device.getMusicVolume();
 device.setMusicVolume(0);
 
-// 把音乐暂停
-//
-media.pauseMusic();
 var back_track_flag = 0;
 
 /*
@@ -456,6 +463,8 @@ if (!finish_list[2] && !finish_list[0]) {
         textStartsWith("正在收听").findOne().parent().child(1).child(0).click();
     }
     sleep(random_time(delay_time));
+    close_music_widget();
+    sleep(random_time(delay_time));
 }
 
 back_track_flag = 1;
@@ -517,8 +526,6 @@ sleep(random_time(delay_time / 2));
 /*
  *********************竞赛部分********************
  */
-// 把音乐打开
-media.resumeMusic();
 back_track_flag = 2;
 
 /**
