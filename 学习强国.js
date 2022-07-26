@@ -69,14 +69,14 @@ var special_problem3 = '下列选项中，';
 
 /**
  * hash函数
- * 6469通过从3967到5591中的质数，算出的最优值，具体可以看评估代码
+ * 8599质数，算出的最优值，具体可以看评估代码
  */
 function hash(string) {
     var hash = 0;
     for (var i = 0; i < string.length; i++) {
         hash += string.charCodeAt(i);
     }
-    return hash % 6469;
+    return hash % 8599;
 }
 
 // 存入
@@ -120,7 +120,7 @@ if (!storage.contains('answer_question_bank_update_storage')) {
 
 var date = new Date();
 // 每周六定时检测更新题库，周日为0
-if (date.getDay() == 1) {
+if (date.getDay() == 3) {
     var answer_question_bank_update = storage.get("answer_question_bank_update_storage");
     if (answer_question_bank_update) {
         var answer_question_bank_checked = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/0.json");
