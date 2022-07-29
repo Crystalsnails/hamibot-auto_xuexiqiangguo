@@ -56,8 +56,8 @@ function handling_access_exceptions() {
             var y_end = random(bound.top, bound.bottom);
             x_start = random(x_start - 7, x_start);
             x_end = random(x_end, x_end + 10);
-            gesture(random_time(delay_time), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
-            sleep(random_time(delay_time));
+            gesture(random(delay_time, delay_time + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
+            sleep(delay_time / 2);
             if (textContains("刷新").exists()) {
                 click("刷新");
                 continue;
