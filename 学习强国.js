@@ -120,7 +120,7 @@ if (!storage.contains('answer_question_bank_update_storage')) {
 
 var date = new Date();
 // 每周六定时检测更新题库，周日为0
-if (date.getDay() == 3) {
+if (date.getDay() == 6) {
     var answer_question_bank_update = storage.get("answer_question_bank_update_storage");
     if (answer_question_bank_update) {
         var answer_question_bank_checked = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/0.json");
@@ -211,7 +211,7 @@ function random_time(time) {
 function refresh(orientation) {
     if (orientation) swipe(device.width / 2, (device.height * 13) / 15, device.width / 2, (device.height * 2) / 15, random_time(delay_time / 2));
     else swipe(device.width / 2, (device.height * 6) / 15, device.width / 2, (device.height * 12) / 15, random_time(delay_time / 2));
-    sleep(random_time(delay_time * 2));
+    sleep(random_time(delay_time));
 }
 
 /**
@@ -1042,13 +1042,17 @@ function do_periodic_answer(number) {
  * 处理访问异常
  */
 function handling_access_exceptions() {
+    // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
     var thread_handling_access_exceptions = threads.start(function() {
-    //在新线程执行的代码
         while (true) {
             textContains("访问异常").waitFor();
-            var delay = 1 * 1000;
+            // 滑动按钮">>"位置
+            idContains("nc_1_n1t").waitFor();            
             var bound = idContains("nc_1_n1t").findOne().bounds();
+            // 滑动边框位置
+            text("向右滑动验证").waitFor();
             var slider_bound = text("向右滑动验证").findOne().bounds();
+            // 通过更复杂的手势验证（向右滑动过程中途停顿）
             var x_start = bound.centerX();
             var dx = x_start - slider_bound.left;
             var x_end = slider_bound.right - dx;
@@ -1057,8 +1061,8 @@ function handling_access_exceptions() {
             var y_end = random(bound.top, bound.bottom);
             x_start = random(x_start - 7, x_start);
             x_end = random(x_end, x_end + 10);
-            gesture(random(delay, delay + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
-            sleep(500);
+            gesture(random_time(delay_time), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
+            sleep(random_time(delay_time));
             if (textContains("刷新").exists()) {
                 click("刷新");
                 continue;
@@ -1067,7 +1071,8 @@ function handling_access_exceptions() {
                 click("确定");
                 continue;
             }
-            sleep(1000);
+            // 执行脚本只需通过一次验证即可，防止占用资源
+            break;
         }
     });
     return thread_handling_access_exceptions;
@@ -1140,6 +1145,13 @@ if (!finish_list[12] && weekly_answer_scored < 4 && all_weekly_answers_completed
 if (!storage.contains('all_special_answer_completed_storage')) {
     storage.put('all_special_answer_completed_storage', 'no');
 }
+
+// 保存本地变量，改变存储上次搜索未完成的题目所需时间，用于加速搜索
+if (!storage.contains("quick_search_special_answer_time_storage")) {
+    storage.put("quick_search_special_answer_time_storage", 0);
+}
+
+// 当该账号已完成专项答题，但配置没有转为yes时，也自动跳过
 if (all_special_answer_completed == 'no') {
     all_special_answer_completed = storage.get('all_special_answer_completed_storage');
 }
@@ -1157,6 +1169,10 @@ if (!finish_list[4] && special_answer_scored < 8) {
     var special_flag = false;
     // 是否答题的标志
     var is_answer_special_flag = false;
+    // 均速搜索次数（需要根据此更新加速搜索次数）
+    var comm_search_special_answer_time = 0
+    // 加速搜索次数
+    var quick_search_special_answer_time = storage.get("quick_search_special_answer_time_storage");
 
     // 如果之前的答题全部完成则不向下搜索
     if (all_special_answer_completed == 'yes') {
@@ -1175,16 +1191,38 @@ if (!finish_list[4] && special_answer_scored < 8) {
                 special_i++;
             }
         }
-        if (!special_flag) swipe(500, 1700, 500, 500, random_time(delay_time / 2));
-        if (text('您已经看到了我的底线').exists()) storage.put('all_special_answers_completed_storage', 'yes');
+        // 根据上次搜索时间 加速搜索
+        while (quick_search_special_answer_time > 0) {
+            swipe(device.width / 2, (device.height * 13) / 15, device.width / 2, (device.height * 2) / 15, 100);
+            quick_search_special_answer_time--;
+        }
+        if (!special_flag) {
+            refresh(true);
+            comm_search_special_answer_time++;
+        }
+        // 如果搜索到底部
+        if (text("您已经看到了我的底线").exists()) {
+            storage.put("all_special_answers_completed_storage", "yes");
+            break;
+        }
     }
     sleep(random_time(delay_time * 2));
+    // 更新加速搜索次数
+    if (storage.get("quick_search_special_answer_time_storage") == 0) {
+        // 如果是第一次更新
+        storage.put("quick_search_special_answer_time_storage", comm_search_special_answer_time);
+    } else {
+        var tmp = storage.get("quick_search_special_answer_time_storage");
+        storage.put("quick_search_special_answer_time_storage", tmp + comm_search_special_answer_time);
+    }
+
     if (text('开始答题').exists() || text('您已经看到了我的底线').exists()) {
         text('开始答题').findOne().click();
         is_answer_special_flag = true;
         // 总题数
         className('android.view.View').depth(24).waitFor();
         sleep(random_time(delay_time));
+        // 为兼容新版本新题只有5题，老版有10题
         var num_string = className('android.view.View').depth(24).findOnce(1).text();
         var total_question_num = parseInt(num_string.slice(num_string.indexOf('/') + 1));
         do_periodic_answer(total_question_num);
@@ -1325,7 +1363,6 @@ function do_contest() {
             } catch (error) {
             }
         }
-        img.recycle();
         log("题目: " + question);
         log("选项: " + options_text);
         if (question) do_contest_answer(32, question, options_text);
