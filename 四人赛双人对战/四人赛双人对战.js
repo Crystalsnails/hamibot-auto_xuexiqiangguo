@@ -458,7 +458,6 @@ function ocr_processing(text, if_question) {
     text = text.replace(/\s*/g, "");
     text = text.replace(/_/g, "一");
     text = text.replace(/;/g, "；");
-    text = text.replace(/。/g, "");
     text = text.replace(/`/g, "、");
     text = text.replace(/\?/g, "？");
     text = text.replace(/:/g, "：");
@@ -503,13 +502,17 @@ function ocr_processing(text, if_question) {
  * 处理访问异常
  */
 function handling_access_exceptions() {
+    // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
     var thread_handling_access_exceptions = threads.start(function() {
-    //在新线程执行的代码
         while (true) {
             textContains("访问异常").waitFor();
-            var delay = 1 * 1000;
+            // 滑动按钮">>"位置
+            idContains("nc_1_n1t").waitFor();            
             var bound = idContains("nc_1_n1t").findOne().bounds();
+            // 滑动边框位置
+            text("向右滑动验证").waitFor();
             var slider_bound = text("向右滑动验证").findOne().bounds();
+            // 通过更复杂的手势验证（向右滑动过程中途停顿）
             var x_start = bound.centerX();
             var dx = x_start - slider_bound.left;
             var x_end = slider_bound.right - dx;
@@ -518,8 +521,8 @@ function handling_access_exceptions() {
             var y_end = random(bound.top, bound.bottom);
             x_start = random(x_start - 7, x_start);
             x_end = random(x_end, x_end + 10);
-            gesture(random(delay, delay + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
-            sleep(500);
+            gesture(random_time(delay_time), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
+            sleep(random_time(delay_time));
             if (textContains("刷新").exists()) {
                 click("刷新");
                 continue;
@@ -528,7 +531,8 @@ function handling_access_exceptions() {
                 click("确定");
                 continue;
             }
-            sleep(1000);
+            // 执行脚本只需通过一次验证即可，防止占用资源
+            break;
         }
     });
     return thread_handling_access_exceptions;
