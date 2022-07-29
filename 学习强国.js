@@ -897,7 +897,6 @@ function ocr_processing(text, if_question) {
     text = text.replace(/\s*/g, "");
     text = text.replace(/_/g, "一");
     text = text.replace(/;/g, "；");
-    text = text.replace(/。/g, "");
     text = text.replace(/`/g, "、");
     text = text.replace(/\?/g, "？");
     text = text.replace(/:/g, "：");
