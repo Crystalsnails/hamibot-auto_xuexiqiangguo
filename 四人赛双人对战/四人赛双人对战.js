@@ -19,18 +19,18 @@ var { AK } = hamibot.env;
 var { SK } = hamibot.env;
 
 // 本地存储数据
-var storage = storages.create('data');
+var storage = storages.create("data");
 // 更新题库为answer_question_map
-storage.remove('answer_question_map1');
-storage.remove('answer_question_map2');
-storage.remove('answer_question_map3');
+storage.remove("answer_question_map1");
+storage.remove("answer_question_map2");
+storage.remove("answer_question_map3");
 
 //请求横屏截图权限
 threads.start(function () {
     try {
         var beginBtn;
-        if (beginBtn = classNameContains('Button').textContains("开始").findOne(delay_time));
-        else (beginBtn = classNameContains('Button').textContains("允许").findOne(delay_time));
+        if (beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time));
+        else (beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time));
         beginBtn.click();
     } catch (error) {
     }
@@ -38,7 +38,7 @@ threads.start(function () {
 requestScreenCapture(false);
 sleep(delay_time);
 
-if (whether_improve_accuracy == 'yes' && !AK) {
+if (whether_improve_accuracy == "yes" && !AK) {
     toast("如果你选择了增强版，请配置信息，具体看脚本说明");
     exit();
 }
@@ -53,10 +53,10 @@ if (whether_improve_accuracy == 'yes' && !AK) {
 var answer_question_map = [];
 
 // 当题目为这些词时，题目较多会造成hash表上的一个index过多，此时存储其选项
-var special_problem = '选择正确的读音 选择词语的正确词形 下列词形正确的是 下列不属于二十四史的';
+var special_problem = "选择正确的读音 选择词语的正确词形 下列词形正确的是 下列不属于二十四史的";
 // 当题目为这些词时，在线搜索书名号和逗号后的内容
-var special_problem2 = '根据《中国共 根据《中华人 《中华人民共 根据《化妆品';
-var special_problem3 = '下列选项中，';
+var special_problem2 = "根据《中国共 根据《中华人 《中华人民共 根据《化妆品";
+var special_problem3 = "下列选项中，";
 
 /**
  * hash函数
@@ -104,9 +104,9 @@ function map_get(key) {
 /**
  * 定时更新题库，通过在线访问辅助文件判断题库是否有更新
  */
-if (!storage.contains('answer_question_bank_update_storage')) {
-    storage.put('answer_question_bank_update_storage', 0);
-    storage.remove('answer_question_map');
+if (!storage.contains("answer_question_bank_update_storage")) {
+    storage.put("answer_question_bank_update_storage", 0);
+    storage.remove("answer_question_map");
 }
 
 var date = new Date();
@@ -115,10 +115,10 @@ if (date.getDay() == 6) {
     var answer_question_bank_update = storage.get("answer_question_bank_update_storage");
     if (answer_question_bank_update) {
         var answer_question_bank_checked = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/0.json");
-        if ((answer_question_bank_checked.statusCode >= 200 && answer_question_bank_checked.statusCode < 300)) storage.remove('answer_question_map');
+        if ((answer_question_bank_checked.statusCode >= 200 && answer_question_bank_checked.statusCode < 300)) storage.remove("answer_question_map");
     } else {
         var answer_question_bank_checked = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/1.json");
-        if ((answer_question_bank_checked.statusCode >= 200 && answer_question_bank_checked.statusCode < 300)) storage.remove('answer_question_map');
+        if ((answer_question_bank_checked.statusCode >= 200 && answer_question_bank_checked.statusCode < 300)) storage.remove("answer_question_map");
     }
 }
 
@@ -129,7 +129,7 @@ if (date.getDay() == 6) {
 /**
  * 通过Http下载题库到本地，并进行处理，如果本地已经存在则无需下载
  */
-if (!storage.contains('answer_question_map')) {
+if (!storage.contains("answer_question_map")) {
     toast("正在下载题库");
     // 使用 Github 文件加速服务：https://gh-proxy.com/
     var answer_question_bank = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2020.json");
@@ -146,30 +146,30 @@ if (!storage.contains('answer_question_map')) {
     toast("格式化题库");
     for (var question in answer_question_bank) {
         var answer = answer_question_bank[question];
-        if (special_problem.indexOf(question.slice(0, 7)) != -1) question = question.slice(question.indexOf('|') + 1);
+        if (special_problem.indexOf(question.slice(0, 7)) != -1) question = question.slice(question.indexOf("|") + 1);
         else {
-            question = question.slice(0, question.indexOf('|'));
-            question = question.slice(0, question.indexOf(' '));
+            question = question.slice(0, question.indexOf("|"));
+            question = question.slice(0, question.indexOf(" "));
             question = question.slice(0, 25);
         }
         map_set(question, answer);
     }
     sleep(random_time(delay_time * 5));
-    storage.put('answer_question_map', answer_question_map);
+    storage.put("answer_question_map", answer_question_map);
 
     // 通过异或运算切换更新题库的开关，并记录
     var k = storage.get("answer_question_bank_update_storage") ^ 1;
-    storage.put('answer_question_bank_update_storage', k);
+    storage.put("answer_question_bank_update_storage", k);
 }
 
-var answer_question_map = storage.get('answer_question_map');
+var answer_question_map = storage.get("answer_question_map");
 
 /**
  * 模拟点击不可以点击元素
  * @param {UiObject / string} target 控件或者是控件文本
  */
 function my_click_non_clickable(target) {
-    if (typeof (target) == 'string') {
+    if (typeof (target) == "string") {
         text(target).waitFor();
         var tmp = text(target).findOne().bounds();
     } else {
@@ -187,7 +187,7 @@ function random_time(time) {
 
 function entry_model(number) {
     sleep(random_time(delay_time * 2));
-    var model = className('android.view.View').depth(22).findOnce(number);
+    var model = className("android.view.View").depth(22).findOnce(number);
     while (!model.child(3).click());
 }
 
@@ -195,8 +195,8 @@ function entry_model(number) {
 function my_click_clickable(target) {
     text(target).waitFor();
     // 防止点到页面中其他有包含“我的”的控件，比如搜索栏
-    if (target == '我的') {
-        id('comm_head_xuexi_mine').findOne().click();
+    if (target == "我的") {
+        id("comm_head_xuexi_mine").findOne().click();
     } else {
         click(target);
     }
@@ -214,7 +214,7 @@ function select_option(answer, depth_click_option, options_text) {
     // 如果找到答案对应的选项
     if (option_i != -1) {
         try {
-            className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOnce(option_i).click();
+            className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOnce(option_i).click();
             return;
         } catch (error) {
         }
@@ -234,14 +234,14 @@ function select_option(answer, depth_click_option, options_text) {
             }
         }
         try {
-            className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOnce(max_similarity_index).click();
+            className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOnce(max_similarity_index).click();
             return;
         } catch (error) {
         }
     } else {
         try {
             // 没找到答案，点击第一个
-            className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
+            className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
         } catch (error) {
         }
     }
@@ -259,7 +259,7 @@ function do_contest_answer(depth_click_option, question, options_text) {
     if (special_problem.indexOf(question.slice(0, 7)) != -1) {
         var original_options_text = options_text.concat();
         var sorted_options_text = original_options_text.sort();
-        question = sorted_options_text.join('|');
+        question = sorted_options_text.join("|");
     }
     // 从哈希表中取出答案
     var answer = map_get(question);
@@ -288,13 +288,13 @@ function do_contest_answer(depth_click_option, question, options_text) {
 
         if (result) {
             // 答案文本
-            var result = result[0].slice(5, result[0].indexOf('<'));
+            var result = result[0].slice(5, result[0].indexOf("<"));
             log("答案: " + result);
             select_option(result, depth_click_option, options_text);
         } else {
             // 没找到答案，点击第一个
             try {
-                className('android.widget.RadioButton').depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
+                className("android.widget.RadioButton").depth(depth_click_option).clickable(true).findOne(delay_time * 3).click();
             } catch (error) {
             }
         }
@@ -334,14 +334,14 @@ function getSimilarity(str1, str2) {
  */
 function get_baidu_token() {
     var res = http.post(
-        'https://aip.baidubce.com/oauth/2.0/token',
+        "https://aip.baidubce.com/oauth/2.0/token",
         {
-            grant_type: 'client_credentials',
+            grant_type: "client_credentials",
             client_id: AK,
             client_secret: SK,
         }
     );
-    return res.body.json()['access_token'];
+    return res.body.json()["access_token"];
 }
 
 if (whether_improve_accuracy == "yes") var token = get_baidu_token();
@@ -356,10 +356,10 @@ function baidu_ocr_api(img) {
     var options_text = [];
     var question = "";
     var res = http.post(
-        'https://aip.baidubce.com/rest/2.0/ocr/v1/general',
+        "https://aip.baidubce.com/rest/2.0/ocr/v1/general",
         {
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                "Content-Type": "application/x-www-form-urlencoded"
             },
             access_token: token,
             image: images.toBase64(img),
@@ -382,8 +382,8 @@ function baidu_ocr_api(img) {
                 /**
                  * location:
                  * 识别到的文字块的区域位置信息，列表形式，
-                 * location['left']表示定位位置的长方形左上顶点的水平坐标
-                 * location['top']表示定位位置的长方形左上顶点的垂直坐标
+                 * location["left"]表示定位位置的长方形左上顶点的水平坐标
+                 * location["top"]表示定位位置的长方形左上顶点的垂直坐标
                  */
                 if (words_list[0].words.indexOf(".") != -1 && i > 0 && Math.abs(words_list[i].location["left"] - words_list[i - 1].location["left"]) > 100) question_flag = true;
                 if (!question_flag) question += words_list[i].words;
@@ -466,7 +466,6 @@ function ocr_processing(text, if_question) {
     text = text.replace(/!/g, "！");
     text = text.replace(/\(/g, "（");
     text = text.replace(/\)/g, "）");
-
     // 拼音修改
     text = text.replace(/ā/g, "a");
     text = text.replace(/á/g, "a");
@@ -508,8 +507,8 @@ function handling_access_exceptions() {
     var thread_handling_access_exceptions = threads.start(function() {
         while (true) {
             textContains("访问异常").waitFor();
-            // 滑动按钮">>"位置
-            idContains("nc_1_n1t").waitFor();            
+            // 滑动按钮“>>”位置
+            idContains("nc_1_n1t").waitFor();
             var bound = idContains("nc_1_n1t").findOne().bounds();
             // 滑动边框位置
             text("向右滑动验证").waitFor();
@@ -590,25 +589,25 @@ function do_contest() {
     }
 }
 
-if (!className('android.view.View').depth(21).text('学习积分').exists()) {
-    app.launchApp('学习强国');
+if (!className("android.view.View").depth(21).text("学习积分").exists()) {
+    app.launchApp("学习强国");
     sleep(random_time(delay_time * 3));
     var while_count = 0;
-    while (!id('comm_head_title').exists() && while_count < 5) {
+    while (!id("comm_head_title").exists() && while_count < 5) {
         while_count++;
         back();
         sleep(random_time(delay_time));
     }
-    app.launchApp('学习强国');
+    app.launchApp("学习强国");
     sleep(random_time(delay_time));
-    my_click_clickable('我的');
-    my_click_clickable('学习积分');
+    my_click_clickable("我的");
+    my_click_clickable("学习积分");
 }
 
 /*
 **********四人赛*********
 */
-if (four_player_battle == 'yes') {
+if (four_player_battle == "yes") {
     log("四人赛");
     sleep(random_time(delay_time));
 
@@ -635,7 +634,7 @@ if (four_player_battle == 'yes') {
 /*
 **********双人对战*********
 */
-if (two_player_battle == 'yes') {
+if (two_player_battle == "yes") {
     log("双人对战");
     sleep(random_time(delay_time));
 
@@ -661,5 +660,5 @@ if (two_player_battle == 'yes') {
 
 // 震动半秒
 device.vibrate(500);
-toast('脚本运行完成');
+toast("脚本运行完成");
 exit();
