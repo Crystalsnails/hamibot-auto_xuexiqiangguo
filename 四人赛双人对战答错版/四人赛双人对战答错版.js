@@ -42,7 +42,7 @@ function handling_access_exceptions() {
     var thread_handling_access_exceptions = threads.start(function() {
         while (true) {
             textContains('访问异常').waitFor();
-            // 滑动按钮">>"位置
+            // 滑动按钮“>>”位置
             idContains('nc_1_n1t').waitFor();
             var bound = idContains('nc_1_n1t').findOne().bounds();
             // 滑动边框位置
