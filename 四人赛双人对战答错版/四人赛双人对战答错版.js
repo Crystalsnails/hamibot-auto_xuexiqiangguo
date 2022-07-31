@@ -1,4 +1,5 @@
 auto.waitFor()
+
 var { four_player_battle } = hamibot.env;
 var { two_player_battle } = hamibot.env;
 var { four_player_count } = hamibot.env;
@@ -27,7 +28,7 @@ function my_click_clickable(target) {
     text(target).waitFor();
     // 防止点到页面中其他有包含“我的”的控件，比如搜索栏
     if (target == '我的') {
-        id("comm_head_xuexi_mine").findOne().click();
+        id('comm_head_xuexi_mine').findOne().click();
     } else {
         click(target);
     }
@@ -40,13 +41,13 @@ function handling_access_exceptions() {
     // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
     var thread_handling_access_exceptions = threads.start(function() {
         while (true) {
-            textContains("访问异常").waitFor();
+            textContains('访问异常').waitFor();
             // 滑动按钮">>"位置
-            idContains("nc_1_n1t").waitFor();            
-            var bound = idContains("nc_1_n1t").findOne().bounds();
+            idContains('nc_1_n1t').waitFor();            
+            var bound = idContains('nc_1_n1t').findOne().bounds();
             // 滑动边框位置
-            text("向右滑动验证").waitFor();
-            var slider_bound = text("向右滑动验证").findOne().bounds();
+            text('向右滑动验证').waitFor();
+            var slider_bound = text('向右滑动验证').findOne().bounds();
             // 通过更复杂的手势验证（向右滑动过程中途停顿）
             var x_start = bound.centerX();
             var dx = x_start - slider_bound.left;
@@ -58,12 +59,12 @@ function handling_access_exceptions() {
             x_end = random(x_end, x_end + 10);
             gesture(random(delay_time, delay_time + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
             sleep(delay_time / 2);
-            if (textContains("刷新").exists()) {
-                click("刷新");
+            if (textContains('刷新').exists()) {
+                click('刷新');
                 continue;
             }
-            if (textContains("网络开小差").exists()) {
-                click("确定");
+            if (textContains('网络开小差').exists()) {
+                click('确定');
                 continue;
             }
             // 执行脚本只需通过一次验证即可，防止占用资源
@@ -125,7 +126,7 @@ if (four_player_battle == 'yes') {
             sleep(random_time(delay_time));
         }
     }
-    sleep(random_time(delay_time * 3));
+    sleep(random_time(delay_time * 2));
     back();
     sleep(random_time(delay_time));
     back();
@@ -146,7 +147,7 @@ if (two_player_battle == 'yes') {
         try {
             className('android.view.View').clickable(true).depth(24).findOnce(1).click();
         } catch (error) {
-            className("android.view.View").text("").findOne().click();
+            className('android.view.View').text('').findOne().click();
         }
         do_it();
         sleep(random_time(delay_time));
@@ -156,7 +157,6 @@ if (two_player_battle == 'yes') {
             sleep(random_time(delay_time));
         }
     }
-
     sleep(random_time(delay_time));
     back();
     sleep(random_time(delay_time));
