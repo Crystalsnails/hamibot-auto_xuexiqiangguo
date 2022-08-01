@@ -466,6 +466,27 @@ function ocr_processing(text, if_question) {
     text = text.replace(/!/g, "！");
     text = text.replace(/\(/g, "（");
     text = text.replace(/\)/g, "）");
+    // 拼音修改
+    text = text.replace(/ā/g, "a");
+    text = text.replace(/á/g, "a");
+    text = text.replace(/ǎ/g, "a");
+    text = text.replace(/à/g, "a");
+    text = text.replace(/ō/g, "o");
+    text = text.replace(/ó/g, "o");
+    text = text.replace(/ǒ/g, "o");
+    text = text.replace(/ò/g, "o");
+    text = text.replace(/ē/g, "e");
+    text = text.replace(/é/g, "e");
+    text = text.replace(/ě/g, "e");
+    text = text.replace(/è/g, "e");
+    text = text.replace(/ī/g, "i");
+    text = text.replace(/í/g, "i");
+    text = text.replace(/ǐ/g, "i");
+    text = text.replace(/ì/g, "i");
+    text = text.replace(/ū/g, "u");
+    text = text.replace(/ú/g, "u");
+    text = text.replace(/ǔ/g, "u");
+    text = text.replace(/ù/g, "u");
 
     if (if_question) {
         text = text.slice(text.indexOf(".") + 1);
