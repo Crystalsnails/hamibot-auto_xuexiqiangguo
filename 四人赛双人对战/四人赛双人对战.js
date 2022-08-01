@@ -53,7 +53,7 @@ if (whether_improve_accuracy == "yes" && !AK) {
 var answer_question_map = [];
 
 // 当题目为这些词时，题目较多会造成hash表上的一个index过多，此时存储其选项
-var special_problem = "选择正确的读音 选择词语的正确词形 下列词形正确的是 下列不属于二十四史的";
+var special_problem = "选择正确的读音 选择词语的正确词形 下列词形正确的是";
 // 当题目为这些词时，在线搜索书名号和逗号后的内容
 var special_problem2 = "根据《中国共 根据《中华人 《中华人民共 根据《化妆品";
 var special_problem3 = "下列选项中，";
@@ -466,27 +466,6 @@ function ocr_processing(text, if_question) {
     text = text.replace(/!/g, "！");
     text = text.replace(/\(/g, "（");
     text = text.replace(/\)/g, "）");
-    // 拼音修改
-    text = text.replace(/ā/g, "a");
-    text = text.replace(/á/g, "a");
-    text = text.replace(/ǎ/g, "a");
-    text = text.replace(/à/g, "a");
-    text = text.replace(/ō/g, "o");
-    text = text.replace(/ó/g, "o");
-    text = text.replace(/ǒ/g, "o");
-    text = text.replace(/ò/g, "o");
-    text = text.replace(/ē/g, "e");
-    text = text.replace(/é/g, "e");
-    text = text.replace(/ě/g, "e");
-    text = text.replace(/è/g, "e");
-    text = text.replace(/ī/g, "i");
-    text = text.replace(/í/g, "i");
-    text = text.replace(/ǐ/g, "i");
-    text = text.replace(/ì/g, "i");
-    text = text.replace(/ū/g, "u");
-    text = text.replace(/ú/g, "u");
-    text = text.replace(/ǔ/g, "u");
-    text = text.replace(/ù/g, "u");
 
     if (if_question) {
         text = text.slice(text.indexOf(".") + 1);
