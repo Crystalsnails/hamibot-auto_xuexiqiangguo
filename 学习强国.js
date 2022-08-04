@@ -234,7 +234,7 @@ function my_click_clickable(target) {
 }
 
 /**
- * 模拟点击可点击元素
+ * 模拟随机时间
  * @param {int} time 时间
  * @return {int} 随机后的时间值
  */
