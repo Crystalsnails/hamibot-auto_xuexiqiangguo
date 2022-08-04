@@ -1,50 +1,71 @@
-auto.waitFor();
+/**
+ * 检查和设置运行环境
+ * @param whether_improve_accuracy {String} 是否提高ocr精度 "yes":开启; "no"(默认):不开启
+ * @param AK {String} 百度API KEY
+ * @param SK {String} 百度Secret KEY
+ * @return {int} 静音前的音量
+ */
+function check_set_env(whether_improve_accuracy, AK, SK) {
+    // 检查无障碍服务是否已经启用
+    auto.waitFor();
 
-// 检查Hamibot版本是否支持ocr
-if (app.versionName < "1.3.1") {
-    toast("请到官网将Hamibot更新至v1.3.1版本或更高版本");
-    exit();
-}
-
-var { delay_time } = hamibot.env;
-var { four_player_battle } = hamibot.env;
-var { two_player_battle } = hamibot.env;
-var { count } = hamibot.env;
-var { whether_improve_accuracy } = hamibot.env;
-count = Number(count);
-delay_time = Number(delay_time) * 1000;
-
-// 调用百度api所需参数
-var { AK } = hamibot.env;
-var { SK } = hamibot.env;
-
-// 本地存储数据
-var storage = storages.create("data");
-// 更新题库为answer_question_map
-storage.remove("answer_question_map1");
-storage.remove("answer_question_map2");
-storage.remove("answer_question_map3");
-
-//请求横屏截图权限
-threads.start(function () {
-    try {
-        var beginBtn;
-        if (beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time));
-        else (beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time));
-        beginBtn.click();
-    } catch (error) {
+    // 检查在选择提高精确度的情况下，AK和SK是否填写
+    if (whether_improve_accuracy == "yes" && (!AK || !SK)) {
+        toast("如果你选择了增强版，请配置信息，具体看脚本说明");
+        exit();
     }
-});
-requestScreenCapture(false);
-sleep(delay_time);
 
-if (whether_improve_accuracy == "yes" && !AK) {
-    toast("如果你选择了增强版，请配置信息，具体看脚本说明");
-    exit();
+    // 检查Hamibot版本是否支持ocr
+    if (app.versionName < "1.3.1") {
+        toast("请将Hamibot更新至v1.3.1版本或更高版本");
+        exit();
+    }
+
+    // 保持屏幕唤醒状态
+    device.keepScreenDim();
+
+    //请求横屏截图权限
+    threads.start(function () {
+        try {
+            var beginBtn;
+            if ((beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time)));
+            else beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time);
+            beginBtn.click();
+        } catch (error) {
+        }
+    });
+    requestScreenCapture(false);
+
+    // 获得原来的媒体音量
+    var vol = device.getMusicVolume();
+
+    return vol;
 }
 
 /**
- * 定义HashTable类，用于存储本地题库，查找效率更高
+ * 获取配置参数及本地存储数据
+ */
+// 基础数据
+var { delay_time } = hamibot.env;
+delay_time = Number(delay_time) * 1000;
+var { four_player_battle, two_player_battle } = hamibot.env;
+var { count } = hamibot.env;
+count = Number(count);
+var { whether_improve_accuracy } = hamibot.env;
+
+// 调用百度api所需参数
+var { AK, SK } = hamibot.env;
+
+// 本地存储数据
+var storage = storages.create("data");
+
+// 更新题库为answer_question_map
+storage.remove("answer_question_map1");
+
+var vol = check_set_env(whether_improve_accuracy, AK, SK);
+
+/**
+ * 定义HashTable类(貌似hamibot有问题，无法定义class， 因此写为函数)，用于存储本地题库，查找效率更高
  * 由于hamibot不支持存储自定义对象和new Map()，因此这里用列表存储自己实现
  * 在存储时，不需要存储整个question，可以仅根据选项来对应question，这样可以省去ocr题目的花费
  * 但如果遇到选项为special_problem数组中的模糊词，无法对应question，则需要存储整个问题
@@ -59,10 +80,11 @@ var special_problem2 = "根据《中国共 根据《中华人 《中华人民共
 var special_problem3 = "下列选项中，";
 
 /**
- * hash函数
- * 8539质数，重新算出的最优值，具体可以看评估代码
+ * hash函数，8539质数，重新算出的最优值，具体可以看评估代码
+ * @param string {String} 需要计算hash值的String
+ * @return {int} string的hash值
  */
-function hash(string) {
+function get_hash(string) {
     var hash = 0;
     for (var i = 0; i < string.length; i++) {
         hash += string.charCodeAt(i);
@@ -70,9 +92,14 @@ function hash(string) {
     return hash % 8539;
 }
 
-// 存入
+/**
+ * 将题目和答案存入answer_question_map
+ * @param key {String} 键：表示题目的问题
+ * @param value {String} 值：表示题目的答案
+ * @return void
+ */
 function map_set(key, value) {
-    var index = hash(key);
+    var index = get_hash(key);
     if (answer_question_map[index] === undefined) {
         answer_question_map[index] = [
             [key, value]
@@ -88,9 +115,13 @@ function map_set(key, value) {
     }
 };
 
-// 取出
+/**
+ * 根据题目在answer_question_map中搜索答案
+ * @param key {String} 键：表示题目的问题
+ * @return {String} 题目的答案，如果没有搜索到则返回null
+ */
 function map_get(key) {
-    var index = hash(key);
+    var index = get_hash(key);
     if (answer_question_map[index] != undefined) {
         for (var i = 0; i < answer_question_map[index].length; i++) {
             if (answer_question_map[index][i][0] == key) {
@@ -127,9 +158,10 @@ if (date.getDay() == 6) {
 //｝
 
 /**
- * 通过Http下载题库到本地，并进行处理，如果本地已经存在则无需下载
+ * 通过Http更新\下载题库到本地，并进行处理，如果本地已经存在则无需下载
+ * @return {List} 题库
  */
-if (!storage.contains("answer_question_map")) {
+function map_update() {
     toast("正在下载题库");
     // 使用 Github 文件加速服务：https://gh-proxy.com/
     var answer_question_bank = http.get("https://git.yumenaka.net/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2020.json");
@@ -155,6 +187,7 @@ if (!storage.contains("answer_question_map")) {
         map_set(question, answer);
     }
     sleep(random_time(delay_time * 5));
+    // 将题库存储到本地
     storage.put("answer_question_map", answer_question_map);
 
     // 通过异或运算切换更新题库的开关，并记录
@@ -162,7 +195,11 @@ if (!storage.contains("answer_question_map")) {
     storage.put("answer_question_bank_update_storage", k);
 }
 
-var answer_question_map = storage.get("answer_question_map");
+if (!storage.contains("answer_question_map")) {
+    map_update();
+} else {
+    answer_question_map = storage.get("answer_question_map");
+}
 
 /**
  * 模拟点击不可以点击元素
@@ -180,18 +217,10 @@ function my_click_non_clickable(target) {
     click(randomX, randomY);
 }
 
-// 模拟随机时间
-function random_time(time) {
-    return time + random(100, 1000);
-}
-
-function entry_model(number) {
-    sleep(random_time(delay_time * 2));
-    var model = className("android.view.View").depth(22).findOnce(number);
-    while (!model.child(3).click());
-}
-
-// 模拟点击可点击元素
+/**
+ * 模拟点击可点击元素
+ * @param {string} target 控件文本
+ */
 function my_click_clickable(target) {
     text(target).waitFor();
     // 防止点到页面中其他有包含“我的”的控件，比如搜索栏
@@ -200,6 +229,25 @@ function my_click_clickable(target) {
     } else {
         click(target);
     }
+}
+
+/**
+ * 模拟随机时间
+ * @param {int} time 时间
+ * @return {int} 随机后的时间值
+ */
+function random_time(time) {
+    return time + random(100, 1000);
+}
+
+/**
+ * 点击对应的去答题
+ * @param {int} number 10和11分别为四人赛双人对战
+ */
+function entry_model(number) {
+    sleep(random_time(delay_time * 2));
+    var model = className("android.view.View").depth(22).findOnce(number);
+    while (!model.child(3).click());
 }
 
 /**
