@@ -879,7 +879,8 @@ function baidu_ocr_api(img) {
     // 处理question
     question = question.replace(/\s*/g, "");
     question = question.replace(/,/g, "，");
-    question = question.replace(/\-/g, "－");
+    question = question.replace(/\-/g, "—");
+    question = question.replace(/－/g, "—");
     question = question.slice(question.indexOf(".") + 1);
     question = question.slice(0, 25);
     return [question, options_text];
@@ -937,7 +938,8 @@ function ocr_processing(text, if_question) {
     text = text.replace(/,/g, "，");
     text = text.replace(/\s*/g, "");
     text = text.replace(/_/g, "一");
-    text = text.replace(/\-/g, "－");
+    text = text.replace(/\-/g, "—");
+    text = text.replace(/－/g, "—");
     text = text.replace(/;/g, "；");
     text = text.replace(/`/g, "、");
     text = text.replace(/\?/g, "？");
