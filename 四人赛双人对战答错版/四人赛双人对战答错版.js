@@ -1,5 +1,21 @@
-auto.waitFor()
+/**
+ * 检查和设置运行环境
+ * @return {int} 静音前的音量
+ */
+function check_set_env() {
+    // 检查无障碍服务是否已经启用
+    auto.waitFor();
 
+    // 获得原来的媒体音量
+    var vol = device.getMusicVolume();
+
+    return vol;
+}
+
+/**
+ * 获取配置参数及本地存储数据
+ */
+// 基础数据
 var { four_player_battle } = hamibot.env;
 var { two_player_battle } = hamibot.env;
 var { four_player_count } = hamibot.env;
@@ -10,20 +26,12 @@ four_player_count = Number(four_player_count);
 two_player_count = Number(two_player_count);
 contest_delay_time = Number(contest_delay_time) * 1000;
 
-sleep(delay_time);
+var vol = check_set_env();
 
-// 模拟随机时间
-function random_time(time) {
-    return time + random(100, 1000);
-}
-
-function entry_model(number) {
-    sleep(random_time(delay_time * 2));
-    var model = className("android.view.View").depth(22).findOnce(number);
-    while (!model.child(3).click());
-}
-
-// 模拟点击可点击元素
+/**
+ * 模拟点击可点击元素
+ * @param {string} target 控件文本
+ */
 function my_click_clickable(target) {
     text(target).waitFor();
     // 防止点到页面中其他有包含“我的”的控件，比如搜索栏
@@ -33,6 +41,26 @@ function my_click_clickable(target) {
         click(target);
     }
 }
+
+/**
+ * 模拟随机时间
+ * @param {int} time 时间
+ * @return {int} 随机后的时间值
+ */
+function random_time(time) {
+    return time + random(100, 1000);
+}
+
+/**
+ * 点击对应的去答题
+ * @param {int} number 10和11分别为四人赛双人对战
+ */
+function entry_model(number) {
+    sleep(random_time(delay_time * 2));
+    var model = className("android.view.View").depth(22).findOnce(number);
+    while (!model.child(3).click());
+}
+
 
 /**
  * 处理访问异常
