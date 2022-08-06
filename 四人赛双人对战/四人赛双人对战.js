@@ -75,9 +75,6 @@ var answer_question_map = [];
 
 // 当题目为这些词时，题目较多会造成hash表上的一个index过多，此时存储其选项
 var special_problem = "选择正确的读音 选择词语的正确词形 下列词形正确的是";
-// 当题目为这些词时，在线搜索书名号和逗号后的内容
-var special_problem2 = "根据《中国共 根据《中华人 《中华人民共 根据《化妆品";
-var special_problem3 = "下列选项中，";
 
 /**
  * hash函数，8539质数，重新算出的最优值，具体可以看评估代码
@@ -315,8 +312,6 @@ function do_contest_answer(depth_click_option, question, options_text) {
     // 如果本地题库没搜到，则搜网络题库
     if (answer == null) {
         var result;
-        if (special_problem2.indexOf(question.slice(0, 6)) != -1 && question.slice(18, 25) != -1) question = question.slice(18, 25);
-        if (special_problem3.indexOf(question.slice(0, 6)) != -1 && question.slice(6, 12) != -1) question = question.slice(6, 12);
         // 发送http请求获取答案 网站搜题速度 r1 > r2
         try {
             // 此网站只支持十个字符的搜索
@@ -448,8 +443,7 @@ function baidu_ocr_api(img) {
     // 处理question
     question = question.replace(/\s*/g, "");
     question = question.replace(/,/g, "，");
-    question = question.replace(/\-/g, "—");
-    question = question.replace(/－/g, "—");
+    question = question.replace(/\-/g, "－");
     question = question.slice(question.indexOf(".") + 1);
     question = question.slice(0, 25);
     return [question, options_text];
@@ -507,8 +501,7 @@ function ocr_processing(text, if_question) {
     text = text.replace(/,/g, "，");
     text = text.replace(/\s*/g, "");
     text = text.replace(/_/g, "一");
-    text = text.replace(/\-/g, "—");
-    text = text.replace(/－/g, "—");
+    text = text.replace(/\-/g, "－");
     text = text.replace(/;/g, "；");
     text = text.replace(/`/g, "、");
     text = text.replace(/\?/g, "？");
