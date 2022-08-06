@@ -659,11 +659,11 @@ if (four_player_battle == "yes") {
     className("android.view.View").depth(21).text("学习积分").waitFor();
     entry_model(10);
 
-    for (var i = 0; i < 2; i++) {
+    for (var i = 0; i < count; i++) {
         sleep(random_time(delay_time));
         my_click_clickable("开始比赛");
         do_contest();
-        if (i == 0) {
+        if (i == 0 && count == 2) {
             sleep(random_time(delay_time * 2));
             my_click_clickable("继续挑战");
             sleep(random_time(delay_time));
