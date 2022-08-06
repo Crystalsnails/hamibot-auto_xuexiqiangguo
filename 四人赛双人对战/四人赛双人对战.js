@@ -62,7 +62,6 @@ var storage = storages.create("data");
 
 // 更新题库为answer_question_map
 storage.remove("answer_question_map1");
-//
 
 var vol = check_set_env(whether_improve_accuracy, AK, SK);
 
