@@ -1320,6 +1320,7 @@ if (!finish_list[5]) {
             // 如果答错，第一次立即复活机会
             if (text("立即复活").exists()) {
                 num -= 2;
+                sleep(random_time(delay_time / 2));
                 click("立即复活");
                 sleep(random_time(delay_time * 3));
                 if (text("访问异常").exists()) {
