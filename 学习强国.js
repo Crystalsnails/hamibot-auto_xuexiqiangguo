@@ -1639,6 +1639,8 @@ sleep(random_time(delay_time));
 device.cancelKeepingAwake();
 // 恢复媒体音量
 device.setMusicVolume(vol);
+home();
+sleep(random_time(delay_time));
 // 震动半秒
 device.vibrate(500);
 toast("脚本运行完成");
