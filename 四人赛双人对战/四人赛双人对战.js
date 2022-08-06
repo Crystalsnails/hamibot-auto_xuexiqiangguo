@@ -47,11 +47,12 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
  */
 // 基础数据
 var { delay_time } = hamibot.env;
-delay_time = Number(delay_time) * 1000;
-var { four_player_battle, two_player_battle } = hamibot.env;
+var { four_player_battle } = hamibot.env;
+var { two_player_battle } = hamibot.env;
 var { count } = hamibot.env;
-count = Number(count);
 var { whether_improve_accuracy } = hamibot.env;
+count = Number(count);
+delay_time = Number(delay_time) * 1000;
 
 // 调用百度api所需参数
 var { AK, SK } = hamibot.env;
@@ -160,7 +161,7 @@ if (date.getDay() == 6) {
  */
 function map_update() {
     toast("正在下载题库");
-    // 使用 GitCode 题库
+    // 使用 GitCode 上存放的题库
     var answer_question_bank = http.get("https://gitcode.net/McMug2020/XXQG_TiKu/-/raw/master/%E9%A2%98%E5%BA%93_McMug2020.json");
     sleep(random_time(delay_time * 3));
     // 如果资源过期或无法访问则换成别的地址
