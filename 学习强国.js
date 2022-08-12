@@ -82,7 +82,7 @@ var special_problem2 = "根据《中国共 根据《中华人 《中华人民共
 var special_problem3 = "下列选项中，";
 
 /**
- * hash函数，8951质数，重新算出的最优值，具体可以看评估代码
+ * hash函数，3911质数，重新算出的最优值，具体可以看评估代码
  * @param string {String} 需要计算hash值的String
  * @return {int} string的hash值
  */
@@ -91,7 +91,7 @@ function get_hash(string) {
     for (var i = 0; i < string.length; i++) {
         hash += string.charCodeAt(i);
     }
-    return hash % 8951;
+    return hash % 3911;
 }
 
 /**
@@ -144,7 +144,7 @@ if (!storage.contains("answer_question_bank_update_storage")) {
 
 var date = new Date();
 // 每周六定时检测更新题库，周日为0
-if (date.getDay() == 0) {
+if (date.getDay() == 6) {
     var answer_question_bank_update = storage.get("answer_question_bank_update_storage");
     if (answer_question_bank_update) {
         var answer_question_bank_checked = http.get("https://gitcode.net/McMug2020/XXQG_TiKu/-/raw/master/0.json");
