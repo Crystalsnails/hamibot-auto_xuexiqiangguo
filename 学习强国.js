@@ -1590,10 +1590,6 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
         // 退回
         className("android.widget.Button").clickable(true).depth(11).findOne().click();
     }
-    // 在订阅模块中若未拿满分，则重试
-    back_track_flag = 2;
-    back_track();
-    finish_list = get_finish_list();
 }
 
 /*
