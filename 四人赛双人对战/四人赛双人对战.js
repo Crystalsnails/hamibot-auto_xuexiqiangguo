@@ -133,6 +133,12 @@ function map_get(key) {
     return null;
 };
 
+sleep(random_time(delay_time));
+launch('com.hamibot.hamibot');
+textMatches(/Hamibot|日志/).waitFor();
+sleep(random_time(delay_time));
+toast("脚本正在运行");
+
 /**
  * 定时更新题库，通过在线访问辅助文件判断题库是否有更新
  */
