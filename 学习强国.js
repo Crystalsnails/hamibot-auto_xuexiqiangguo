@@ -134,6 +134,12 @@ function map_get(key) {
     return null;
 };
 
+sleep(random_time(delay_time));
+launch('com.hamibot.hamibot');
+textMatches(/Hamibot|日志/).waitFor();
+sleep(random_time(delay_time));
+toast("脚本正在运行");
+
 /**
  * 定时更新题库，通过在线访问辅助文件判断题库是否有更新
  */
@@ -1322,10 +1328,6 @@ if (!finish_list[5]) {
                 num -= 2;
                 sleep(random_time(delay_time / 2));
                 click("立即复活");
-                sleep(random_time(delay_time * 3));
-                if (text("访问异常").exists()) {
-                    sleep(random_time(delay_time * 7));
-                }
                 // 等待题目加载
                 sleep(random_time(delay_time * 3));
             }
@@ -1365,9 +1367,6 @@ if (!finish_list[5]) {
     } while (!text("再来一局").exists() && !text("结束本局").exists());
     click("结束本局");
     sleep(random_time(delay_time * 3));    
-    if (text("访问异常").exists()) {
-        sleep(random_time(delay_time * 7));
-    }
     back();
 }
 
