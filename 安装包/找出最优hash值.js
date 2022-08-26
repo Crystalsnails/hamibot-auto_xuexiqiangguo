@@ -3,6 +3,12 @@ auto.waitFor();
 // 保持屏幕唤醒状态
 device.keepScreenDim();
 
+sleep(random_time(delay_time));
+launch('com.hamibot.hamibot');
+textMatches(/Hamibot|日志/).waitFor();
+toast("脚本正在运行");
+sleep(random_time(delay_time));
+
 /* 评估各hash值，找出最优利用率，最小平均值，最小最大值的哈希值 */
 
 var max_utilization = 0;
