@@ -45,8 +45,8 @@ function my_click_clickable(target) {
 sleep(random_time(delay_time));
 launch('com.hamibot.hamibot');
 textMatches(/Hamibot|日志/).waitFor();
-sleep(random_time(delay_time));
 toast("脚本正在运行");
+sleep(random_time(delay_time));
 
 /**
  * 模拟随机时间
