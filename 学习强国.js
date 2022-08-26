@@ -76,13 +76,13 @@ var vol = check_set_env(whether_improve_accuracy, AK, SK);
 var answer_question_map = [];
 
 // 当题目为这些词时，题目较多会造成hash表上的一个index过多，此时存储其选项
-var special_problem = "选择正确的读音 选择词语的正确词形 下列词形正确的是";
+var special_problem = "选择正确的读音 选择词语的正确词形 下列词形正确的是 选择正确的字形 下列词语字形正确的是";
 // 当题目为这些词时，在线搜索书名号和逗号后的内容
 var special_problem2 = "根据《中国共 根据《中华人 《中华人民共 根据《化妆品";
 var special_problem3 = "下列选项中，";
 
 /**
- * hash函数，3911质数，重新算出的最优值，具体可以看评估代码
+ * hash函数，7853质数，重新算出的最优值，具体可以看评估代码
  * @param string {String} 需要计算hash值的String
  * @return {int} string的hash值
  */
@@ -91,7 +91,7 @@ function get_hash(string) {
     for (var i = 0; i < string.length; i++) {
         hash += string.charCodeAt(i);
     }
-    return hash % 3911;
+    return hash % 7853;
 }
 
 /**
@@ -137,8 +137,8 @@ function map_get(key) {
 sleep(random_time(delay_time));
 launch('com.hamibot.hamibot');
 textMatches(/Hamibot|日志/).waitFor();
-sleep(random_time(delay_time));
 toast("脚本正在运行");
+sleep(random_time(delay_time));
 
 /**
  * 定时更新题库，通过在线访问辅助文件判断题库是否有更新
