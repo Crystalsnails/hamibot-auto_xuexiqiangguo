@@ -1109,7 +1109,7 @@ function handling_access_exceptions() {
             var y_end = random(bound.top, bound.bottom);
             x_start = random(x_start - 7, x_start);
             x_end = random(x_end, x_end + 10);
-            gesture(random(delay_time, delay_time + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
+            gesture(random(delay_time * 0.75, delay_time * 0.75 + 75), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
             sleep(delay_time / 2);
             if (textContains("刷新").exists()) {
                 click("刷新");
@@ -1636,13 +1636,15 @@ if (sct_token || pushplus_token) {
 sleep(random_time(delay_time));
 back();
 sleep(random_time(delay_time));
+launch('com.hamibot.hamibot');
+sleep(random_time(delay_time));
 // 取消屏幕唤醒
 device.cancelKeepingAwake();
 // 恢复媒体音量
 device.setMusicVolume(vol);
-home();
-sleep(random_time(delay_time));
 // 震动半秒
 device.vibrate(500);
 toast("脚本运行完成");
+sleep(random_time(delay_time));
+home();
 exit();
