@@ -67,6 +67,24 @@ function entry_model(number) {
     while (!model.child(3).click());
 }
 
+/**
+ * 如果因为某种不知道的bug退出了界面，则使其回到正轨
+ */
+function back_track() {
+    app.launchApp("学习强国");
+    sleep(random_time(delay_time * 2));
+    var while_count = 0;
+    while (!id("comm_head_title").exists() && while_count < 5) {
+        while_count++;
+        back();
+        sleep(random_time(delay_time));
+    }
+    my_click_clickable("我的");
+    sleep(random_time(delay_time));
+    my_click_clickable("学习积分");
+    sleep(random_time(delay_time));
+    text("登录").waitFor();
+}
 
 /**
  * 处理访问异常
@@ -128,26 +146,13 @@ function do_it() {
     }
 }
 
-if (!className("android.view.View").depth(21).text("学习积分").exists()) {
-    app.launchApp("学习强国");
-    sleep(random_time(delay_time * 3));
-    var while_count = 0;
-    while (!id("comm_head_title").exists() && while_count < 5) {
-        while_count++;
-        back();
-        sleep(random_time(delay_time));
-    }
-    app.launchApp("学习强国");
-    sleep(random_time(delay_time));
-    my_click_clickable("我的");
-    my_click_clickable("学习积分");
-}
-
 /*
 **********四人赛*********
 */
 if (four_player_battle == "yes") {
     sleep(random_time(delay_time));
+
+    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
     className("android.view.View").depth(21).text("学习积分").waitFor();
     entry_model(10);
     for (var i = 0; i < four_player_count; i++) {
@@ -171,6 +176,8 @@ if (four_player_battle == "yes") {
 */
 if (two_player_battle == "yes") {
     sleep(random_time(delay_time));
+
+    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
     className("android.view.View").depth(21).text("学习积分").waitFor();
     entry_model(11);
 
