@@ -426,7 +426,6 @@ if (!finish_list[10]) {
 /*
  *********************阅读部分********************
  */
-
 var back_track_flag = 0;
 
 /*
@@ -655,7 +654,7 @@ function do_contest_answer(depth_click_option, question, options_text) {
         if (!(result && result[0].charCodeAt(3) > 64 && result[0].charCodeAt(3) < 69)) {
             try {
                 // 此网站只支持六个字符的搜索
-                var r2 = http.get("https://www.souwen123.com/search/select.php?age=" + encodeURI(question.slice(0, 6)));
+                var r2 = http.get("http://www.syiban.com/search/index/init.html?modelid=1&q=" + encodeURI(question.slice(3, 9)));
                 result = r2.body.string().match(/答案：.*</);
             } catch (error) {
             }
