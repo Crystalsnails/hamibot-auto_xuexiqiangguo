@@ -888,6 +888,8 @@ function baidu_ocr_api(img) {
     question = question.replace(/\s*/g, "");
     question = question.replace(/,/g, "，");
     question = question.replace(/\-/g, "－");
+    question = question.replace(/\(/g, "（");
+    question = question.replace(/\)/g, "）");
     question = question.slice(question.indexOf(".") + 1);
     question = question.slice(0, 25);
     return [question, options_text];
