@@ -1,16 +1,5 @@
-/**
- * 检查和设置运行环境
- * @return {int} 静音前的音量
- */
-function check_set_env() {
-    // 检查无障碍服务是否已经启用
-    auto.waitFor();
-
-    // 获得原来的媒体音量
-    var vol = device.getMusicVolume();
-
-    return vol;
-}
+// 检查无障碍服务是否已经启用
+auto.waitFor();
 
 /**
  * 获取配置参数及本地存储数据
@@ -26,7 +15,20 @@ four_player_count = Number(four_player_count);
 two_player_count = Number(two_player_count);
 contest_delay_time = Number(contest_delay_time) * 1000;
 
-var vol = check_set_env();
+/**
+ * 模拟随机时间
+ * @param {int} time 时间
+ * @return {int} 随机后的时间值
+ */
+function random_time(time) {
+    return time + random(100, 1000);
+}
+
+sleep(random_time(delay_time));
+launch('com.hamibot.hamibot');
+textMatches(/Hamibot|日志/).waitFor();
+toastLog("答错脚本正在运行");
+sleep(random_time(delay_time));
 
 /**
  * 模拟点击可点击元素
@@ -42,29 +44,14 @@ function my_click_clickable(target) {
     }
 }
 
-sleep(random_time(delay_time));
-launch('com.hamibot.hamibot');
-textMatches(/Hamibot|日志/).waitFor();
-toast("脚本正在运行");
-sleep(random_time(delay_time));
-
-/**
- * 模拟随机时间
- * @param {int} time 时间
- * @return {int} 随机后的时间值
- */
-function random_time(time) {
-    return time + random(100, 1000);
-}
-
 /**
  * 点击对应的去答题
  * @param {int} number 10和11分别为四人赛双人对战
  */
 function entry_model(number) {
     sleep(random_time(delay_time * 2));
-    var model = className("android.view.View").depth(22).findOnce(number);
-    while (!model.child(3).click());
+    var model = className("android.view.View").depth(24).findOnce(number);
+    while (!model.child(4).click());
 }
 
 /**
@@ -72,7 +59,7 @@ function entry_model(number) {
  */
 function back_track() {
     app.launchApp("学习强国");
-    sleep(random_time(delay_time * 2));
+    sleep(random_time(delay_time * 3));
     var while_count = 0;
     while (!id("comm_head_title").exists() && while_count < 5) {
         while_count++;
@@ -91,7 +78,7 @@ function back_track() {
  */
 function handling_access_exceptions() {
     // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
-    var thread_handling_access_exceptions = threads.start(function() {
+    var thread_handling_access_exceptions = threads.start(function () {
         while (true) {
             textContains("访问异常").waitFor();
             // 滑动按钮“>>”位置
@@ -109,7 +96,7 @@ function handling_access_exceptions() {
             var y_end = random(bound.top, bound.bottom);
             x_start = random(x_start - 7, x_start);
             x_end = random(x_end, x_end + 10);
-            gesture(random(delay_time * 0.75, delay_time * 0.75 + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
+            gesture(random(delay_time * 0.809, delay_time * 0.809 + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
             sleep(delay_time / 2);
             if (textContains("刷新").exists()) {
                 click("刷新");
@@ -131,6 +118,7 @@ function handling_access_exceptions() {
 */
 var thread_handling_access_exceptions = handling_access_exceptions();
 
+//答错
 function do_it() {
     while (!text("开始").exists());
     while (!text("继续挑战").exists()) {
@@ -152,8 +140,8 @@ function do_it() {
 if (four_player_battle == "yes") {
     sleep(random_time(delay_time));
 
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
-    className("android.view.View").depth(21).text("学习积分").waitFor();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
+    className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(10);
     for (var i = 0; i < four_player_count; i++) {
         sleep(random_time(delay_time));
@@ -177,8 +165,8 @@ if (four_player_battle == "yes") {
 if (two_player_battle == "yes") {
     sleep(random_time(delay_time));
 
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
-    className("android.view.View").depth(21).text("学习积分").waitFor();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
+    className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(11);
 
     for (var i = 0; i < two_player_count; i++) {
@@ -207,5 +195,5 @@ if (two_player_battle == "yes") {
 
 // 震动半秒
 device.vibrate(500);
-toast("脚本运行完成");
+toastLog("脚本运行完成");
 exit();
