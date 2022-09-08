@@ -48,12 +48,12 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
  */
 // 基础数据
 var { delay_time } = hamibot.env;
-delay_time = Number(delay_time) * 1000;
 var { whether_improve_accuracy } = hamibot.env;
 var { all_weekly_answers_completed, all_special_answer_completed } = hamibot.env;
 var { whether_complete_subscription } = hamibot.env;
 var { whether_complete_speech } = hamibot.env;
 var { sct_token, pushplus_token } = hamibot.env;
+delay_time = Number(delay_time) * 1000;
 
 // 调用百度api所需参数
 var { AK, SK } = hamibot.env;
@@ -137,7 +137,7 @@ function map_get(key) {
 sleep(random_time(delay_time));
 launch('com.hamibot.hamibot');
 textMatches(/Hamibot|日志/).waitFor();
-toast("脚本正在运行");
+toastLog("旧主脚本正在运行");
 sleep(random_time(delay_time));
 
 /**
@@ -366,21 +366,21 @@ function get_finish_list() {
     for (var i = 4; i < 17; i++) {
         // 由于模拟器有model无法读取因此用try catch
         try {
-            var model = className("android.view.View").depth(22).findOnce(i);
+            var model = className("android.view.View").depth(24).findOnce(i);
             if (i == 4) {
-                completed_read_count = parseInt(model.child(2).text().match(/\d+/)) / 2;
+                completed_read_count = parseInt(model.child(3).child(0).text()) / 2;
             } else if (i == 5) {
-                completed_watch_count = parseInt(model.child(2).text().match(/\d+/));
+                completed_watch_count = parseInt(model.child(3).child(0).text());
             } else if (i == 16) {
-                weekly_answer_scored = parseInt(model.child(2).text().match(/\d+/));
+                weekly_answer_scored = parseInt(model.child(3).child(0).text());
             } else if (i == 8) {
-                special_answer_scored = parseInt(model.child(2).text().match(/\d+/));
+                special_answer_scored = parseInt(model.child(3).child(0).text());
             } else if (i == 10) {
-                four_players_scored = parseInt(model.child(2).text().match(/\d+/));
+                four_players_scored = parseInt(model.child(3).child(0).text());
             } else if (i == 11) {
-                two_players_scored = parseInt(model.child(2).text().match(/\d+/));
+                two_players_scored = parseInt(model.child(3).child(0).text());
             }
-            finish_list.push(model.child(3).text() == "已完成");
+            finish_list.push(model.child(4).text() == "已完成");
         } catch (error) {
             finish_list.push(false);
         }
@@ -393,14 +393,14 @@ function get_finish_list() {
 
 var back_track_flag = 2;
 // 首次运行可能弹升级，等久一点
-var back_track_wait_time = 4;
+var back_track_wait_time = 5;
 back_track();
 // 等待时间可以少一点了
-back_track_wait_time = 2;
+back_track_wait_time = 3;
 var finish_list = get_finish_list();
 
 // 返回首页
-className("android.view.View").clickable(true).depth(21).findOne().click();
+className("android.view.View").clickable(true).depth(22).findOne().click();
 id("my_back").waitFor();
 sleep(random_time(delay_time / 2));
 id("my_back").findOne().click();
@@ -778,8 +778,8 @@ function is_select_all_choice() {
  * @param {int} number 7对应为每日答题模块，以此类推
  */
 function entry_model(number) {
-    var model = className("android.view.View").depth(22).findOnce(number);
-    while (!model.child(3).click());
+    var model = className("android.view.View").depth(24).findOnce(number);
+    while (!model.child(4).click());
 }
 
 /**
@@ -1095,7 +1095,7 @@ function do_periodic_answer(number) {
  */
 function handling_access_exceptions() {
     // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
-    var thread_handling_access_exceptions = threads.start(function() {
+    var thread_handling_access_exceptions = threads.start(function () {
         while (true) {
             textContains("访问异常").waitFor();
             // 滑动按钮“>>”位置
@@ -1113,7 +1113,7 @@ function handling_access_exceptions() {
             var y_end = random(bound.top, bound.bottom);
             x_start = random(x_start - 7, x_start);
             x_end = random(x_end, x_end + 10);
-            gesture(random(delay_time * 0.75, delay_time * 0.75 + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
+            gesture(random(delay_time * 0.809, delay_time * 0.809 + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
             sleep(delay_time / 2);
             if (textContains("刷新").exists()) {
                 click("刷新");
@@ -1142,7 +1142,7 @@ var restart_flag = 0;
 
 if (!finish_list[3]) {
     sleep(random_time(delay_time));
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     entry_model(7);
     // 等待题目加载
     text("查看提示").waitFor();
@@ -1166,7 +1166,7 @@ if (all_weekly_answers_completed == "no") {
 
 if (!finish_list[12] && weekly_answer_scored < 4 && all_weekly_answers_completed == "no") {
     sleep(random_time(delay_time));
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     entry_model(16);
     // 等待列表加载
     textContains("月").waitFor();
@@ -1210,7 +1210,7 @@ if (all_special_answer_completed == "no") {
 
 if (!finish_list[4] && special_answer_scored < 8) {
     sleep(random_time(delay_time));
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     entry_model(8);
     // 等待列表加载
     className("android.view.View").clickable(true).depth(23).waitFor();
@@ -1314,7 +1314,7 @@ if (!finish_list[4] && special_answer_scored < 8) {
 if (!finish_list[5]) {
     sleep(random_time(delay_time));
 
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     entry_model(9);
     // 加载页面
     className("android.view.View").clickable(true).depth(22).waitFor();
@@ -1429,8 +1429,8 @@ if (!finish_list[6] && four_players_scored < 3) {
     log("四人赛");
     sleep(random_time(delay_time));
 
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
-    className("android.view.View").depth(21).text("学习积分").waitFor();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
+    className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(10);
 
     for (var i = 0; i < 2; i++) {
@@ -1456,8 +1456,8 @@ if (!finish_list[7] && two_players_scored < 1) {
     log("双人对战");
     sleep(random_time(delay_time));
 
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
-    className("android.view.View").depth(21).text("学习积分").waitFor();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
+    className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(11);
 
     // 点击随机匹配
@@ -1481,7 +1481,7 @@ if (!finish_list[7] && two_players_scored < 1) {
  */
 if (!finish_list[8] && whether_complete_subscription == "yes") {
     sleep(random_time(delay_time));
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     entry_model(12);
     // 等待加载
     sleep(random_time(delay_time * 3));
@@ -1602,7 +1602,7 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
 if (!finish_list[9] && whether_complete_speech == "yes") {
     var speechs = ["风调雨顺，国泰民安！", "大国领袖，高瞻远瞩！", "强国有我，请党放心！", "不忘初心，牢记使命！", "团结一致，共建美好！", "盛世太平，安居乐业！"];
     sleep(random_time(delay_time));
-    if (!className("android.view.View").depth(21).text("学习积分").exists()) back_track();
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     entry_model(13);
     // 随意找一篇文章
     sleep(random_time(delay_time));
@@ -1648,7 +1648,7 @@ device.cancelKeepingAwake();
 device.setMusicVolume(vol);
 // 震动半秒
 device.vibrate(500);
-toast("脚本运行完成");
+toastLog("脚本运行完成");
 sleep(random_time(delay_time));
 home();
 exit();
