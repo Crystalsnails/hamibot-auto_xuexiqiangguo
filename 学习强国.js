@@ -11,13 +11,13 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
 
     // 检查在选择提高精确度的情况下，AK和SK是否填写
     if (whether_improve_accuracy == "yes" && (!AK || !SK)) {
-        toast("如果你选择了增强版，请配置信息，具体看脚本说明");
+        toastLog("如果你选择了增强版，请配置信息，具体看脚本说明");
         exit();
     }
 
     // 检查Hamibot版本是否支持ocr
     if (app.versionName < "1.3.1") {
-        toast("请将Hamibot更新至v1.3.1版本或更高版本");
+        toastLog("请将Hamibot更新至v1.3.1版本或更高版本");
         exit();
     }
 
