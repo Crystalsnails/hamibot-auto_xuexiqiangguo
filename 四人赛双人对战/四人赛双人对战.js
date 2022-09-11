@@ -11,13 +11,13 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
 
     // 检查在选择提高精确度的情况下，AK和SK是否填写
     if (whether_improve_accuracy == "yes" && (!AK || !SK)) {
-        toast("如果你选择了增强版，请配置信息，具体看脚本说明");
+        toastLog("如果你选择了增强版，请配置信息，具体看脚本说明");
         exit();
     }
 
     // 检查Hamibot版本是否支持ocr
     if (app.versionName < "1.3.1") {
-        toast("请将Hamibot更新至v1.3.1版本或更高版本");
+        toastLog("请将Hamibot更新至v1.3.1版本或更高版本");
         exit();
     }
 
@@ -136,7 +136,7 @@ function map_get(key) {
 sleep(random_time(delay_time));
 launch('com.hamibot.hamibot');
 textMatches(/Hamibot|日志/).waitFor();
-toast("脚本正在运行");
+toastLog("脚本正在运行");
 sleep(random_time(delay_time));
 
 /**
@@ -169,7 +169,7 @@ if (date.getDay() == 6) {
  * @return {List} 题库
  */
 function map_update() {
-    toast("正在下载题库");
+    toastLog("正在下载题库");
     // 使用 GitCode 上存放的题库
     var answer_question_bank = http.get("https://gitcode.net/McMug2020/XXQG_TiKu/-/raw/master/%E9%A2%98%E5%BA%93_McMug2020.json");
     sleep(random_time(delay_time * 3));
@@ -177,12 +177,12 @@ function map_update() {
     if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
         // 使用XXQG_TiKu挑战答题腾讯云题库地址
         var answer_question_bank = http.get("https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json");
-        toast("下载XXQG_TiKu题库");
+        toastLog("下载XXQG_TiKu题库");
         sleep(random_time(delay_time * 3));
     }
     answer_question_bank = answer_question_bank.body.string();
     answer_question_bank = JSON.parse(answer_question_bank);
-    toast("格式化题库");
+    toastLog("格式化题库");
     for (var question in answer_question_bank) {
         var answer = answer_question_bank[question];
         if (special_problem.indexOf(question.slice(0, 7)) != -1) question = question.slice(question.indexOf("|") + 1);
@@ -736,5 +736,5 @@ if (two_player_battle == "yes") {
 
 // 震动半秒
 device.vibrate(500);
-toast("脚本运行完成");
+toastLog("脚本运行完成");
 exit();
