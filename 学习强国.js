@@ -387,6 +387,7 @@ function get_finish_list() {
     }
     return finish_list;
 }
+
 /*
  *********************准备部分********************
  */
@@ -410,6 +411,7 @@ sleep(random_time(delay_time));
 className("android.view.ViewGroup").depth(15).waitFor();
 sleep(random_time(delay_time));
 className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
+
 
 /*
  **********本地频道*********
@@ -566,6 +568,7 @@ if (!finish_list[1] || !finish_list[2]) {
 }
 
 // 过渡
+sleep(random_time(delay_time / 2));
 my_click_clickable("我的");
 sleep(random_time(delay_time / 2));
 my_click_clickable("学习积分");
