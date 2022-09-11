@@ -170,7 +170,7 @@ if (date.getDay() == 6) {
  * @return {List} 题库
  */
 function map_update() {
-    toast("正在下载题库");
+    toastLog("正在下载题库");
     // 使用 GitCode 上存放的题库
     var answer_question_bank = http.get("https://gitcode.net/McMug2020/XXQG_TiKu/-/raw/master/%E9%A2%98%E5%BA%93_McMug2020.json");
     sleep(random_time(delay_time * 3));
@@ -178,12 +178,12 @@ function map_update() {
     if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
         // 使用XXQG_TiKu挑战答题腾讯云题库地址
         var answer_question_bank = http.get("https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json");
-        toast("下载XXQG_TiKu题库");
+        toastLog("下载XXQG_TiKu题库");
         sleep(random_time(delay_time * 3));
     }
     answer_question_bank = answer_question_bank.body.string();
     answer_question_bank = JSON.parse(answer_question_bank);
-    toast("格式化题库");
+    toastLog("格式化题库");
     for (var question in answer_question_bank) {
         var answer = answer_question_bank[question];
         if (special_problem.indexOf(question.slice(0, 7)) != -1) question = question.slice(question.indexOf("|") + 1);
@@ -1490,7 +1490,7 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
     sleep(random_time(delay_time * 3));
 
     if (!className("android.view.View").desc("强国号\nTab 1 of 2").exists()) {
-        toast("强国版本v2.34.0及以上不支持订阅功能");
+        toastLog("强国版本v2.34.0及以上不支持订阅功能");
         back();
     } else {
         // 获取第一个订阅按钮位置
