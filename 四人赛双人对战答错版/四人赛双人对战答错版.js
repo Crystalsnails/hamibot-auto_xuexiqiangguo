@@ -143,6 +143,7 @@ if (four_player_battle == "yes") {
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(10);
+
     for (var i = 0; i < four_player_count; i++) {
         sleep(random_time(delay_time));
         my_click_clickable("开始比赛");
