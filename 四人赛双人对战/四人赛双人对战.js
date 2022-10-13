@@ -152,10 +152,10 @@ var date = new Date();
 if (date.getDay() == 6) {
     var answer_question_bank_update = storage.get("answer_question_bank_update_storage");
     if (answer_question_bank_update) {
-        var answer_question_bank_checked = http.get("https://gitcode.net/McMug2020/XXQG_TiKu/-/raw/master/0.json");
+        var answer_question_bank_checked = http.get("https://ghproxy.com/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/0.json");
         if ((answer_question_bank_checked.statusCode >= 200 && answer_question_bank_checked.statusCode < 300)) storage.remove("answer_question_map");
     } else {
-        var answer_question_bank_checked = http.get("https://gitcode.net/McMug2020/XXQG_TiKu/-/raw/master/1.json");
+        var answer_question_bank_checked = http.get("https://ghproxy.com/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/1.json");
         if ((answer_question_bank_checked.statusCode >= 200 && answer_question_bank_checked.statusCode < 300)) storage.remove("answer_question_map");
     }
 }
@@ -171,12 +171,12 @@ if (date.getDay() == 6) {
 function map_update() {
     toastLog("正在下载题库");
     // 使用 GitCode 上存放的题库
-    var answer_question_bank = http.get("https://gitcode.net/McMug2020/XXQG_TiKu/-/raw/master/%E9%A2%98%E5%BA%93_McMug2020.json");
+    var answer_question_bank = http.get("https://ghproxy.com/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2020.json");
     sleep(random_time(delay_time * 3));
     // 如果资源过期或无法访问则换成别的地址
     if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
         // 使用XXQG_TiKu挑战答题腾讯云题库地址
-        var answer_question_bank = http.get("https://xxqg-tiku-1305531293.cos.ap-nanjing.myqcloud.com/%E9%A2%98%E5%BA%93_%E6%8E%92%E5%BA%8F%E7%89%88.json");
+        var answer_question_bank = http.get("https://gitcode.net/McMug2020/XXQG_TiKu/-/raw/65dc252b0ce9016d8a66cd9450c6a0bd9c43991e/%E9%A2%98%E5%BA%93_McMug2020.json");
         toastLog("下载XXQG_TiKu题库");
         sleep(random_time(delay_time * 3));
     }
