@@ -52,7 +52,7 @@ var { whether_improve_accuracy } = hamibot.env;
 var { all_weekly_answers_completed, all_special_answer_completed } = hamibot.env;
 var { whether_complete_subscription } = hamibot.env;
 var { whether_complete_speech } = hamibot.env;
-var { sct_token, pushplus_token } = hamibot.env;
+var { pushplus_token } = hamibot.env;
 delay_time = Number(delay_time) * 1000;
 
 // 调用百度api所需参数
@@ -265,28 +265,43 @@ function refresh(orientation) {
 }
 
 /**
- * 推送通知到微信
- * @param {string} account 账号
- * @param {string} score 分数
+ * pushplus推送通知到微信
  */
-function push_weixin_message(message) {
-    if (pushplus_token != "") {
-        http.postJson(
-            "http://www.pushplus.plus/send",
-            {
-                token: pushplus_token,
-                title: "强国学习通知",
-                content: message,
-            }
-        );
+function push_weixin_message(account) {
+    http.postJson(
+        "http://www.pushplus.plus/send",
+        {
+            token: pushplus_token,
+            title: account,
+            content: content_str,
+            template: "markdown",
+        }
+    );
+    toastLog("积分已推送到微信");
+}
+
+function send_pushplus() {
+    var zongfen = text("成长总积分").findOne().parent().child(1).text();
+    var jifen_list = className("android.widget.ListView").rowCount(14).findOne();
+    var jinri = jifen_list.parent().child(1).text().match(/\d+/g)[0];
+    let style_str = '<style>.item{height:1.5em;line-height:1.5em;}.item span{display:inline-block;padding-left:0.4em;}\
+    .item .bar{width:100px;height:10px;background-color:#ddd;border-radius:5px;display:inline-block;}\
+    .item .bar div{height:10px;background-color:#ed4e45;border-radius:5px;}</style>';
+    let content_str = '<h6>今日已累积：' + jinri + '积分' + '\xa0\xa0\xa0\xa0' + '成长总积分：' + zongfen + '</h6><div>';
+    for (let option of jifen_list.children()) {
+        var title = option.child(0).text();
+        var score = option.child(3).child(0).text();
+        var total = option.child(3).child(2).text().match(/\d+/g)[0];
+        if (title == "专项答题") {
+            if (all_special_answer_completed == "no" && all_special_answer_completed_storage == "no") { total = 10; }
+            else { total = 5; }
+        }
+        let percent = (Number(score) / Number(total) * 100).toFixed() + '%';
+        let detail = title + ": " + score + "/" + total;
+        content_str += '<div class="item"><div class="bar"><div style="width: ' + percent + ';"></div></div><span>' + detail + '</span></div>';
     }
-    if (sct_token != "") {
-        URL = "https://sctapi.ftqq.com/" + sct_token + ".send";
-        http.post(URL, {
-            title: "强国学习通知",
-            desp: message,
-        });
-    }
+    content_str += '</div>' + style_str;
+    return [jinri, content_str];
 }
 
 /**
@@ -1487,7 +1502,7 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     entry_model(12);
     // 等待加载
-    sleep(random_time(delay_time * 3));
+    sleep(random_time(delay_time * 2.5));
 
     if (!className("android.view.View").desc("强国号\nTab 1 of 2").exists()) {
         toastLog("强国版本v2.34.0及以上不支持订阅功能");
@@ -1550,7 +1565,7 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
             // 更新本地存储值
             if (i > subscription_strong_country_startup) storage.put("subscription_strong_country_startup", i);
             if (num_subscribe >= 2) break;
-            sleep(random_time(delay_time * 2));
+            sleep(random_time(delay_time));
         }
 
         // 地方平台
@@ -1590,7 +1605,7 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
                 }
                 if (i > subscription_local_platform_startup) storage.put("subscription_local_platform_startup", i);
                 if (num_subscribe >= 2) break;
-                sleep(random_time(delay_time * 2));
+                sleep(random_time(delay_time));
             }
         }
 
@@ -1624,20 +1639,23 @@ if (!finish_list[9] && whether_complete_speech == "yes") {
     my_click_clickable("确认");
 }
 
-if (sct_token || pushplus_token) {
+if (pushplus_token) {
     back_track_flag = 2;
     back_track();
     // 获取今日得分
-    var score = textStartsWith("今日已累积").findOne().text();
-    score = score.match(/\d+/);
-    cap_img = captureScreen();
+    sleep(5000);
+    // 推送消息
+    var getData = send_pushplus();
+    var jinri = getData[0];
+    var content_str = getData[1];
     sleep(random_time(delay_time));
     back();
+    sleep(random_time(delay_time / 2));
     // 获取账号名
     var account = id("my_display_name").findOne().text();
-
+    sleep(random_time(delay_time / 2));
     // 推送消息
-    push_weixin_message("账号名" + account + "今日已经获得" + score + "分");
+    push_weixin_message("Auto学习：" + account + " " + jinri + "积分");
 }
 
 sleep(random_time(delay_time));
