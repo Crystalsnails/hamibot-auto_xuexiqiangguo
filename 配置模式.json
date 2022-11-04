@@ -35,7 +35,7 @@
       "yes": "是",
       "no": "否"
     },
-    "label": "是否完成订阅模块",
+    "label": "是否选择完成订阅模块",
     "validation": "required"
   },
   {
@@ -45,7 +45,7 @@
       "yes": "是",
       "no": "否"
     },
-    "label": "是否完成发表言论模块",
+    "label": "是否选择完成发表言论模块",
     "validation": "required"
   },
   {
@@ -75,12 +75,6 @@
     "name": "pushplus_token",
     "type": "text",
     "label": "pushplus_token",
-    "help": "选填，是否要使用微信消息推送功能，如是请填写pushplus的token"
-  },
-  {
-    "name": "sct_token",
-    "type": "text",
-    "label": "sct_token",
-    "help": "选填，是否要使用server酱推送，如是请填写server酱的token。"
+    "help": "微信关注“pushplus推送加”，复制token填入即可。推送通知内容展示详细的学习积分"
   }
 ]
