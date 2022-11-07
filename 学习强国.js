@@ -293,7 +293,7 @@ function send_pushplus() {
         var score = option.child(3).child(0).text();
         var total = option.child(3).child(2).text().match(/\d+/g)[0];
         if (title == "专项答题") {
-            if (all_special_answer_completed == "no" && all_special_answer_completed_storage == "no") { total = 10; }
+            if (all_special_answer_completed == "no") { total = 10; }
             else { total = 5; }
         }
         let percent = (Number(score) / Number(total) * 100).toFixed() + '%';
@@ -1272,7 +1272,7 @@ if (!finish_list[4] && special_answer_scored < 8) {
         }
         // 如果搜索到底部
         if (text("您已经看到了我的底线").exists()) {
-            storage.put("all_special_answers_completed_storage", "yes");
+            storage.put("all_special_answer_completed_storage", "yes");
             break;
         }
     }
