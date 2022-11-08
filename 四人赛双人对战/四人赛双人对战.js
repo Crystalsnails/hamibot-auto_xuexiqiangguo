@@ -581,6 +581,7 @@ function ocr_processing(text, if_question) {
 function handling_access_exceptions() {
     // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
     var thread_handling_access_exceptions = threads.start(function () {
+        var zz = 0;
         while (true) {
             textContains("访问异常").waitFor();
             // 滑动按钮“>>”位置
@@ -598,9 +599,14 @@ function handling_access_exceptions() {
             var y_end = random(bound.top, bound.bottom);
             x_start = random(x_start - 7, x_start);
             x_end = random(x_end, x_end + 10);
-            gesture(random(delay_time * 0.809, delay_time * 0.809 + 50), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
+            gesture(random(delay_time * 0.78, delay_time * 0.78 + 80), [x_start, y_start], [x_mid, y_end], [x_end, y_end]);
             sleep(delay_time / 2);
             if (textContains("刷新").exists()) {
+                zz = zz + random(1, 2);
+                if (zz > 10) {
+                    toastLog("多次滑动验证失败");
+                    break;
+                }
                 click("刷新");
                 continue;
             }
