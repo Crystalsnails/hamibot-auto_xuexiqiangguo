@@ -1112,9 +1112,9 @@ function do_periodic_answer(number) {
  * 处理访问异常
  */
 function handling_access_exceptions() {
-    var zz = 0;
     // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
     var thread_handling_access_exceptions = threads.start(function () {
+        var zz = 0;
         while (true) {
             textContains("访问异常").waitFor();
             // 滑动按钮“>>”位置
