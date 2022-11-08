@@ -293,7 +293,7 @@ function send_pushplus() {
         var score = option.child(3).child(0).text();
         var total = option.child(3).child(2).text().match(/\d+/g)[0];
         if (title == "专项答题") {
-            if (all_special_answer_completed == "no") { total = 10; }
+            if (all_special_answer_completed == "no" || score > 5) { total = 10; }
             else { total = 5; }
         }
         let percent = (Number(score) / Number(total) * 100).toFixed() + '%';
