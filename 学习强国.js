@@ -287,7 +287,7 @@ function send_pushplus() {
     let style_str = '<style>.item{height:1.5em;line-height:1.5em;}.item span{display:inline-block;padding-left:0.4em;}\
     .item .bar{width:100px;height:10px;background-color:#ddd;border-radius:5px;display:inline-block;}\
     .item .bar div{height:10px;background-color:#ed4e45;border-radius:5px;}</style>';
-    let content_str = '<h6>今日已累积：' + jinri + '积分' + '\xa0\xa0\xa0\xa0' + '成长总积分：' + zongfen + '</h6><div>';
+    let content_str = '<h6>今日已累积：' + jinri + '积分' + '\xa0\xa0\xa0\xa0' + '成长总积分：' + zongfen + '\xa0\xa0\xa0\xa0' + '</h6><div>';
     for (let option of jifen_list.children()) {
         var title = option.child(0).text();
         var score = option.child(3).child(0).text();
