@@ -277,7 +277,7 @@ function push_weixin_message(account) {
             template: "markdown",
         }
     );
-    toastLog("积分已推送到微信");
+    toastLog("消息已推送到微信");
 }
 
 function send_pushplus() {
@@ -1115,6 +1115,7 @@ function handling_access_exceptions() {
     // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
     var thread_handling_access_exceptions = threads.start(function () {
         var zz = 0;
+        var nn = 0;
         while (true) {
             textContains("访问异常").waitFor();
             // 滑动按钮“>>”位置
@@ -1136,8 +1137,14 @@ function handling_access_exceptions() {
             sleep(delay_time / 2);
             if (textContains("刷新").exists()) {
                 zz = zz + random(1, 2);
+                nn++;
                 if (zz > 10) {
                     toastLog("多次滑动验证失败");
+                    if (pushplus_token) {
+                        var content_str = '<h6>多次滑动验证失败（随机尝试了' + nn + '次），可能是网络问题，请重启脚本运行。' + '</h6>';
+                        // 推送消息
+                        push_weixin_message("Auto学习：滑动验证失败");
+                    }
                     break;
                 }
                 click("刷新");
