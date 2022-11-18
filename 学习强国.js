@@ -333,7 +333,11 @@ function back_track() {
             // 去province模块
             className("adnroid.view.ViewGroup").depth(15).waitFor();
             sleep(random_time(delay_time));
-            className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
+            if (text("亮点").exists()) {
+                className("android.view.ViewGroup").depth(15).findOnce(2).child(4).click();
+            } else {
+                className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
+            }
             break;
         case 1:
             break;
@@ -425,7 +429,11 @@ id("my_back").findOne().click();
 sleep(random_time(delay_time));
 className("android.view.ViewGroup").depth(15).waitFor();
 sleep(random_time(delay_time));
-className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
+if (text("亮点").exists()) {
+    className("android.view.ViewGroup").depth(15).findOnce(2).child(4).click();
+} else {
+    className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
+}
 
 
 /*
