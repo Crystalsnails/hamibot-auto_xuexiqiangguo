@@ -282,7 +282,7 @@ function push_weixin_message(account) {
 
 function send_pushplus() {
     var zongfen = text("成长总积分").findOne().parent().child(1).text();
-    var jifen_list = className("android.widget.ListView").rowCount(14).findOne();
+    var jifen_list = className("android.widget.ListView").rowCount(15).findOne();
     var jinri = jifen_list.parent().child(1).text().match(/\d+/g)[0];
     let style_str = '<style>.item{height:1.5em;line-height:1.5em;}.item span{display:inline-block;padding-left:0.4em;}\
     .item .bar{width:100px;height:10px;background-color:#ddd;border-radius:5px;display:inline-block;}\
@@ -382,7 +382,7 @@ var two_players_scored;
 
 function get_finish_list() {
     var finish_list = [];
-    for (var i = 4; i < 17; i++) {
+    for (var i = 4; i < 18; i++) {
         // 由于模拟器有model无法读取因此用try catch
         try {
             var model = className("android.view.View").depth(24).findOnce(i);
@@ -390,13 +390,15 @@ function get_finish_list() {
                 completed_read_count = parseInt(model.child(3).child(0).text()) / 2;
             } else if (i == 5) {
                 completed_watch_count = parseInt(model.child(3).child(0).text());
-            } else if (i == 16) {
+            } else if (i == 17) {
                 weekly_answer_scored = parseInt(model.child(3).child(0).text());
             } else if (i == 8) {
                 special_answer_scored = parseInt(model.child(3).child(0).text());
             } else if (i == 10) {
                 four_players_scored = parseInt(model.child(3).child(0).text());
             } else if (i == 11) {
+                taiko_players_scored = parseInt(model.child(3).child(0).text());           
+            } else if (i == 12) {
                 two_players_scored = parseInt(model.child(3).child(0).text());
             }
             finish_list.push(model.child(4).text() == "已完成");
@@ -439,7 +441,7 @@ if (text("亮点").exists()) {
 /*
  **********本地频道*********
  */
-if (!finish_list[10]) {
+if (!finish_list[11]) {
     // 去本地频道
     className("android.widget.LinearLayout").clickable(true).depth(26).waitFor();
     sleep(random_time(delay_time));
@@ -1212,10 +1214,10 @@ if (all_weekly_answers_completed == "no") {
     all_weekly_answers_completed = storage.get("all_weekly_answers_completed_storage");
 }
 
-if (!finish_list[12] && weekly_answer_scored < 4 && all_weekly_answers_completed == "no") {
+if (!finish_list[13] && weekly_answer_scored < 4 && all_weekly_answers_completed == "no") {
     sleep(random_time(delay_time));
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model(16);
+    entry_model(17);
     // 等待列表加载
     textContains("月").waitFor();
     sleep(random_time(delay_time * 2));
@@ -1423,6 +1425,44 @@ if (!finish_list[5]) {
 }
 
 /*
+ ********************太空三人行********************
+ */
+
+//答太空三人行的题
+function do_taiko() {
+    sleep(random_time(delay_time));
+    for (var i = 0; i < 2; i++) {
+        sleep(random_time(delay_time));
+        textStartsWith("网络").findOne().parent().child(1).child(0).click();
+        sleep(random_time(delay_time));
+        while (!text("开始").exists());
+        while (!text("继续挑战").exists()) {
+            sleep(random_time(delay_time * 2.5));
+            // 等待选项加载
+            className("android.widget.RadioButton").depth(32).clickable(true).waitFor();
+            // 随机选择
+            try {
+                var options = className("android.widget.RadioButton").depth(32).find();
+                var select = random(0, options.length - 1);
+                className("android.widget.RadioButton").depth(32).findOnce(select).click();
+            } catch (error) {
+            }
+            while (!textMatches(/第\d题/).exists() && !text("继续挑战").exists() && !text("开始").exists());
+        }
+        if (i < 1) {
+            sleep(random_time(delay_time));
+            while (!click("继续挑战"));
+            sleep(random_time(delay_time));
+        }
+    }
+    sleep(random_time(delay_time * 2));
+    back();
+    sleep(random_time(delay_time));
+    back();
+}
+
+
+/*
  ********************四人赛、双人对战********************
  */
 
@@ -1498,15 +1538,28 @@ if (!finish_list[6] && four_players_scored < 3) {
 }
 
 /*
- **********双人对战*********
+ **********太空三人行*********
  */
-if (!finish_list[7] && two_players_scored < 1) {
-    log("双人对战");
+if (!finish_list[7] && taiko_players_scored < 1) {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(11);
+
+    do_taiko();
+}
+
+/*
+ **********双人对战*********
+ */
+if (!finish_list[8] && two_players_scored < 1) {
+    log("双人对战");
+    sleep(random_time(delay_time));
+
+    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
+    className("android.view.View").depth(22).text("学习积分").waitFor();
+    entry_model(12);
 
     // 点击随机匹配
     text("随机匹配").waitFor();
@@ -1527,10 +1580,10 @@ if (!finish_list[7] && two_players_scored < 1) {
 /*
  **********订阅*********
  */
-if (!finish_list[8] && whether_complete_subscription == "yes") {
+if (!finish_list[9] && whether_complete_subscription == "yes") {
     sleep(random_time(delay_time));
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model(12);
+    entry_model(13);
     // 等待加载
     sleep(random_time(delay_time * 2.5));
 
@@ -1647,11 +1700,11 @@ if (!finish_list[8] && whether_complete_subscription == "yes") {
 /*
  **********发表观点*********
  */
-if (!finish_list[9] && whether_complete_speech == "yes") {
+if (!finish_list[10] && whether_complete_speech == "yes") {
     var speechs = ["风调雨顺，国泰民安！", "大国领袖，高瞻远瞩！", "强国有我，请党放心！", "不忘初心，牢记使命！", "团结一致，共建美好！", "盛世太平，安居乐业！"];
     sleep(random_time(delay_time));
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model(13);
+    entry_model(14);
     // 随意找一篇文章
     sleep(random_time(delay_time));
     my_click_clickable("推荐");
