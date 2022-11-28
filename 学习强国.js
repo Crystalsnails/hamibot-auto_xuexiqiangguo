@@ -1540,7 +1540,7 @@ if (!finish_list[6] && four_players_scored < 3) {
 /*
  **********太空三人行*********
  */
-if (!finish_list[7] && taiko_players_scored < 1) {
+if (!finish_list[7] && taiko_players_scored < 2) {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
