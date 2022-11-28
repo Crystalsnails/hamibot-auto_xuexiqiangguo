@@ -723,7 +723,7 @@ if (two_player_battle == "yes") {
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     className("android.view.View").depth(22).text("学习积分").waitFor();
-    entry_model(11);
+    entry_model(12);
 
     // 点击随机匹配
     text("随机匹配").waitFor();
