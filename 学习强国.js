@@ -28,8 +28,9 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
     threads.start(function () {
         try {
             var beginBtn;
-            if ((beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time)));
-            else beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time);
+            if (beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time));
+            else if (beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time));
+            else (beginBtn = classNameContains("Button").textContains("ALLOW").findOne(delay_time));
             beginBtn.click();
         } catch (error) {
         }
@@ -396,8 +397,6 @@ function get_finish_list() {
                 special_answer_scored = parseInt(model.child(3).child(0).text());
             } else if (i == 10) {
                 four_players_scored = parseInt(model.child(3).child(0).text());
-            } else if (i == 11) {
-                taiko_players_scored = parseInt(model.child(3).child(0).text());           
             } else if (i == 12) {
                 two_players_scored = parseInt(model.child(3).child(0).text());
             }
@@ -523,8 +522,11 @@ while ((count < 6 - completed_read_count) && !finish_list[0]) {
  *********************视听部分********************
  */
 
+back_track_flag = 1;
+
 // 关闭电台广播
 if (!finish_list[2] && !finish_list[0]) {
+    if (!id("comm_head_title").exists()) back_track();
     sleep(random_time(delay_time));
     my_click_clickable("电台");
     sleep(random_time(delay_time));
@@ -541,8 +543,6 @@ if (!finish_list[2] && !finish_list[0]) {
     close_music_widget();
     sleep(random_time(delay_time));
 }
-
-back_track_flag = 1;
 
 /*
  **********视听学习、听学习时长*********
@@ -1134,17 +1134,52 @@ function handling_access_exceptions() {
             // 滑动边框位置
             text("向右滑动验证").waitFor();
             var slider_bound = text("向右滑动验证").findOne().bounds();
-            // 通过更复杂的手势验证（向右滑动过程中途折返）
+            // 通过随机选择动作库中的手势验证
+
+            /**
+             * 动作库
+             */
+            // x轴起点位置
             var x_start = bound.centerX();
-            var dx = x_start - slider_bound.left;
-            var x_end = slider_bound.right - dx;
-            var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
-            var back_x = (x_end - x_start) * random(2, 3) / 10;
-            var y_start = random(bound.top, bound.bottom);
-            var y_end = random(bound.top, bound.bottom);
-            x_start = random(x_start - 7, x_start);
-            x_end = random(x_end, x_end + 10);
-            gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y_start], [x_mid, y_end], [x_mid - back_x, y_start], [x_end, y_end]);
+            // x轴终点位置
+            var x_end = slider_bound.right;
+            // y轴位置
+            var y = random(bound.top, bound.bottom);
+            // 随机选择手势
+            var choice_number = random(1, 5);
+            switch (choice_number) {
+                case 1:
+                    // 1. 先左后右（匀速）
+                    gesture(random_time(delay_time), [x_start, y], [x_end, y]);
+                case 2:
+                    // 2. 先左后右（加速）
+                    var x_mid1 = (x_end - x_start) * 1 / 4 + x_start;
+                    var x_mid2 = (x_end - x_start) * 2 / 4 + x_start;
+                    var x_mid3 = (x_end - x_start) * 3 / 4 + x_start;
+                    gesture([random_time(delay_time) / 2, [x_start, y], [x_mid1, y]],
+                        [random_time(delay_time) / 4, [x_mid1, y], [x_mid2, y]],
+                        [random_time(delay_time) / 6, [x_mid2, y], [x_mid3, y]],
+                        [random_time(delay_time) / 10, [x_mid3, y], [x_end, y]]);
+                case 3:
+                    // 3. 先左后右（减速）
+                    var x_mid1 = (x_end - x_start) * 1 / 4 + x_start;
+                    var x_mid2 = (x_end - x_start) * 2 / 4 + x_start;
+                    var x_mid3 = (x_end - x_start) * 3 / 4 + x_start;
+                    gesture([random_time(delay_time) / 10, [x_start, y], [x_mid1, y]],
+                        [random_time(delay_time) / 6, [x_mid1, y], [x_mid2, y]],
+                        [random_time(delay_time) / 4, [x_mid2, y], [x_mid3, y]],
+                        [random_time(delay_time) / 2, [x_mid3, y], [x_end, y]]);
+                case 4:
+                    // 4. 先左后右停顿再右
+                    var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
+                    gesture(random_time(delay_time), [x_start, y], [x_mid, y], [x_mid, y], [x_end, y]);
+                case 5:
+                    // 5. 先右后左再右
+                    var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
+                    var back_x = (x_end - x_start) * random(2, 3) / 10;
+                    gesture(random_time(delay_time), [x_start, y], [x_mid, y], [x_mid - back_x, y], [x_end, y]);
+            }
+
             sleep(delay_time / 2);
             if (textContains("刷新").exists()) {
                 zz = zz + random(1, 2);
@@ -1425,49 +1460,11 @@ if (!finish_list[5]) {
 }
 
 /*
- ********************太空三人行********************
- */
-
-//答太空三人行的题
-function do_taiko() {
-    sleep(random_time(delay_time));
-    for (var i = 0; i < 2; i++) {
-        sleep(random_time(delay_time));
-        textStartsWith("网络").findOne().parent().child(1).child(0).click();
-        sleep(random_time(delay_time));
-        while (!text("开始").exists());
-        while (!text("继续挑战").exists()) {
-            sleep(random_time(delay_time * 2.5));
-            // 等待选项加载
-            className("android.widget.RadioButton").depth(32).clickable(true).waitFor();
-            // 随机选择
-            try {
-                var options = className("android.widget.RadioButton").depth(32).find();
-                var select = random(0, options.length - 1);
-                className("android.widget.RadioButton").depth(32).findOnce(select).click();
-            } catch (error) {
-            }
-            while (!textMatches(/第\d题/).exists() && !text("继续挑战").exists() && !text("开始").exists());
-        }
-        if (i < 1) {
-            sleep(random_time(delay_time));
-            while (!click("继续挑战"));
-            sleep(random_time(delay_time));
-        }
-    }
-    sleep(random_time(delay_time * 2));
-    back();
-    sleep(random_time(delay_time));
-    back();
-}
-
-
-/*
- ********************四人赛、双人对战********************
+ ********************四人赛、双人对战、太空三人行********************
  */
 
 /**
- * 答题
+ * 答四人赛、双人对战API
  */
 function do_contest() {
     while (!text("开始").exists());
@@ -1518,7 +1515,6 @@ if (!finish_list[6] && four_players_scored < 3) {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(10);
 
     for (var i = 0; i < 2; i++) {
@@ -1540,15 +1536,34 @@ if (!finish_list[6] && four_players_scored < 3) {
 /*
  **********太空三人行*********
  */
-if (!finish_list[7] && taiko_players_scored < 2) {
+// 由于不需要赢也可以获得积分，因此用hamibot自带ocr，不浪费baidu_ocr次数
+var old_whether_improve_accuracy = whether_improve_accuracy
+whether_improve_accuracy = "no"
+
+if (!finish_list[7]) {
+    log("太空三人行");
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(11);
 
-    do_taiko();
+    for (var i = 0; i < 2; i++) {
+        sleep(random_time(delay_time));
+        textStartsWith("网络").findOne().parent().child(1).child(0).click();
+        do_contest();
+        if (i == 0) {
+            sleep(random_time(delay_time * 2));
+            my_click_clickable("继续挑战");
+            sleep(random_time(delay_time));
+        }
+    }
+    sleep(random_time(delay_time * 2));
+    back();
+    sleep(random_time(delay_time));
+    back();
 }
+// 改回来
+whether_improve_accuracy = old_whether_improve_accuracy
 
 /*
  **********双人对战*********
@@ -1558,7 +1573,6 @@ if (!finish_list[8] && two_players_scored < 1) {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(12);
 
     // 点击随机匹配
