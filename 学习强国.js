@@ -1537,8 +1537,8 @@ if (!finish_list[6] && four_players_scored < 3) {
  **********太空三人行*********
  */
 // 由于不需要赢也可以获得积分，因此用hamibot自带ocr，不浪费baidu_ocr次数
-var old_whether_improve_accuracy = whether_improve_accuracy
-whether_improve_accuracy = "no"
+var old_whether_improve_accuracy = whether_improve_accuracy;
+whether_improve_accuracy = "no";
 
 if (!finish_list[7]) {
     log("太空三人行");
@@ -1563,7 +1563,7 @@ if (!finish_list[7]) {
     back();
 }
 // 改回来
-whether_improve_accuracy = old_whether_improve_accuracy
+whether_improve_accuracy = old_whether_improve_accuracy;
 
 /*
  **********双人对战*********
