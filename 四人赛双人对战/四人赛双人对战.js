@@ -28,8 +28,9 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
     threads.start(function () {
         try {
             var beginBtn;
-            if ((beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time)));
-            else beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time);
+            if (beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time));
+            else if (beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time));
+            else (beginBtn = classNameContains("Button").textContains("ALLOW").findOne(delay_time));
             beginBtn.click();
         } catch (error) {
         }
@@ -590,17 +591,52 @@ function handling_access_exceptions() {
             // 滑动边框位置
             text("向右滑动验证").waitFor();
             var slider_bound = text("向右滑动验证").findOne().bounds();
-            // 通过更复杂的手势验证（向右滑动过程中途折返）
+            // 通过随机选择动作库中的手势验证
+
+            /**
+             * 动作库
+             */
+            // x轴起点位置
             var x_start = bound.centerX();
-            var dx = x_start - slider_bound.left;
-            var x_end = slider_bound.right - dx;
-            var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
-            var back_x = (x_end - x_start) * random(2, 3) / 10;
-            var y_start = random(bound.top, bound.bottom);
-            var y_end = random(bound.top, bound.bottom);
-            x_start = random(x_start - 7, x_start);
-            x_end = random(x_end, x_end + 10);
-            gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y_start], [x_mid, y_end], [x_mid - back_x, y_start], [x_end, y_end]);
+            // x轴终点位置
+            var x_end = slider_bound.right;
+            // y轴位置
+            var y = random(bound.top, bound.bottom);
+            // 随机选择手势
+            var choice_number = random(1, 5);
+            switch (choice_number) {
+                case 1:
+                    // 1. 先左后右（匀速）
+                    gesture(random_time(delay_time), [x_start, y], [x_end, y]);
+                case 2:
+                    // 2. 先左后右（加速）
+                    var x_mid1 = (x_end - x_start) * 1 / 4 + x_start;
+                    var x_mid2 = (x_end - x_start) * 2 / 4 + x_start;
+                    var x_mid3 = (x_end - x_start) * 3 / 4 + x_start;
+                    gesture([random_time(delay_time) / 2, [x_start, y], [x_mid1, y]],
+                        [random_time(delay_time) / 4, [x_mid1, y], [x_mid2, y]],
+                        [random_time(delay_time) / 6, [x_mid2, y], [x_mid3, y]],
+                        [random_time(delay_time) / 10, [x_mid3, y], [x_end, y]]);
+                case 3:
+                    // 3. 先左后右（减速）
+                    var x_mid1 = (x_end - x_start) * 1 / 4 + x_start;
+                    var x_mid2 = (x_end - x_start) * 2 / 4 + x_start;
+                    var x_mid3 = (x_end - x_start) * 3 / 4 + x_start;
+                    gesture([random_time(delay_time) / 10, [x_start, y], [x_mid1, y]],
+                        [random_time(delay_time) / 6, [x_mid1, y], [x_mid2, y]],
+                        [random_time(delay_time) / 4, [x_mid2, y], [x_mid3, y]],
+                        [random_time(delay_time) / 2, [x_mid3, y], [x_end, y]]);
+                case 4:
+                    // 4. 先左后右停顿再右
+                    var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
+                    gesture(random_time(delay_time), [x_start, y], [x_mid, y], [x_mid, y], [x_end, y]);
+                case 5:
+                    // 5. 先右后左再右
+                    var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
+                    var back_x = (x_end - x_start) * random(2, 3) / 10;
+                    gesture(random_time(delay_time), [x_start, y], [x_mid, y], [x_mid - back_x, y], [x_end, y]);
+            }
+
             sleep(delay_time / 2);
             if (textContains("刷新").exists()) {
                 zz = zz + random(1, 2);
@@ -695,7 +731,6 @@ if (four_player_battle == "yes") {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(10);
 
     for (var i = 0; i < count; i++) {
@@ -722,7 +757,6 @@ if (two_player_battle == "yes") {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    className("android.view.View").depth(22).text("学习积分").waitFor();
     entry_model(12);
 
     // 点击随机匹配
