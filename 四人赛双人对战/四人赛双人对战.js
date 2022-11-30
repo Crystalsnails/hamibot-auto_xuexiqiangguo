@@ -591,52 +591,17 @@ function handling_access_exceptions() {
             // 滑动边框位置
             text("向右滑动验证").waitFor();
             var slider_bound = text("向右滑动验证").findOne().bounds();
-            // 通过随机选择动作库中的手势验证
-
-            /**
-             * 动作库
-             */
-            // x轴起点位置
+            // 通过更复杂的手势验证（向右滑动过程中途折返）
             var x_start = bound.centerX();
-            // x轴终点位置
-            var x_end = slider_bound.right;
-            // y轴位置
-            var y = random(bound.top, bound.bottom);
-            // 随机选择手势
-            var choice_number = random(1, 5);
-            switch (choice_number) {
-                case 1:
-                    // 1. 先左后右（匀速）
-                    gesture(random(delay_time * 1.8, delay_time * 1.8 + 150), [x_start, y], [x_end, y]);
-                case 2:
-                    // 2. 先左后右（加速）
-                    var x_mid1 = (x_end - x_start) * 1 / 4 + x_start;
-                    var x_mid2 = (x_end - x_start) * 2 / 4 + x_start;
-                    var x_mid3 = (x_end - x_start) * 3 / 4 + x_start;
-                    gesture([random(delay_time * 0.8, delay_time * 0.8 + 50), [x_start, y], [x_mid1, y]],
-                        [random(delay_time * 0.5, delay_time * 0.5 + 50), [x_mid1, y], [x_mid2, y]],
-                        [random(delay_time * 0.3, delay_time * 0.3 + 30), [x_mid2, y], [x_mid3, y]],
-                        [random(delay_time * 0.2, delay_time * 0.2 + 20), [x_mid3, y], [x_end, y]]);
-                case 3:
-                    // 3. 先左后右（减速）
-                    var x_mid1 = (x_end - x_start) * 1 / 4 + x_start;
-                    var x_mid2 = (x_end - x_start) * 2 / 4 + x_start;
-                    var x_mid3 = (x_end - x_start) * 3 / 4 + x_start;
-                    gesture([random(delay_time * 0.2, delay_time * 0.2 + 20), [x_start, y], [x_mid1, y]],
-                        [random(delay_time * 0.3, delay_time * 0.3 + 30), [x_mid1, y], [x_mid2, y]],
-                        [random(delay_time * 0.5, delay_time * 0.5 + 50), [x_mid2, y], [x_mid3, y]],
-                        [random(delay_time * 0.8, delay_time * 0.8 + 50), [x_mid3, y], [x_end, y]]);
-                case 4:
-                    // 4. 先左后右停顿再右
-                    var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
-                    gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y], [x_mid, y], [x_mid, y], [x_end, y]);
-                case 5:
-                    // 5. 先右后左再右
-                    var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
-                    var back_x = (x_end - x_start) * random(2, 3) / 10;
-                    gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y], [x_mid, y], [x_mid - back_x, y], [x_end, y]);
-            }
-
+            var dx = x_start - slider_bound.left;
+            var x_end = slider_bound.right - dx;
+            var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
+            var back_x = (x_end - x_start) * random(2, 3) / 10;
+            var y_start = random(bound.top, bound.bottom);
+            var y_end = random(bound.top, bound.bottom);
+            x_start = random(x_start - 7, x_start);
+            x_end = random(x_end, x_end + 10);
+            gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y_start], [x_mid, y_end], [x_mid - back_x, y_start], [x_end, y_end]);
             sleep(delay_time / 2);
             if (textContains("刷新").exists()) {
                 zz = zz + random(1, 2);
