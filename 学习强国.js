@@ -1161,7 +1161,7 @@ function handling_access_exceptions() {
                                 content: message_str,
                             }
                         );
-                        toastLog("消息已推送到微信");
+                        toastLog("问题已推送到微信");
                     }
                     break;
                 }
