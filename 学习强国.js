@@ -1563,7 +1563,7 @@ if (!finish_list[9] && whether_complete_subscription == "yes") {
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     entry_model(13);
     // 等待加载
-    sleep(random_time(delay_time * 2.5));
+    sleep(random_time(delay_time * 2));
 
     if (!className("android.view.View").desc("强国号\nTab 1 of 2").exists()) {
         toastLog("强国版本v2.34.0及以上不支持订阅功能");
