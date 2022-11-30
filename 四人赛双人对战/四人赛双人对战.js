@@ -607,34 +607,34 @@ function handling_access_exceptions() {
             switch (choice_number) {
                 case 1:
                     // 1. 先左后右（匀速）
-                    gesture(random_time(delay_time), [x_start, y], [x_end, y]);
+                    gesture(random(delay_time * 1.8, delay_time * 1.8 + 150), [x_start, y], [x_end, y]);
                 case 2:
                     // 2. 先左后右（加速）
                     var x_mid1 = (x_end - x_start) * 1 / 4 + x_start;
                     var x_mid2 = (x_end - x_start) * 2 / 4 + x_start;
                     var x_mid3 = (x_end - x_start) * 3 / 4 + x_start;
-                    gesture([random_time(delay_time) / 2, [x_start, y], [x_mid1, y]],
-                        [random_time(delay_time) / 4, [x_mid1, y], [x_mid2, y]],
-                        [random_time(delay_time) / 6, [x_mid2, y], [x_mid3, y]],
-                        [random_time(delay_time) / 10, [x_mid3, y], [x_end, y]]);
+                    gesture([random(delay_time * 0.8, delay_time * 0.8 + 50), [x_start, y], [x_mid1, y]],
+                        [random(delay_time * 0.5, delay_time * 0.5 + 50), [x_mid1, y], [x_mid2, y]],
+                        [random(delay_time * 0.3, delay_time * 0.3 + 30), [x_mid2, y], [x_mid3, y]],
+                        [random(delay_time * 0.2, delay_time * 0.2 + 20), [x_mid3, y], [x_end, y]]);
                 case 3:
                     // 3. 先左后右（减速）
                     var x_mid1 = (x_end - x_start) * 1 / 4 + x_start;
                     var x_mid2 = (x_end - x_start) * 2 / 4 + x_start;
                     var x_mid3 = (x_end - x_start) * 3 / 4 + x_start;
-                    gesture([random_time(delay_time) / 10, [x_start, y], [x_mid1, y]],
-                        [random_time(delay_time) / 6, [x_mid1, y], [x_mid2, y]],
-                        [random_time(delay_time) / 4, [x_mid2, y], [x_mid3, y]],
-                        [random_time(delay_time) / 2, [x_mid3, y], [x_end, y]]);
+                    gesture([random(delay_time * 0.2, delay_time * 0.2 + 20), [x_start, y], [x_mid1, y]],
+                        [random(delay_time * 0.3, delay_time * 0.3 + 30), [x_mid1, y], [x_mid2, y]],
+                        [random(delay_time * 0.5, delay_time * 0.5 + 50), [x_mid2, y], [x_mid3, y]],
+                        [random(delay_time * 0.8, delay_time * 0.8 + 50), [x_mid3, y], [x_end, y]]);
                 case 4:
                     // 4. 先左后右停顿再右
                     var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
-                    gesture(random_time(delay_time), [x_start, y], [x_mid, y], [x_mid, y], [x_end, y]);
+                    gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y], [x_mid, y], [x_mid, y], [x_end, y]);
                 case 5:
                     // 5. 先右后左再右
                     var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
                     var back_x = (x_end - x_start) * random(2, 3) / 10;
-                    gesture(random_time(delay_time), [x_start, y], [x_mid, y], [x_mid - back_x, y], [x_end, y]);
+                    gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y], [x_mid, y], [x_mid - back_x, y], [x_end, y]);
             }
 
             sleep(delay_time / 2);
@@ -664,7 +664,7 @@ function handling_access_exceptions() {
 var thread_handling_access_exceptions = handling_access_exceptions();
 
 /**
- * 答题
+ * 答四人赛、双人对战API
  */
 function do_contest() {
     while (!text("开始").exists());
