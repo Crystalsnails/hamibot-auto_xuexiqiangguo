@@ -313,53 +313,63 @@ function send_pushplus() {
  * back_track_flag = 2时，表示竞赛、答题部分和准备部分
  */
 function back_track() {
-    app.launchApp("学习强国");
-    sleep(random_time(delay_time * back_track_wait_time));
-    if (text("立即升级").exists()) {
-        text("取消").findOne().click();
-    }
-    var while_count = 0;
-    while (!id("comm_head_title").exists() && while_count < 5) {
-        while_count++;
-        back();
-        sleep(random_time(delay_time));
-    }
-    switch (back_track_flag) {
-        case 0:
-            // 去中心模块
-            id("home_bottom_tab_icon_large").waitFor();
+    do {
+        app.launchApp("学习强国");
+        sleep(random_time(delay_time * back_track_wait_time));
+        if (text("立即升级").exists()) {
+            text("取消").findOne().click();
+        }
+        var while_count = 0;
+        while (!id("comm_head_title").exists() && while_count < 5) {
+            while_count++;
+            back();
             sleep(random_time(delay_time));
-            var home_bottom = id("home_bottom_tab_icon_large").findOne().bounds();
-            click(home_bottom.centerX(), home_bottom.centerY());
-            // 去province模块
-            className("adnroid.view.ViewGroup").depth(15).waitFor();
-            sleep(random_time(delay_time));
-            if (text("亮点").exists()) {
-                className("android.view.ViewGroup").depth(15).findOnce(2).child(4).click();
-            } else {
-                className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
-            }
-            break;
-        case 1:
-            break;
-        case 2:
-            my_click_clickable("我的");
-            sleep(random_time(delay_time));
-            my_click_clickable("学习积分");
-            sleep(random_time(delay_time));
-            text("登录").waitFor();
-            break;
-    }
+        }
+        switch (back_track_flag) {
+            case 0:
+                // 去中心模块
+                id("home_bottom_tab_icon_large").waitFor();
+                sleep(random_time(delay_time));
+                var home_bottom = id("home_bottom_tab_icon_large").findOne().bounds();
+                click(home_bottom.centerX(), home_bottom.centerY());
+                // 去province模块
+                className("adnroid.view.ViewGroup").depth(15).waitFor();
+                sleep(random_time(delay_time));
+                if (text("亮点").exists()) {
+                    className("android.view.ViewGroup").depth(15).findOnce(2).child(4).click();
+                } else {
+                    className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
+                }
+                break;
+            case 1:
+                break;
+            case 2:
+                // 当网络不稳定时容易碰见积分规则更新中的情况
+                while (true) {
+                    my_click_clickable("我的");
+                    sleep(random_time(delay_time));
+                    my_click_clickable("学习积分");
+                    sleep(random_time(delay_time));
+                    text("积分规则").waitFor();
+                    sleep(random_time(delay_time));
+                    if (text("登录").exists()) break;
+                    back();
+                    sleep(random_time(delay_time));
+                    back();
+                }
+        }
+    // 当由于未知原因退出学习强国，则重新执行
+    } while (!className("FrameLayout").packageName("cn.xuexi.android").exists());
 }
 
 // 关闭音乐播放浮窗控件
 function close_music_widget() {
-  let imv = className("android.widget.ImageView").find();
-  let swtch = imv[imv.length - 1];
-  swtch.click();
-  sleep(1000);
-  swtch.click();
-  return true;
+    let imv = className("android.widget.ImageView").find();
+    let swtch = imv[imv.length - 1];
+    swtch.click();
+    sleep(1000);
+    swtch.click();
+    return true;
 }
 
 /**
@@ -425,17 +435,19 @@ className("android.view.View").clickable(true).depth(22).findOne().click();
 id("my_back").waitFor();
 sleep(random_time(delay_time / 2));
 id("my_back").findOne().click();
+sleep(random_time(delay_time));
 
-// 去province模块
-sleep(random_time(delay_time));
-className("android.view.ViewGroup").depth(15).waitFor();
-sleep(random_time(delay_time));
-if (text("亮点").exists()) {
-    className("android.view.ViewGroup").depth(15).findOnce(2).child(4).click();
-} else {
-    className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
+if (!finish_list[11] || !finish_list[0]) {
+    // 去省份模块
+    sleep(random_time(delay_time));
+    className("android.view.ViewGroup").depth(15).waitFor();
+    sleep(random_time(delay_time));
+    if (text("亮点").exists()) {
+        className("android.view.ViewGroup").depth(15).findOnce(2).child(4).click();
+    } else {
+        className("android.view.ViewGroup").depth(15).findOnce(2).child(3).click();
+    }
 }
-
 
 /*
  **********本地频道*********
@@ -526,6 +538,7 @@ back_track_flag = 1;
 
 // 关闭电台广播
 if (!finish_list[2] && !finish_list[0]) {
+    if (!id("comm_head_title").exists()) back_track();
     sleep(random_time(delay_time));
     my_click_clickable("电台");
     sleep(random_time(delay_time));
@@ -559,7 +572,7 @@ if (!finish_list[1] || !finish_list[2]) {
     // 点击第一个视频
     className("android.widget.FrameLayout").clickable(true).depth(24).findOne().click();
 
-    // 为了兼容强国版本为v2.33.0
+    // 为了兼容强国版本为v2.33.0（改版本号）
     sleep(random_time(delay_time));
     if (!id("iv_back").exists()) {
         className("android.widget.FrameLayout").clickable(true).depth(24).findOnce(7).click();
@@ -704,6 +717,7 @@ function do_contest_answer(depth_click_option, question, options_text) {
         select_option(answer, depth_click_option, options_text);
     }
 }
+
 /*
  ********************答题部分********************
  */
@@ -1111,7 +1125,7 @@ function do_periodic_answer(number) {
                     }
                 }
             }
-            sleep(random_time(delay_time)); // 每题之间的过渡时间
+            sleep(random_time(delay_time * 2)); // 每题之间的过渡时间
         }
         if (num == number) flag = true;
     }
@@ -1700,11 +1714,14 @@ if (!finish_list[10] && whether_complete_speech == "yes") {
     my_click_clickable("确认");
 }
 
+sleep(random_time(delay_time));
+// 回到积分页
+back_track_flag = 2;
+back_track();
+
 if (pushplus_token) {
-    back_track_flag = 2;
-    back_track();
-    // 获取今日得分
-    sleep(5000);
+    // 获取今日得分，延时
+    sleep(random_time(delay_time));
     // 推送消息
     var getData = send_pushplus();
     var jinri = getData[0];
@@ -1719,9 +1736,7 @@ if (pushplus_token) {
     push_weixin_message("Auto学习：" + account + " " + jinri + "积分");
 }
 
-sleep(random_time(delay_time));
-back();
-sleep(random_time(delay_time));
+sleep(random_time(delay_time * 2));
 launch('com.hamibot.hamibot');
 sleep(random_time(delay_time));
 // 取消屏幕唤醒
