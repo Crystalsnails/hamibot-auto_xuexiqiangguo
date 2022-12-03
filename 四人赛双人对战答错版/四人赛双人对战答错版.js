@@ -58,19 +58,30 @@ function entry_model(number) {
  * 如果因为某种不知道的bug退出了界面，则使其回到正轨
  */
 function back_track() {
-    app.launchApp("学习强国");
-    sleep(random_time(delay_time * 3));
-    var while_count = 0;
-    while (!id("comm_head_title").exists() && while_count < 5) {
-        while_count++;
-        back();
-        sleep(random_time(delay_time));
-    }
-    my_click_clickable("我的");
-    sleep(random_time(delay_time));
-    my_click_clickable("学习积分");
-    sleep(random_time(delay_time));
-    text("登录").waitFor();
+    do {
+        app.launchApp("学习强国");
+        sleep(random_time(delay_time * 3));
+        var while_count = 0;
+        while (!id("comm_head_title").exists() && while_count < 5) {
+            while_count++;
+            back();
+            sleep(random_time(delay_time));
+        }
+        // 当网络不稳定时容易碰见积分规则更新中的情况
+        while (true) {
+            my_click_clickable("我的");
+            sleep(random_time(delay_time));
+            my_click_clickable("学习积分");
+            sleep(random_time(delay_time));
+            text("积分规则").waitFor();
+            sleep(random_time(delay_time));
+            if (text("登录").exists()) break;
+            back();
+            sleep(random_time(delay_time));
+            back();
+        }
+    // 当由于未知原因退出学习强国，则重新执行
+    } while (!className("FrameLayout").packageName("cn.xuexi.android").exists());
 }
 
 /**
