@@ -60,7 +60,7 @@ function entry_model(number) {
 function back_track() {
     do {
         app.launchApp("学习强国");
-        sleep(random_time(delay_time * 3));
+        sleep(random_time(delay_time * 5));
         var while_count = 0;
         while (!id("comm_head_title").exists() && while_count < 5) {
             while_count++;
