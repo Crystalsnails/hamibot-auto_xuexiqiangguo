@@ -332,8 +332,8 @@ function back_track() {
                 sleep(random_time(delay_time));
                 var home_bottom = id("home_bottom_tab_icon_large").findOne().bounds();
                 click(home_bottom.centerX(), home_bottom.centerY());
-                // 去province模块
-                className("adnroid.view.ViewGroup").depth(15).waitFor();
+                // 去省份模块
+                className("android.view.ViewGroup").depth(15).waitFor();
                 sleep(random_time(delay_time));
                 if (text("亮点").exists()) {
                     className("android.view.ViewGroup").depth(15).findOnce(2).child(4).click();
