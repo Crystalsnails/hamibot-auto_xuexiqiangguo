@@ -172,15 +172,15 @@ if (date.getDay() == 6) {
  */
 function map_update() {
     toastLog("正在下载题库");
-    // 使用 GitCode 上存放的题库
+    // 使用 GitHub 上存放的题库
     var answer_question_bank = http.get("https://ghproxy.com/https://raw.githubusercontent.com/McMug2020/XXQG_TiKu/main/%E9%A2%98%E5%BA%93_McMug2020.json");
-    sleep(random_time(delay_time * 3));
+    sleep(2500);
     // 如果资源过期或无法访问则换成别的地址
     if (!(answer_question_bank.statusCode >= 200 && answer_question_bank.statusCode < 300)) {
         // 使用XXQG_TiKu挑战答题腾讯云题库地址
         var answer_question_bank = http.get("https://gitcode.net/McMug2020/XXQG_TiKu/-/raw/65dc252b0ce9016d8a66cd9450c6a0bd9c43991e/%E9%A2%98%E5%BA%93_McMug2020.json");
         toastLog("下载XXQG_TiKu题库");
-        sleep(random_time(delay_time * 3));
+        sleep(2500);
     }
     answer_question_bank = answer_question_bank.body.string();
     answer_question_bank = JSON.parse(answer_question_bank);
@@ -195,7 +195,7 @@ function map_update() {
         }
         map_set(question, answer);
     }
-    sleep(random_time(delay_time * 2));
+    sleep(1500);
     // 将题库存储到本地
     storage.put("answer_question_map", answer_question_map);
 
