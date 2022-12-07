@@ -30,7 +30,8 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
             var beginBtn;
             if (beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time));
             else if (beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time));
-            else (beginBtn = classNameContains("Button").textContains("ALLOW").findOne(delay_time));
+            else if (beginBtn = classNameContains("Button").textContains("ALLOW").findOne(delay_time));
+            else (beginBtn = classNameContains("Button").textContains("Start now").findOne(delay_time));
             beginBtn.click();
         } catch (error) {
         }
