@@ -45,12 +45,19 @@ function my_click_clickable(target) {
 }
 
 /**
- * 点击对应的去答题
- * @param {int} number 10和11分别为四人赛双人对战
+ * 点击对应的模块的 去答题
+ * @param {string} name 模块的名字
  */
-function entry_model(number) {
+function entry_model(name) {
     sleep(random_time(delay_time * 2));
-    var model = className("android.view.View").depth(24).findOnce(number);
+    // 模块列表
+    var model_list = className('ListView').depth(23).findOne();
+    for (var i = 0; i < model_list.childCount(); i++) {
+        var model = model_list.child(i);
+        // 获取模块名
+        var model_name = model.child(0).text().trim();
+        if (name == model_name) break;
+    }
     while (!model.child(4).click());
 }
 
@@ -159,7 +166,7 @@ if (four_player_battle == "yes") {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model(10);
+    entry_model('四人赛');
 
     for (var i = 0; i < four_player_count; i++) {
         sleep(random_time(delay_time));
@@ -184,7 +191,7 @@ if (two_player_battle == "yes") {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model(12);
+    entry_model('双人对战');
 
     for (var i = 0; i < two_player_count; i++) {
         // 点击随机匹配
