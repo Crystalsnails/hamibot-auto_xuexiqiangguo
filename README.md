@@ -4,8 +4,8 @@ https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
 
 **自建题库，每周六自动检测更新**
 
-# hamibot-Auto学习强国
-<p>hamibot-Auto学习强国 是一款自动化学习工具 fork <a href="https://github.com/dundunnp/auto_xuexiqiangguo/">dundunnp</a></p>
+# Hamibot-Auto学习强国
+<p>Hamibot-Auto学习强国 是一款自动化学习工具 fork <a href="https://github.com/dundunnp/auto_xuexiqiangguo/">dundunnp</a></p>
 <p>本项目旨在解放双手 让大家在未来十年有更多时间做更有意义的事</p>
 <p><img src="https://s1.ax1x.com/2022/12/10/zWHfRP.jpg"/></p>
 
