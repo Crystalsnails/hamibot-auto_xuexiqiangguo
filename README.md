@@ -41,9 +41,9 @@ https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
 
 # 使用说明
 
-配合2.33.0脚本可以在Hamibot上完美运行使用；多账号请谨慎使用，**超出百度OCR免费次数所产生的费用概不负责**
+配合强国软件2.33.0，脚本可以在Hamibot上完美运行；多账号请谨慎使用，**超出百度OCR免费次数所产生的费用概不负责**
 
-推荐选择Hamibot运行，具体操作如下：
+推荐选择Hamibot使用，具体操作如下：
 
 ## Hamibot
 1. 先跟随着[Hamibot指导](https://hamibot.com/guide)安装Hamibot并配对好机器人：
@@ -147,9 +147,8 @@ https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
 
 Q1: 点击运行脚本没有反应，甚至连学习强国都没有打开
 
-A: 
-1. 请确保Hamibot已经打开**无障碍服务权限**
-2. 由于hamibot软件原因或某种原因，脚本无法运行（我也出现过这种情况）你可以重新下载hamibot软件
+A: 1. 请确保Hamibot已经打开**无障碍服务权限**
+   2. 由于hamibot软件原因或某种原因，脚本无法运行（我也出现过这种情况）你可以重新下载hamibot软件
 
 Q2: 在四人赛、双人对战正确率感人
 
