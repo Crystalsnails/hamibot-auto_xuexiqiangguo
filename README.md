@@ -43,7 +43,7 @@ https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
 
 配合强国软件2.33.0，脚本可以在Hamibot上完美运行；多账号请谨慎使用，**超出百度OCR免费次数所产生的费用概不负责**
 
-推荐选择Hamibot使用，具体操作如下：
+推荐选择Hamibot使用，Hamibot是适用于安卓系统的自动化工具，近似Auto.js，优点是脚本热更新，能操控任意 APP，实现自动化操作，提高工作效率；发布的脚本经由平台审核安全。具体操作如下：
 
 ## Hamibot
 1. 先跟随着[Hamibot指导](https://hamibot.com/guide)安装Hamibot并配对好机器人：
