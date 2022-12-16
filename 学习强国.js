@@ -1136,6 +1136,7 @@ function handling_access_exceptions() {
     var thread_handling_access_exceptions = threads.start(function () {
         var zz = 0;
         var nn = 0;
+        var jj = 0;
         while (true) {
             textContains("访问异常").waitFor();
             // 滑动按钮“>>”位置
@@ -1159,7 +1160,35 @@ function handling_access_exceptions() {
             if (textContains("刷新").exists()) {
                 zz = zz + random(1, 2);
                 nn++;
-                if (zz > 10) {
+                if (zz > 7 && jj < 2) {
+                    sleep(random_time(delay_time * 2));
+                    back();
+                    sleep(random_time(delay_time * 2));
+                    if (textContains("提交失败").exists()) {
+                        // 重新滑动
+                        sleep(random_time(delay_time * 3));
+                        my_click_clickable("重试");
+                        sleep(random_time(delay_time));
+                        jj++;
+                        zz = 0;
+                        continue;
+                    }
+                    else if (textContains("网络开小差").exists() && resume_flag == 1) {
+                        sleep(random_time(delay_time));
+                        my_click_clickable("确定");
+                        sleep(random_time(delay_time));
+                        text("登录").waitFor();
+                        sleep(random_time(delay_time));
+                        entry_model('每日答题');
+                        text("查看提示").waitFor();
+                        do_periodic_answer(5);
+                        zz = 0;
+                        continue;
+                    } else {
+                        jj = 2;
+                    }
+                }
+                if (zz > 7 && jj == 2) {
                     toastLog("多次滑动验证失败");
                     if (pushplus_token) {
                         var message_str = "多次滑动验证失败（随机尝试了" + nn + "次），可能是网络问题，请重启运行脚本。";
@@ -1179,7 +1208,7 @@ function handling_access_exceptions() {
                 click("刷新");
                 continue;
             }
-            if (textContains("网络开小差").exists()) {
+            if (textContains("网络开小差" && resume_flag == 0).exists()) {
                 click("确定");
                 continue;
             }
@@ -1193,6 +1222,7 @@ function handling_access_exceptions() {
 /* 
 处理访问异常，滑动验证
 */
+var resume_flag = 1;
 var thread_handling_access_exceptions = handling_access_exceptions();
 
 /*
@@ -1209,6 +1239,8 @@ if (!finish_dict['每日答题'][0]) {
     do_periodic_answer(5);
     my_click_clickable("返回");
 }
+
+var resume_flag = 0;
 
 /*
 **********每周答题*********
