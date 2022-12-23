@@ -438,7 +438,7 @@ function get_baidu_token() {
     return res.body.json()["access_token"];
 }
 
-if (whether_improve_accuracy == "yes") var token = get_baidu_token();
+if (whether_improve_accuracy == "yes") { var token = get_baidu_token(); }
 
 /**
  * 百度ocr接口，传入图片返回文字和选项文字
@@ -715,7 +715,7 @@ if (four_player_battle == "yes") {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model('四人赛');
+    entry_model("四人赛");
 
     for (var i = 0; i < count; i++) {
         sleep(random_time(delay_time));
@@ -741,7 +741,7 @@ if (two_player_battle == "yes") {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model('双人对战');
+    entry_model("双人对战");
 
     // 点击随机匹配
     text("随机匹配").waitFor();
