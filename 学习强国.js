@@ -370,7 +370,7 @@ function close_music_widget() {
     let imv = className("android.widget.ImageView").find();
     let swtch = imv[imv.length - 1];
     swtch.click();
-    sleep(1000);
+    sleep(random(1000, 1200));
     swtch.click();
     return true;
 }
