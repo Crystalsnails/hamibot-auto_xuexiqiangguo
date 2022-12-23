@@ -166,7 +166,7 @@ if (four_player_battle == "yes") {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model('四人赛');
+    entry_model("四人赛");
 
     for (var i = 0; i < four_player_count; i++) {
         sleep(random_time(delay_time));
@@ -191,7 +191,7 @@ if (two_player_battle == "yes") {
     sleep(random_time(delay_time));
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model('双人对战');
+    entry_model("双人对战");
 
     for (var i = 0; i < two_player_count; i++) {
         // 点击随机匹配
