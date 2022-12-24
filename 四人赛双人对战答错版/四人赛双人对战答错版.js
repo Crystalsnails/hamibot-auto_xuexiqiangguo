@@ -10,6 +10,7 @@ var { two_player_battle } = hamibot.env;
 var { four_player_count } = hamibot.env;
 var { two_player_count } = hamibot.env;
 var { contest_delay_time } = hamibot.env;
+var { all_completed_Vibrate } = hamibot.env;
 var delay_time = 1000;
 four_player_count = Number(four_player_count);
 two_player_count = Number(two_player_count);
@@ -217,7 +218,7 @@ if (two_player_battle == "yes") {
     my_click_clickable("退出");
 }
 
-// 震动半秒
-device.vibrate(500);
+// 震动半秒(可选项)
+if (all_completed_Vibrate == "yes") device.vibrate(500);
 toastLog("脚本运行完成");
 exit();
