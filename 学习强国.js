@@ -55,6 +55,7 @@ var { all_weekly_answers_completed, all_special_answer_completed } = hamibot.env
 var { whether_complete_subscription } = hamibot.env;
 var { whether_complete_speech } = hamibot.env;
 var { pushplus_token } = hamibot.env;
+var { all_completed_Vibrate } = hamibot.env;
 delay_time = Number(delay_time) * 1000;
 
 // 调用百度api所需参数
@@ -1772,8 +1773,8 @@ sleep(random_time(delay_time));
 device.cancelKeepingAwake();
 // 恢复媒体音量
 device.setMusicVolume(vol);
-// 震动半秒
-device.vibrate(500);
+// 震动半秒(可选项)
+if (all_completed_Vibrate == "yes") device.vibrate(500);
 toastLog("脚本运行完成");
 sleep(random_time(delay_time));
 home();
