@@ -76,5 +76,16 @@
     "type": "text",
     "label": "pushplus_token",
     "help": "微信关注“pushplus推送加”，复制token填入即可。推送通知内容展示详细的学习积分"
+  },
+  {
+    "name": "all_completed_Vibrate",
+    "type": "radio",
+    "options": {
+      "yes": "是",
+      "no": "否"
+    },
+    "label": "是否启用脚本运行完成后震动",
+    "validation": "required",
+    "help": "运行完成后设备震动半秒以提醒用户，因脚本可能定时任务执行，为避免休息时被打扰，该项默认为否"
   }
 ]
