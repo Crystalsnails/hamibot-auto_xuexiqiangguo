@@ -51,7 +51,7 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
 // 基础数据
 var { delay_time } = hamibot.env;
 var { whether_improve_accuracy } = hamibot.env;
-var { all_weekly_answers_completed, all_special_answer_completed } = hamibot.env;
+var { all_special_answer_completed } = hamibot.env;
 var { whether_complete_subscription } = hamibot.env;
 var { whether_complete_speech } = hamibot.env;
 var { pushplus_token } = hamibot.env;
@@ -1249,39 +1249,6 @@ var resume_flag = 0;
 var restart_flag = 1;
 // 是否重做过，如果重做，也即错了，则换用精度更高的百度ocr
 var if_restart_flag = false;
-// 保存本地变量，如果已经做完之前的所有题目则跳过
-if (!storage.contains("all_weekly_answers_completed_storage")) {
-    storage.put("all_weekly_answers_completed_storage", "no");
-}
-if (all_weekly_answers_completed == "no") {
-    all_weekly_answers_completed = storage.get("all_weekly_answers_completed_storage");
-}
-
-if (!finish_dict['每周答题'][0] && finish_dict['每周答题'][1] < 4 && all_weekly_answers_completed == "no") {
-    sleep(random_time(delay_time));
-    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model('每周答题');
-    // 等待列表加载
-    textContains("月").waitFor();
-    sleep(random_time(delay_time * 2));
-    // 打开第一个出现未作答的题目
-    // 如果之前的答题全部完成则不向下搜索
-    if (all_weekly_answers_completed == "no") {
-        while (!text("未作答").exists() && !text("您已经看到了我的底线").exists()) {
-            swipe(500, 1700, 500, 500, random_time(delay_time / 2));
-        }
-        if (text("您已经看到了我的底线").exists()) storage.put("all_weekly_answers_completed_storage", "yes");
-    }
-    sleep(random_time(delay_time * 2));
-    if (text("未作答").exists()) {
-        text("未作答").findOne().parent().click();
-        do_periodic_answer(5);
-        my_click_clickable("返回");
-        sleep(random_time(delay_time));
-    }
-    className("android.view.View").clickable(true).depth(23).waitFor();
-    className("android.view.View").clickable(true).depth(23).findOne().click();
-}
 
 /*
 **********专项答题*********
@@ -1468,7 +1435,7 @@ if (!finish_dict['挑战答题'][0]) {
 }
 
 /*
- ********************四人赛、双人对战、太空三人行********************
+ ********************四人赛、双人对战********************
  */
 
 /**
@@ -1540,38 +1507,6 @@ if (!finish_dict['四人赛'][0] && finish_dict['四人赛'][1] < 3) {
     sleep(random_time(delay_time));
     back();
 }
-
-/*
- **********太空三人行*********
- */
-// 由于不需要赢也可以获得积分，因此用hamibot自带ocr，不浪费baidu_ocr次数
-var old_whether_improve_accuracy = whether_improve_accuracy;
-whether_improve_accuracy = "no";
-
-if (typeof (finish_dict['太空三人行']) != "undefined" && !finish_dict['太空三人行'][0]) {
-    log("太空三人行");
-    sleep(random_time(delay_time));
-
-    if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
-    entry_model('太空三人行');
-
-    for (var i = 0; i < 2; i++) {
-        sleep(random_time(delay_time));
-        textStartsWith("网络").findOne().parent().child(1).child(0).click();
-        do_contest();
-        if (i == 0) {
-            sleep(random_time(delay_time * 2));
-            my_click_clickable("继续挑战");
-            sleep(random_time(delay_time));
-        }
-    }
-    sleep(random_time(delay_time * 2));
-    back();
-    sleep(random_time(delay_time));
-    back();
-}
-// 改回来
-whether_improve_accuracy = old_whether_improve_accuracy;
 
 /*
  **********双人对战*********
