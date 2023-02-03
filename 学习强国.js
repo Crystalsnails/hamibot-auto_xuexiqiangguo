@@ -422,7 +422,13 @@ back_track_wait_time = 3;
 var finish_dict = get_finish_dict();
 
 // 返回首页
-className("android.view.View").clickable(true).depth(22).findOne().click();
+var version_number = device.release;
+version_number = Number(version_number);
+if (version_number == 13) {
+    className("android.view.View").clickable(true).depth(23).findOne().click();
+} else {
+    className("android.view.View").clickable(true).depth(22).findOne().click();
+}
 id("my_back").waitFor();
 sleep(random_time(delay_time / 2));
 id("my_back").findOne().click();
@@ -835,6 +841,7 @@ function restart() {
     switch (restart_flag) {
         case 0:
             text("登录").waitFor();
+            sleep(random_time(delay_time / 2));
             entry_model('每日答题');
             break;
         case 1:
@@ -1076,7 +1083,7 @@ function do_periodic_answer(number) {
             } else {
                 my_click_clickable("查看提示");
                 // 打开查看提示的时间
-                sleep(random_time(delay_time));
+                sleep(2500);
                 var img = images.inRange(captureScreen(), "#600000", "#FF6060");
                 if (if_restart_flag && whether_improve_accuracy == "yes") {
                     answer = baidu_ocr_api(img)[0];
@@ -1086,8 +1093,10 @@ function do_periodic_answer(number) {
                     } catch (error) {
                     }
                 }
-                img.recycle();
+                sleep(500);
                 answer = ocr_processing(answer, false);
+                sleep(random_time(delay_time / 2));
+                img.recycle();
                 text("提示").waitFor();
                 back();
                 sleep(random_time(delay_time));
@@ -1209,7 +1218,7 @@ function handling_access_exceptions() {
                 click("刷新");
                 continue;
             }
-            if (textContains("网络开小差" && resume_flag == 0).exists()) {
+            if (textContains("网络开小差").exists() && resume_flag == 0) {
                 click("确定");
                 continue;
             }
@@ -1376,6 +1385,10 @@ if (!finish_dict['挑战答题'][0]) {
 
     if (!className("android.view.View").depth(22).text("学习积分").exists()) back_track();
     entry_model('挑战答题');
+    // 点击强国总题库
+    text("挑战答题").waitFor();
+    sleep(random_time(delay_time / 2))
+    while (!click("total.88d389ee"));
     // 加载页面
     className("android.view.View").clickable(true).depth(22).waitFor();
     log("挑战答题");
@@ -1432,6 +1445,9 @@ if (!finish_dict['挑战答题'][0]) {
     click("结束本局");
     sleep(random_time(delay_time * 3));    
     back();
+    text("挑战答题").waitFor();
+    sleep(random_time(delay_time / 2));
+    if (text("文学知识").exists()) back();
 }
 
 /*
@@ -1679,7 +1695,7 @@ if (!finish_dict['发表观点'][0] && whether_complete_speech == "yes") {
     my_click_clickable("确认");
 }
 
-sleep(random_time(delay_time));
+sleep(random_time(delay_time * 2));
 // 回到积分页
 back_track_flag = 2;
 back_track();
