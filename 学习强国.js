@@ -31,7 +31,7 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
             if (beginBtn = classNameContains("Button").textContains("开始").findOne(delay_time));
             else if (beginBtn = classNameContains("Button").textContains("允许").findOne(delay_time));
             else if (beginBtn = classNameContains("Button").textContains("ALLOW").findOne(delay_time));
-            else (beginBtn = classNameContains("Button").textContains("Start now").findOne(delay_time));
+            else (beginBtn = classNameContains("Button").textContains("Start").findOne(delay_time));
             beginBtn.click();
         } catch (error) {
         }
@@ -421,14 +421,12 @@ back_track();
 back_track_wait_time = 3;
 var finish_dict = get_finish_dict();
 
+// 获取Android系统版本号
+var version_number = Number(device.release);
 // 返回首页
-var version_number = device.release;
-version_number = Number(version_number);
-if (version_number == 13) {
-    className("android.view.View").clickable(true).depth(23).findOne().click();
-} else {
-    className("android.view.View").clickable(true).depth(22).findOne().click();
-}
+// Android 13控件位置不同
+var depth_num = version_number == 13 ? 23 : 22;
+className("android.view.View").clickable(true).depth(depth_num).findOne().click();
 id("my_back").waitFor();
 sleep(random_time(delay_time / 2));
 id("my_back").findOne().click();
@@ -808,7 +806,7 @@ function is_select_all_choice() {
     var options = className("android.view.View").depth(26).find();
     // question是题目(专项答题是第4个，其他是第2个)
     var question = className("android.view.View").depth(23).findOnce(1).text().length > 2 ? className("android.view.View").depth(23).findOnce(1).text() : className("android.view.View").depth(23).findOnce(3).text();
-    return options.length / 2 == (question.match(/\s+/g) || []).length;
+    return options.length / 2 <= (question.match(/\s+/g) || []).length;
 }
 
 /**
@@ -1149,74 +1147,85 @@ function handling_access_exceptions() {
         var jj = 0;
         while (true) {
             textContains("访问异常").waitFor();
-            // 滑动按钮“>>”位置
-            idContains("nc_1_n1t").waitFor();
-            var bound = idContains("nc_1_n1t").findOne().bounds();
-            // 滑动边框位置
-            text("向右滑动验证").waitFor();
-            var slider_bound = text("向右滑动验证").findOne().bounds();
-            // 通过更复杂的手势验证（向右滑动过程中途折返）
-            var x_start = bound.centerX();
-            var dx = x_start - slider_bound.left;
-            var x_end = slider_bound.right - dx;
-            var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
-            var back_x = (x_end - x_start) * random(2, 3) / 10;
-            var y_start = random(bound.top, bound.bottom);
-            var y_end = random(bound.top, bound.bottom);
-            x_start = random(x_start - 7, x_start);
-            x_end = random(x_end, x_end + 10);
-            gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y_start], [x_mid, y_end], [x_mid - back_x, y_start], [x_end, y_end]);
-            sleep(delay_time / 2);
-            if (textContains("刷新").exists()) {
-                zz = zz + random(1, 2);
-                nn++;
-                if (zz > 7 && jj < 2) {
-                    sleep(random_time(delay_time * 2));
-                    back();
-                    sleep(random_time(delay_time * 2));
-                    if (textContains("提交失败").exists()) {
-                        // 重新滑动
-                        sleep(random_time(delay_time * 3));
-                        my_click_clickable("重试");
-                        sleep(random_time(delay_time));
-                        jj++;
-                        zz = 0;
-                        continue;
+            sleep(random_time(delay_time * 2.5));
+            // 如果是新版验证，暂时采用手动方式
+            if (text("拖动滑块直到出现").exists()) {
+                // 震动提示
+                device.vibrate(200);
+                sleep(500);
+                device.vibrate(300);
+                sleep(random_time(delay_time * 4.5));
+            } else {
+                // 旧版验证（将删除）
+                // 滑动按钮“>>”位置
+                idContains("nc_1_n1t").waitFor();
+                var bound = idContains("nc_1_n1t").findOne().bounds();
+                // 滑动边框位置
+                text("向右滑动验证").waitFor();
+                var slider_bound = text("向右滑动验证").findOne().bounds();
+                // 通过更复杂的手势验证（向右滑动过程中途折返）
+                var x_start = bound.centerX();
+                var dx = x_start - slider_bound.left;
+                var x_end = slider_bound.right - dx;
+                var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
+                var back_x = (x_end - x_start) * random(2, 3) / 10;
+                var y_start = random(bound.top, bound.bottom);
+                var y_end = random(bound.top, bound.bottom);
+                x_start = random(x_start - 7, x_start);
+                x_end = random(x_end, x_end + 10);
+                gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y_start], [x_mid, y_end], [x_mid - back_x, y_start], [x_end, y_end]);
+                sleep(delay_time / 2);
+                if (textContains("刷新").exists()) {
+                    zz = zz + random(1, 2);
+                    nn++;
+                    if (zz > 7 && jj < 2) {
+                        sleep(random_time(delay_time * 2));
+                        back();
+                        sleep(random_time(delay_time * 2));
+                        if (textContains("提交失败").exists()) {
+                            // 重新滑动
+                            sleep(random_time(delay_time * 3));
+                            my_click_clickable("重试");
+                            sleep(random_time(delay_time));
+                            jj++;
+                            zz = 0;
+                            continue;
+                        }
+                        else if (textContains("网络开小差").exists() && resume_flag == 1) {
+                            sleep(random_time(delay_time));
+                            my_click_clickable("确定");
+                            sleep(random_time(delay_time));
+                            text("登录").waitFor();
+                            sleep(random_time(delay_time));
+                            entry_model('每日答题');
+                            text("查看提示").waitFor();
+                            do_periodic_answer(5);
+                            zz = 0;
+                            continue;
+                        } else {
+                            jj = 2;
+                        }
                     }
-                    else if (textContains("网络开小差").exists() && resume_flag == 1) {
-                        sleep(random_time(delay_time));
-                        my_click_clickable("确定");
-                        sleep(random_time(delay_time));
-                        text("登录").waitFor();
-                        sleep(random_time(delay_time));
-                        entry_model('每日答题');
-                        text("查看提示").waitFor();
-                        do_periodic_answer(5);
-                        zz = 0;
-                        continue;
-                    } else {
-                        jj = 2;
+                    if (zz > 7 && jj == 2) {
+                        toastLog("多次滑动验证失败");
+                        if (pushplus_token) {
+                            var message_str = "多次滑动验证失败（随机尝试了" + nn + "次），可能是网络问题，请重启运行脚本。";
+                            // 推送消息
+                            http.postJson(
+                                "http://www.pushplus.plus/send",
+                                {
+                                    token: pushplus_token,
+                                    title: "Auto学习：滑动验证失败",
+                                    content: message_str,
+                                }
+                                );
+                            toastLog("问题已推送到微信");
+                        }
+                        break;
                     }
+                    click("刷新");
+                    continue;
                 }
-                if (zz > 7 && jj == 2) {
-                    toastLog("多次滑动验证失败");
-                    if (pushplus_token) {
-                        var message_str = "多次滑动验证失败（随机尝试了" + nn + "次），可能是网络问题，请重启运行脚本。";
-                        // 推送消息
-                        http.postJson(
-                            "http://www.pushplus.plus/send",
-                            {
-                                token: pushplus_token,
-                                title: "Auto学习：滑动验证失败",
-                                content: message_str,
-                            }
-                        );
-                        toastLog("问题已推送到微信");
-                    }
-                    break;
-                }
-                click("刷新");
-                continue;
             }
             if (textContains("网络开小差").exists() && resume_flag == 0) {
                 click("确定");
