@@ -1,5 +1,5 @@
 # 脚本安装和题库更新
-**Hamibot自用学习主脚本参考** 新增开屏解锁选项和完成后结束APP（针对备用机定时任务）
+**Hamibot自用学习主脚本参考** 新增开屏解锁选项、pushplus重复推送校验、低电量微信推送和完成后结束APP（针对备用机定时任务，可以在间隔时间段设置2个定时任务以确保当天学习完全）
 
 https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
 
