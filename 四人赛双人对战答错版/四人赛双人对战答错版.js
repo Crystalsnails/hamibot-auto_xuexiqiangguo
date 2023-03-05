@@ -98,35 +98,16 @@ function back_track() {
 function handling_access_exceptions() {
     // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
     var thread_handling_access_exceptions = threads.start(function () {
-        var zz = 0;
         while (true) {
             textContains("访问异常").waitFor();
-            // 滑动按钮“>>”位置
-            idContains("nc_1_n1t").waitFor();
-            var bound = idContains("nc_1_n1t").findOne().bounds();
-            // 滑动边框位置
-            text("向右滑动验证").waitFor();
-            var slider_bound = text("向右滑动验证").findOne().bounds();
-            // 通过更复杂的手势验证（向右滑动过程中途折返）
-            var x_start = bound.centerX();
-            var dx = x_start - slider_bound.left;
-            var x_end = slider_bound.right - dx;
-            var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
-            var back_x = (x_end - x_start) * random(2, 3) / 10;
-            var y_start = random(bound.top, bound.bottom);
-            var y_end = random(bound.top, bound.bottom);
-            x_start = random(x_start - 7, x_start);
-            x_end = random(x_end, x_end + 10);
-            gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y_start], [x_mid, y_end], [x_mid - back_x, y_start], [x_end, y_end]);
-            sleep(delay_time / 2);
-            if (textContains("刷新").exists()) {
-                zz = zz + random(1, 2);
-                if (zz > 10) {
-                    toastLog("多次滑动验证失败");
-                    break;
-                }
-                click("刷新");
-                continue;
+            sleep(random_time(delay_time * 2.5));
+            // 新版验证暂时采用手动方式，可装学习强国2.22.0无验证
+            if (text("拖动滑块直到出现").exists()) {
+                // 震动提示
+                device.vibrate(200);
+                sleep(500);
+                device.vibrate(300);
+                sleep(random_time(delay_time * 4.5));
             }
             if (textContains("网络开小差").exists()) {
                 click("确定");
