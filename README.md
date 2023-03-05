@@ -1,12 +1,12 @@
 # 脚本安装和题库更新
 **Hamibot自用学习主脚本参考** 新增开屏解锁选项、pushplus重复推送校验、低电量微信推送和完成后结束APP（针对备用机定时任务，可以在间隔时间段设置2个定时任务以确保当天学习完全）
-
 https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
 
 顺畅运行脚本需 [學習强国v2.22.0(改版本号)]（系统版本太高安装不了QG旧版本，可用VMOS+64位版安卓7.1+Hamibot1.4.3+qg2.22改版本号，可多开；具体方法可搜索GitHub页面上的相关议题）
-v2.22.0下载（请忽略压缩包文件名） https://www.123pan.com/s/D1WuVv-5trKh.html arrow_upper_right 提取码:7777
 
-**自建题库，每周六自动检测更新(如有）**
+**v2.22.0下载（请忽略压缩包文件名） https://www.123pan.com/s/D1WuVv-5trKh.html 提取码:7777**
+
+**自建题库，每周六自动检测更新（如有）**
 https://github.com/McMug2020/XXQG_TiKu
 
 # Hamibot-Auto学习强国
@@ -40,7 +40,7 @@ https://github.com/McMug2020/XXQG_TiKu
 如果喜欢的话可以star一下噢，谢谢！
 
 # 脚本声明
-**本脚本适用于安卓、鸿蒙系统，不适用于IOS，用IOS设备可在PC上安装[浏览器扩展插件](https://github.com/McMug2020/LearningThePooh)扫二维码学习；请将强国软件换为2.33.0版本（修改版本号），这之后的版本脚本运行可能报错**
+**本脚本适用于安卓、鸿蒙系统，不适用于IOS，用IOS设备可在PC上安装[浏览器扩展插件](https://github.com/McMug2020/LearningThePooh)扫二维码学习；请将强国软件换为v2.22.0 或v2.33.0（修改版本号），v2.33.0之后的版本脚本运行可能报错**
 **如果因为bug或各种原因不得不终止脚本，请重新运行脚本，脚本会自动跳过已完成的部分**
 **如果遇到bug问题，请先查看[常见问题](#常见问题)，如果没有找到类似问题或还是不行请反馈bug给我**
 
