@@ -21,8 +21,8 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
         exit();
     }
 
-    // 保持屏幕唤醒状态
-    device.keepScreenDim();
+    // 保持屏幕唤醒状态30分钟
+    device.keepScreenDim(30 * 60 * 1000);
 
     //请求横屏截图权限
     threads.start(function () {
@@ -49,6 +49,7 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
  * 获取配置参数及本地存储数据
  */
 // 基础数据
+var { self_unlock } = hamibot.env;
 var { delay_time } = hamibot.env;
 var { whether_improve_accuracy } = hamibot.env;
 var { all_special_answer_completed } = hamibot.env;
@@ -137,6 +138,63 @@ function map_get(key) {
     return null;
 };
 
+
+//自滑屏解锁
+if (self_unlock) {
+    while (!device.isScreenOn()) {
+        device.wakeUpIfNeeded();
+        sleep(1000);
+        swipe(device.width / 2, device.height * 14 / 15, device.width / 2, device.height * 9 / 15, 300);
+    }
+    sleep(1000);
+}
+
+//pushplus推送校验
+if (pushplus_token) {
+    if (!storage.contains("token_check_storage")) {
+        storage.put("token_check_storage", "0");
+    }
+    if (!storage.contains("account_check_storage")) {
+        storage.put("account_check_storage", "学习强国");
+    }
+    if (!storage.contains("day_check_storage")) {
+        storage.put("day_check_storage", 32);
+    }
+    if (!storage.contains("score_check_storage")) {
+        storage.put("score_check_storage", 99);
+    }
+    var token_check0 = storage.get("token_check_storage");
+    var account_check0 = storage.get("account_check_storage");
+    var day_check0 = storage.get("day_check_storage");
+    var score_check0 = storage.get("score_check_storage");
+    /**
+     * 低电量提醒微信推送
+     //多账号可指定推送第一个的token
+     */
+    if (!device.isCharging() && Number(device.getBattery()) < 20) {
+        let style_str = '<style>.item{height:1.5em;line-height:1.5em;}.item span{display:inline-block;padding-left:0.4em;}\
+        .item .bar{width:100px;height:10px;background-color:#ddd;border-radius:5px;display:inline-block;}\
+        .item .bar div{height:10px;background-color:#ed4e45;border-radius:5px;}</style>';
+        var PP4 = device.getBattery() + '%';
+        var message_str = '<h6>关联设备的电量为：' + PP4 + '</h6><div>';
+        message_str += '<div class="item"><div class="bar"><div style="width: ' + PP4 + ';"></div></div></div></div>' + style_str;
+        // 推送消息
+        http.postJson(
+            "http://www.pushplus.plus/send",
+            {
+                token: pushplus_token,
+                title: "电量较低，请及时给设备充电",
+                content: message_str,
+                template: "markdown",
+            }
+        );
+        toastLog("电量低消息已推送到微信");
+    }
+}
+
+/**
+ * 开始运行学习脚本
+ */
 sleep(random_time(delay_time));
 launch('com.hamibot.hamibot');
 textMatches(/Hamibot|日志/).waitFor();
@@ -1142,92 +1200,18 @@ function do_periodic_answer(number) {
 function handling_access_exceptions() {
     // 在子线程执行的定时器，如果不用子线程，则无法获取弹出页面的控件
     var thread_handling_access_exceptions = threads.start(function () {
-        var zz = 0;
-        var nn = 0;
-        var jj = 0;
         while (true) {
             textContains("访问异常").waitFor();
             sleep(random_time(delay_time * 2.5));
-            // 如果是新版验证，暂时采用手动方式
+            // 新版验证暂时采用手动方式，可装学习强国2.22.0无验证
             if (text("拖动滑块直到出现").exists()) {
                 // 震动提示
                 device.vibrate(200);
                 sleep(500);
                 device.vibrate(300);
                 sleep(random_time(delay_time * 4.5));
-            } else {
-                // 旧版验证（将删除）
-                // 滑动按钮“>>”位置
-                idContains("nc_1_n1t").waitFor();
-                var bound = idContains("nc_1_n1t").findOne().bounds();
-                // 滑动边框位置
-                text("向右滑动验证").waitFor();
-                var slider_bound = text("向右滑动验证").findOne().bounds();
-                // 通过更复杂的手势验证（向右滑动过程中途折返）
-                var x_start = bound.centerX();
-                var dx = x_start - slider_bound.left;
-                var x_end = slider_bound.right - dx;
-                var x_mid = (x_end - x_start) * random(5, 8) / 10 + x_start;
-                var back_x = (x_end - x_start) * random(2, 3) / 10;
-                var y_start = random(bound.top, bound.bottom);
-                var y_end = random(bound.top, bound.bottom);
-                x_start = random(x_start - 7, x_start);
-                x_end = random(x_end, x_end + 10);
-                gesture(random(delay_time * 0.6, delay_time * 0.6 + 50), [x_start, y_start], [x_mid, y_end], [x_mid - back_x, y_start], [x_end, y_end]);
-                sleep(delay_time / 2);
-                if (textContains("刷新").exists()) {
-                    zz = zz + random(1, 2);
-                    nn++;
-                    if (zz > 7 && jj < 2) {
-                        sleep(random_time(delay_time * 2));
-                        back();
-                        sleep(random_time(delay_time * 2));
-                        if (textContains("提交失败").exists()) {
-                            // 重新滑动
-                            sleep(random_time(delay_time * 3));
-                            my_click_clickable("重试");
-                            sleep(random_time(delay_time));
-                            jj++;
-                            zz = 0;
-                            continue;
-                        }
-                        else if (textContains("网络开小差").exists() && resume_flag == 1) {
-                            sleep(random_time(delay_time));
-                            my_click_clickable("确定");
-                            sleep(random_time(delay_time));
-                            text("登录").waitFor();
-                            sleep(random_time(delay_time));
-                            entry_model('每日答题');
-                            text("查看提示").waitFor();
-                            do_periodic_answer(5);
-                            zz = 0;
-                            continue;
-                        } else {
-                            jj = 2;
-                        }
-                    }
-                    if (zz > 7 && jj == 2) {
-                        toastLog("多次滑动验证失败");
-                        if (pushplus_token) {
-                            var message_str = "多次滑动验证失败（随机尝试了" + nn + "次），可能是网络问题，请重启运行脚本。";
-                            // 推送消息
-                            http.postJson(
-                                "http://www.pushplus.plus/send",
-                                {
-                                    token: pushplus_token,
-                                    title: "Auto学习：滑动验证失败",
-                                    content: message_str,
-                                }
-                                );
-                            toastLog("问题已推送到微信");
-                        }
-                        break;
-                    }
-                    click("刷新");
-                    continue;
-                }
             }
-            if (textContains("网络开小差").exists() && resume_flag == 0) {
+            if (textContains("网络开小差").exists()) {
                 click("确定");
                 continue;
             }
@@ -1241,7 +1225,6 @@ function handling_access_exceptions() {
 /* 
 处理访问异常，滑动验证
 */
-var resume_flag = 1;
 var thread_handling_access_exceptions = handling_access_exceptions();
 
 /*
@@ -1258,8 +1241,6 @@ if (!finish_dict['每日答题'][0]) {
     do_periodic_answer(5);
     my_click_clickable("返回");
 }
-
-var resume_flag = 0;
 
 /*
 **********每周答题*********
@@ -1716,15 +1697,55 @@ if (pushplus_token) {
     var getData = send_pushplus();
     var jinri = getData[0];
     var content_str = getData[1];
+    var day_check1 = new Date().getDate();//时间校验
     sleep(random_time(delay_time));
     back();
     sleep(random_time(delay_time / 2));
     // 获取账号名
     var account = id("my_display_name").findOne().text();
     sleep(random_time(delay_time / 2));
-    // 推送消息
-    push_weixin_message("Auto学习：" + account + " " + jinri + "积分");
+    // 推送消息(校验是否重复相同内容)
+    var push_check = 0;
+    if (pushplus_token != token_check0) { storage.put("token_check_storage", pushplus_token); push_check = 1;}
+    if (account != account_check0) { storage.put("account_check_storage", account); push_check = 1;}
+    if (day_check1 != day_check0) { storage.put("day_check_storage", day_check1); push_check = 1;}
+    if (jinri != score_check0) { storage.put("score_check_storage", jinri); push_check = 1;}
+    if (push_check) {
+        push_weixin_message("Auto学习：" + account + " " + jinri + "积分");
+    } else {
+        toastLog("不再重复推送，今日已完成");
+    }
 }
+
+// 尝试成功点击
+function real_click(obj) {
+    for (let i = 1; i <= 3; i++) {
+        if (obj.click()) { return true; }
+        sleep(300);
+    }
+    click(obj.bounds().centerX(), obj.bounds().centerY());
+    return false;
+}
+/**
+* 结束学习强国APP
+*/
+sleep(random_time(delay_time * 2));
+var packageName = getPackageName("学习强国");
+app.openAppSetting(packageName);
+sleep(2000);
+text("学习强国").findOne(5000);
+sleep(1500);
+let stopbb = textMatches(/(强.停止$|.*停止$|结束运行|停止运行|[Ff][Oo][Rr][Cc][Ee] [Ss][Tt][Oo][Pp])/).findOne();
+real_click(stopbb);
+sleep(1000);
+let surebb = textMatches(/(确定|.*停止.*|[Ff][Oo][Rr][Cc][Ee] [Ss][Tt][Oo][Pp]|O[Kk])/).clickable().findOne(1500);
+if (!surebb) {
+    back();
+} else {
+    real_click(surebb);
+}
+sleep(1500);
+back();
 
 sleep(random_time(delay_time * 2));
 launch('com.hamibot.hamibot');
