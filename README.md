@@ -1,6 +1,10 @@
 # 脚本安装和题库更新
-**Hamibot自用学习主脚本参考**
+**Hamibot自用学习主脚本参考** 新增开屏解锁选项和完成后结束APP（针对备用机定时任务）
+
 https://hamibot.com/marketplace/gtf52?invite=ADfZFZnW31U9Xrnu7xy8Ns3U
+
+顺畅运行脚本需 [學習强国v2.22.0(改版本号)]（系统版本太高安装不了QG旧版本，可用VMOS+64位版安卓7.1+Hamibot1.4.3+qg2.22改版本号，可多开；具体方法可搜索GitHub页面上的相关议题）
+v2.22.0下载（请忽略压缩包文件名） https://www.123pan.com/s/D1WuVv-5trKh.html arrow_upper_right 提取码:7777
 
 **自建题库，每周六自动检测更新(如有）**
 https://github.com/McMug2020/XXQG_TiKu
