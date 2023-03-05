@@ -6,6 +6,9 @@
  * @return {int} 静音前的音量
  */
 function check_set_env(whether_improve_accuracy, AK, SK) {
+    // 检查无障碍服务是否已经启用
+    auto.waitFor();
+
     // 检查在选择提高精确度的情况下，AK和SK是否填写
     if (whether_improve_accuracy == "yes" && (!AK || !SK)) {
         toastLog("如果你选择了增强版，请配置信息，具体看脚本说明");
@@ -46,7 +49,6 @@ function check_set_env(whether_improve_accuracy, AK, SK) {
  * 获取配置参数及本地存储数据
  */
 // 基础数据
-var { self_unlock } = hamibot.env;
 var { delay_time } = hamibot.env;
 var { whether_improve_accuracy } = hamibot.env;
 var { all_special_answer_completed } = hamibot.env;
@@ -64,19 +66,6 @@ var storage = storages.create("data");
 
 // 更新题库为answer_question_map
 storage.remove("answer_question_map1");
-
-// 检查无障碍服务是否已经启用
-auto.waitFor();
-
-//自滑屏解锁
-if (self_unlock) {
-    while (!device.isScreenOn()) {
-        device.wakeUpIfNeeded();
-        sleep(1000);
-        swipe(device.width / 2, device.height * 14 / 15, device.width / 2, device.height * 9 / 15, 300);
-    }
-    sleep(1000);
-}
 
 var vol = check_set_env(whether_improve_accuracy, AK, SK);
 
