@@ -68,6 +68,17 @@ var storage = storages.create("data");
 // 更新题库为answer_question_map
 storage.remove("answer_question_map1");
 
+//自滑屏解锁
+if (self_unlock) {
+    sleep(1000);
+    while (!device.isScreenOn()) {
+        device.wakeUpIfNeeded();
+        sleep(1000);
+        swipe(device.width / 2, device.height * 14 / 15, device.width / 2, device.height * 9 / 15, 300);
+    }
+    sleep(1000);
+}
+
 var vol = check_set_env(whether_improve_accuracy, AK, SK);
 
 /**
@@ -137,17 +148,6 @@ function map_get(key) {
     }
     return null;
 };
-
-
-//自滑屏解锁
-if (self_unlock) {
-    while (!device.isScreenOn()) {
-        device.wakeUpIfNeeded();
-        sleep(1000);
-        swipe(device.width / 2, device.height * 14 / 15, device.width / 2, device.height * 9 / 15, 300);
-    }
-    sleep(1000);
-}
 
 //pushplus推送校验
 if (pushplus_token) {
