@@ -1662,9 +1662,14 @@ if (!finish_dict['发表观点'][0] && whether_complete_speech == "yes") {
     sleep(random_time(delay_time * 2));
     className("android.widget.FrameLayout").clickable(true).depth(22).findOnce(0).click();
     sleep(random_time(delay_time * 2));
+    try {
+        var comment = text('观点').findOne(3000).parent().parent().child(2).child(1).child(0).text();
+    } catch(e) {
+        var comment = speechs[random(0, speechs.length - 1)];
+    }
     my_click_clickable("欢迎发表你的观点");
-    sleep(random_time(delay_time));
-    setText(speechs[random(0, speechs.length - 1)]);
+    sleep(random_time(delay_time) * 2);
+    setText(comment);
     sleep(random_time(delay_time));
     my_click_clickable("发布");
     sleep(random_time(delay_time * 2));
@@ -1673,7 +1678,7 @@ if (!finish_dict['发表观点'][0] && whether_complete_speech == "yes") {
     my_click_clickable("确认");
 }
 
-sleep(random_time(delay_time * 2));
+sleep(random_time(delay_time * 4));
 // 回到积分页
 back_track_flag = 2;
 back_track();
