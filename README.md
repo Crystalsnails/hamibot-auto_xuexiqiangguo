@@ -10,10 +10,15 @@ bug修正：因device.keepScreenDim();本来就有点亮屏幕的功能，为了
 **自建题库，每周六自动检测更新（如有）**
 https://github.com/McMug2020/XXQG_TiKu
 
+**自动跑跑，见 备用机（LG V35洋垃圾）学习心得分享**
+https://github.com/dundunnp/auto_xuexiqiangguo/issues/673
+
 # Hamibot-Auto学习强国
 <p>Hamibot-Auto学习强国 是一款自动化学习工具 forked from <a href="https://github.com/dundunnp/auto_xuexiqiangguo/">dundunnp</a>大神</p>
 <p>本项目旨在解放双手 让大家在未来十年有更多时间做更有意义的事</p>
-<p><img src="https://s1.ax1x.com/2022/12/10/zWHfRP.jpg"/></p>
+<p><img src="https://www.rmzxb.com.cn/upload/resources/image/2022/01/27/2648926_500x500.jpg"/></p>
+
+快扫码解锁，上车了！
 
 <p>
 <a href="https://github.com/dundunnp/auto_xuexiqiangguo/blob/version-15.71/LICENSE.txt"><img src="https://img.shields.io/github/license/dundunnp/auto_xuexiqiangguo"/></a>
